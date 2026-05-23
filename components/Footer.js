@@ -19,7 +19,7 @@ export default function Footer() {
     {
       title: "For Boards",
       links: [
-        { href: "#", label: "Claim Profile" },
+        { href: "/claim-listing", label: "List Your Board" },
         { href: "#", label: "Advertise" },
         { href: "#", label: "Partners" },
       ],

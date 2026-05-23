@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 export default function CategoryFilter({
   categories,
   selectedCategory,
@@ -11,7 +13,7 @@ export default function CategoryFilter({
 }) {
   return (
     <aside className={isMobile ? "space-y-10" : "space-y-10"}>
-      {/* Industry Filter */}
+      {/* Industry Focus */}
       <div>
         <h4 className="text-sm font-black text-slate-400 uppercase tracking-widest mb-6">
           Industry Focus
@@ -83,13 +85,16 @@ export default function CategoryFilter({
             <svg className="w-8 h-8 text-amber-400 mb-4" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
             </svg>
-            <h5 className="text-xl font-black mb-3">List Your Board?</h5>
+            <h5 className="text-xl font-black mb-3">List Your Board</h5>
             <p className="text-slate-400 text-sm font-medium mb-6 leading-relaxed">
               Get your job board in front of thousands of hiring managers on JobBoardsReview.
             </p>
-            <button className="w-full py-3 bg-[#FF5630] rounded-xl font-black text-sm hover:scale-105 transition-all">
-              Submit Now
-            </button>
+            <Link
+              href="/claim-listing"
+              className="block text-center w-full py-3 bg-[#FF5630] rounded-xl font-black text-sm hover:scale-105 transition-all text-white"
+            >
+              List Your Board
+            </Link>
           </div>
           <div className="absolute -right-10 -bottom-10 w-32 h-32 bg-[#FF5630]/10 rounded-full blur-2xl"></div>
         </div>

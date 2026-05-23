@@ -1,3 +1,5 @@
+import fs from "fs";
+import path from "path";
 import { getAllBoards, getBoardBySlug, getBoardProsCons, getBoardDecisionTags } from "@/data/jobBoards";
 import { getSiteContent } from "@/data/siteContent";
 import { getBlogs } from "@/data/blogs";
@@ -30,6 +32,17 @@ export default function AdminPage({ searchParams }) {
     editTags = getBoardDecisionTags(editSlug);
   }
 
+  // Read Submissions
+  const submissionsPath = path.join(process.cwd(), "storage", "submissions.json");
+  let submissions = [];
+  if (fs.existsSync(submissionsPath)) {
+    try {
+      submissions = JSON.parse(fs.readFileSync(submissionsPath, "utf-8"));
+    } catch (e) {
+      console.error("Error reading submissions in admin page.js:", e);
+    }
+  }
+
   return (
     <AdminDashboard 
       boards={boards}
@@ -39,6 +52,8 @@ export default function AdminPage({ searchParams }) {
       editProsCons={editProsCons}
       editTags={editTags}
       editSlug={editSlug}
+      submissions={submissions}
     />
   );
 }
+

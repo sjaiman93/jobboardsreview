@@ -3,6 +3,33 @@
 import fs from "fs";
 import path from "path";
 import { revalidatePath } from "next/cache";
+import { validateBoardData } from "@/data/validation";
+import { getAllBoards } from "@/data/jobBoards";
+import { headers } from "next/headers";
+
+// Helper to read metadata file
+function readMetadataFile(filePath, exportName) {
+  const content = fs.readFileSync(filePath, "utf-8");
+  const prefix = `export const ${exportName} = `;
+  const startIndex = content.indexOf(prefix);
+  if (startIndex === -1) return {};
+  let objStr = content.substring(startIndex + prefix.length).trim();
+  if (objStr.endsWith(";")) {
+    objStr = objStr.slice(0, -1);
+  }
+  try {
+    return new Function(`return ${objStr}`)();
+  } catch (e) {
+    console.error(`Error parsing ${filePath}:`, e);
+    return {};
+  }
+}
+
+// Helper to write metadata file
+function writeMetadataFile(filePath, exportName, data) {
+  const content = `export const ${exportName} = ${JSON.stringify(data, null, 2)};\n`;
+  fs.writeFileSync(filePath, content, "utf-8");
+}
 
 export async function saveBoard(formData) {
   const name = formData.get("name");
@@ -17,62 +44,217 @@ export async function saveBoard(formData) {
   const categorySlug = category.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
   
   // Use \n for pros and cons
-  const pros = formData.get("pros").split("\n").map(s => s.trim()).filter(Boolean);
-  const cons = formData.get("cons").split("\n").map(s => s.trim()).filter(Boolean);
+  const pros = formData.get("pros") ? formData.get("pros").split("\n").map(s => s.trim()).filter(Boolean) : [];
+  const cons = formData.get("cons") ? formData.get("cons").split("\n").map(s => s.trim()).filter(Boolean) : [];
   
   // Tags and features still comma-separated
-  const tags = formData.get("tags").split(",").map(s => s.trim()).filter(Boolean);
-  const features = formData.get("features").split(",").map(s => s.trim()).filter(Boolean);
+  const tags = formData.get("tags") ? formData.get("tags").split(",").map(s => s.trim()).filter(Boolean) : [];
+  const features = formData.get("features") ? formData.get("features").split(",").map(s => s.trim()).filter(Boolean) : [];
 
-  const newBoard = {
-    id: Date.now(),
-    slug,
-    name,
-    logo,
-    bestFor: tags[0] || "General",
-    shortDescription,
-    fullDescription,
-    category,
-    categorySlug,
-    subcategory,
-    pricing: pricingSummary,
-    pricingModel: "paid",
-    rating: 0,
-    reviewCount: 0,
-    yearFounded: new Date().getFullYear(),
-    headquarters: "Remote",
-    ownership: "Private",
-    website,
-    features,
-    idealFor: [],
-    pricingDetails: { employerCost: pricingSummary, includes: [] },
-    reviews: []
+  const allBoards = getAllBoards();
+  const existingBoard = allBoards.find(b => b.slug === slug);
+
+  let newBoard;
+  if (existingBoard) {
+    newBoard = {
+      ...existingBoard,
+      name,
+      logo,
+      bestFor: tags[0] || existingBoard.bestFor || "General",
+      shortDescription,
+      fullDescription,
+      category,
+      categorySlug,
+      subcategory,
+      pricing: pricingSummary,
+      website,
+      features,
+      highlights: tags.slice(0, 3).length > 0 ? tags.slice(0, 3) : (existingBoard.highlights || []),
+      pricingDetails: {
+        ...existingBoard.pricingDetails,
+        employerCost: pricingSummary
+      }
+    };
+  } else {
+    newBoard = {
+      id: Date.now(),
+      slug,
+      name,
+      logo,
+      bestFor: tags[0] || "General",
+      shortDescription,
+      fullDescription,
+      category,
+      categorySlug,
+      subcategory,
+      pricing: pricingSummary,
+      pricingModel: "paid",
+      rating: null,
+      reviewCount: null,
+      yearFounded: new Date().getFullYear(),
+      headquarters: "Remote",
+      ownership: "Private",
+      website,
+      features,
+      idealFor: [],
+      pricingDetails: { employerCost: pricingSummary, includes: [] },
+      reviews: [],
+      highlights: tags.slice(0, 3)
+    };
+  }
+
+  // Validate the board data
+  const existingSlugs = new Set(allBoards.map(b => b.slug).filter(s => s !== slug));
+  const existingNames = new Set(allBoards.map(b => b.name.toLowerCase()).filter(n => n !== name.trim().toLowerCase()));
+  validateBoardData(newBoard, existingSlugs, existingNames);
+
+  // 1. Save individual board file under /data/jobboards/
+  const boardVarName = slug.replace(/[^a-zA-Z0-9_]/g, "_");
+  const boardFileContent = `const ${boardVarName} = ${JSON.stringify(newBoard, null, 2)};\n\nexport default ${boardVarName};\n`;
+  fs.writeFileSync(path.join(process.cwd(), "data", "jobboards", `${slug}.js`), boardFileContent, "utf-8");
+
+  // 2. Update boardProsCons.js
+  const prosConsPath = path.join(process.cwd(), "data", "boardProsCons.js");
+  const prosConsData = readMetadataFile(prosConsPath, "boardProsCons");
+  prosConsData[slug] = { pros, cons };
+  writeMetadataFile(prosConsPath, "boardProsCons", prosConsData);
+
+  // 3. Update boardDecisionTags.js
+  const tagsPath = path.join(process.cwd(), "data", "boardDecisionTags.js");
+  const tagsData = readMetadataFile(tagsPath, "boardDecisionTags");
+  tagsData[slug] = tags;
+  writeMetadataFile(tagsPath, "boardDecisionTags", tagsData);
+
+  // 4. Update boardHighlightGroups.js
+  const highlightPath = path.join(process.cwd(), "data", "boardHighlightGroups.js");
+  const highlightData = readMetadataFile(highlightPath, "boardHighlightGroups");
+  if (!highlightData[slug]) {
+    highlightData[slug] = {
+      "Hiring Type": ["Full-time"],
+      "Industry Focus": [category],
+      "Pricing Model": [pricingSummary],
+      "Candidate Quality": ["Verified Pool"]
+    };
+  }
+  writeMetadataFile(highlightPath, "boardHighlightGroups", highlightData);
+
+  // 5. Update boardMetrics.js
+  const metricsPath = path.join(process.cwd(), "data", "boardMetrics.js");
+  const metricsData = readMetadataFile(metricsPath, "boardMetrics");
+  if (!metricsData[slug]) {
+    metricsData[slug] = {
+      candidateReach: "Growing",
+      reachLabel: "Candidates"
+    };
+  }
+  writeMetadataFile(metricsPath, "boardMetrics", metricsData);
+
+  // 6. Regenerate data/index.js imports
+  const jobboardsDir = path.join(process.cwd(), "data", "jobboards");
+  const files = fs.readdirSync(jobboardsDir).filter(f => f.endsWith(".js"));
+
+  const imports = files.map(f => {
+    const boardSlug = f.slice(0, -3);
+    const varName = boardSlug.replace(/[^a-zA-Z0-9_]/g, "_");
+    return `import ${varName} from "./jobboards/${boardSlug}";`;
+  }).join("\n");
+
+  const rawBoardsList = files.map(f => {
+    const boardSlug = f.slice(0, -3);
+    return `  ${boardSlug.replace(/[^a-zA-Z0-9_]/g, "_")}`;
+  }).join(",\n");
+
+  const indexContent = `import { validateBoardData } from "./validation";
+import { categories } from "./categories";
+import { boardProsCons } from "./boardProsCons";
+import { boardDecisionTags } from "./boardDecisionTags";
+import { boardHighlightGroups } from "./boardHighlightGroups";
+import { boardMetrics } from "./boardMetrics";
+
+${imports}
+
+const rawBoards = [
+${rawBoardsList}
+];
+
+// Perform compile-time validation
+const seenSlugs = new Set();
+const seenNames = new Set();
+rawBoards.forEach(board => {
+  validateBoardData(board, seenSlugs, seenNames);
+});
+
+export const jobBoards = rawBoards;
+export { categories, boardProsCons, boardDecisionTags, boardHighlightGroups, boardMetrics };
+
+/* Helper Functions */
+export function getAllBoards() {
+  return jobBoards;
+}
+
+export function getBoardBySlug(slug) {
+  return jobBoards.find((b) => b.slug === slug) || null;
+}
+
+export function getBoardsByCategory(categorySlug) {
+  return jobBoards.filter((b) => b.categorySlug === categorySlug);
+}
+
+export function getAllCategories() {
+  return categories;
+}
+
+export function getCategoryBySlug(slug) {
+  return categories.find((c) => c.slug === slug) || null;
+}
+
+export function searchBoards(query) {
+  if (!query) return [];
+  const q = query.toLowerCase();
+  return jobBoards.filter((b) => {
+    const nameMatch = b.name.toLowerCase().includes(q);
+    const slugMatch = b.slug.toLowerCase().includes(q);
+    const catMatch = b.category.toLowerCase().includes(q);
+    const shortDescMatch = b.shortDescription?.toLowerCase().includes(q);
+    const fullDescMatch = b.fullDescription?.toLowerCase().includes(q);
+    const featuresMatch = b.features?.some(f => f.toLowerCase().includes(q));
+    const tags = getBoardDecisionTags(b.slug) || [];
+    const tagsMatch = tags.some(t => t.toLowerCase().includes(q));
+
+    return nameMatch || slugMatch || catMatch || shortDescMatch || fullDescMatch || featuresMatch || tagsMatch;
+  });
+}
+
+export function getBoardMetrics(slug) {
+  return boardMetrics[slug] || { candidateReach: "Growing", reachLabel: "Candidates" };
+}
+
+export function getBoardProsCons(slug) {
+  return boardProsCons[slug] || {
+    pros: ["Established platform in its niche", "Active user community", "Regular platform updates"],
+    cons: ["Limited public pricing information", "May not suit all industries"],
   };
+}
 
-  const filePath = path.join(process.cwd(), "data", "jobBoards.js");
-  let content = fs.readFileSync(filePath, "utf-8");
+export function getBoardDecisionTags(slug) {
+  return boardDecisionTags[slug] || ["Established", "Active Community"];
+}
 
-  // 1. Insert into jobBoards array (top so .find() hits it first)
-  const jobBoardsStr = "const jobBoards = [";
-  const jobBoardsIndex = content.indexOf(jobBoardsStr) + jobBoardsStr.length;
-  content = content.slice(0, jobBoardsIndex) + `\n  ${JSON.stringify(newBoard, null, 2)},` + content.slice(jobBoardsIndex);
+export function getBoardHighlightGroups(slug) {
+  return boardHighlightGroups[slug] || {
+    "Hiring Type": ["Full-time", "Various Levels"],
+    "Industry Focus": [slug ? "Specialized" : "Generalist"],
+    "Pricing Model": ["Contact for Pricing"],
+    "Candidate Quality": ["Standard Pool"],
+  };
+}
+`;
+  fs.writeFileSync(path.join(process.cwd(), "data", "index.js"), indexContent, "utf-8");
 
-  // 2. Insert into boardProsCons (bottom so it overwrites existing keys)
-  const prosConsStr = "const boardProsCons = {";
-  const prosConsStartIndex = content.indexOf(prosConsStr);
-  const prosConsEndIndex = content.indexOf("};", prosConsStartIndex);
-  content = content.slice(0, prosConsEndIndex) + `  "${slug}": { pros: ${JSON.stringify(pros)}, cons: ${JSON.stringify(cons)} },\n` + content.slice(prosConsEndIndex);
-
-  // 3. Insert into boardDecisionTags (bottom so it overwrites existing keys)
-  const tagsStr = "const boardDecisionTags = {";
-  const tagsStartIndex = content.indexOf(tagsStr);
-  const tagsEndIndex = content.indexOf("};", tagsStartIndex);
-  content = content.slice(0, tagsEndIndex) + `  "${slug}": ${JSON.stringify(tags)},\n` + content.slice(tagsEndIndex);
-
-  fs.writeFileSync(filePath, content, "utf-8");
-  
   revalidatePath("/admin");
   revalidatePath("/directory");
+  revalidatePath(`/board/${slug}`);
+  revalidatePath("/compare");
 }
 
 export async function importCsvAction(csvText) {
@@ -244,3 +426,377 @@ export async function saveBlogAction(formData) {
   revalidatePath(`/blog/${slug}`);
   revalidatePath("/admin");
 }
+
+// In-memory rate limiting: max 3 per IP per hour
+const rateLimitCache = new Map();
+
+function checkRateLimit(ip) {
+  const now = Date.now();
+  const oneHourAgo = now - 60 * 60 * 1000;
+  
+  if (!rateLimitCache.has(ip)) {
+    rateLimitCache.set(ip, [now]);
+    return true;
+  }
+  
+  const timestamps = rateLimitCache.get(ip).filter(t => t > oneHourAgo);
+  if (timestamps.length >= 3) {
+    return false;
+  }
+  
+  timestamps.push(now);
+  rateLimitCache.set(ip, timestamps);
+  return true;
+}
+
+export async function submitBoardProposal(submission) {
+  // Honeypot check
+  if (submission.website_hp) {
+    console.warn("Honeypot triggered, rejecting submission.");
+    return { success: false, error: "Spam verification failed." };
+  }
+
+  // Timestamp validation (minimum 3 seconds)
+  const submitTime = Date.now();
+  if (!submission.formLoadTime || submitTime - submission.formLoadTime < 3000) {
+    console.warn("Submission too fast, rejecting as bot.");
+    return { success: false, error: "Spam verification failed." };
+  }
+
+  // IP rate limiting
+  let ip = "127.0.0.1";
+  try {
+    const headersList = headers();
+    ip = headersList.get("x-forwarded-for")?.split(",")[0] || headersList.get("x-real-ip") || "127.0.0.1";
+  } catch (err) {
+    console.error("Error reading headers for IP rate limit:", err);
+  }
+
+  if (!checkRateLimit(ip)) {
+    console.warn(`Rate limit exceeded for IP: ${ip}`);
+    return { success: false, error: "Too many requests. Please try again in an hour." };
+  }
+
+  const storageDir = path.join(process.cwd(), "storage");
+  const submissionsPath = path.join(storageDir, "submissions.json");
+
+  // Ensure storage folder exists
+  try {
+    if (!fs.existsSync(storageDir)) {
+      fs.mkdirSync(storageDir, { recursive: true });
+    }
+  } catch (err) {
+    console.error("Error creating storage directory:", err);
+    return { success: false, error: "Server storage error." };
+  }
+
+  let submissions = [];
+  try {
+    if (fs.existsSync(submissionsPath)) {
+      const fileData = fs.readFileSync(submissionsPath, "utf-8");
+      submissions = JSON.parse(fileData);
+    }
+  } catch (e) {
+    console.error("Error reading submissions.json:", e);
+  }
+
+  // Remove honeypot and formLoadTime from saved object to keep it clean
+  const { website_hp, formLoadTime, ...cleanSubmission } = submission;
+
+  const newSubmission = {
+    id: Date.now(),
+    submittedAt: new Date().toISOString(),
+    ...cleanSubmission
+  };
+  submissions.push(newSubmission);
+
+  try {
+    fs.writeFileSync(submissionsPath, JSON.stringify(submissions, null, 2), "utf-8");
+    console.log("Structured submission payload logged successfully:\n", JSON.stringify(newSubmission, null, 2));
+    return { success: true };
+  } catch (e) {
+    console.error("Error writing submission:", e);
+    return { success: false, error: "Failed to save submission locally." };
+  }
+}
+
+export async function approveSubmissionAction(submissionId) {
+  const submissionsPath = path.join(process.cwd(), "storage", "submissions.json");
+  if (!fs.existsSync(submissionsPath)) {
+    return { success: false, error: "Submissions file not found." };
+  }
+  
+  let submissions = [];
+  try {
+    submissions = JSON.parse(fs.readFileSync(submissionsPath, "utf-8"));
+  } catch (e) {
+    console.error("Error reading submissions:", e);
+    return { success: false, error: "Failed to read submissions." };
+  }
+  
+  const subIndex = submissions.findIndex(s => s.id === submissionId);
+  if (subIndex === -1) {
+    return { success: false, error: "Submission not found." };
+  }
+  
+  const sub = submissions[subIndex];
+  
+  // 1. Sanitize incoming text & normalize formatting
+  const boardName = sub.boardName.trim();
+  const websiteUrl = sub.websiteUrl.trim();
+  const shortDescription = sub.shortDescription.trim();
+  const category = sub.category || "Generalist";
+  
+  // 2. Safely generate slug
+  const slugify = (text) => {
+    return text.toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
+  };
+  
+  let baseSlug = slugify(boardName);
+  if (!baseSlug) baseSlug = "board";
+  
+  let slug = baseSlug;
+  let counter = 1;
+  const allBoards = getAllBoards();
+  while (allBoards.some(b => b.slug === slug)) {
+    slug = `${baseSlug}-${counter}`;
+    counter++;
+  }
+  
+  const categorySlug = sub.categorySlug || slugify(category);
+  
+  // 3. Build new board structure, keeping factual/verifiable metrics only
+  const newBoard = {
+    id: Date.now(),
+    slug,
+    name: boardName,
+    logo: "/logos/default.svg",
+    bestFor: sub.bestFor?.trim() || "General",
+    shortDescription,
+    fullDescription: shortDescription,
+    category,
+    categorySlug,
+    toolType: sub.toolType || "Job Board",
+    subcategory: "",
+    pricing: sub.pricingInfo?.trim() || sub.pricingModel || "Custom Pricing",
+    pricingModel: sub.pricingModel ? sub.pricingModel.toLowerCase() : "paid",
+    rating: null,
+    reviewCount: null,
+    yearFounded: new Date().getFullYear(),
+    headquarters: "Remote",
+    ownership: "Private",
+    website: websiteUrl,
+    features: [],
+    idealFor: sub.targetAudience || [],
+    pricingDetails: { 
+      employerCost: sub.pricingInfo?.trim() || sub.pricingModel || "Custom Pricing",
+      includes: []
+    },
+    reviews: [],
+    highlights: sub.targetAudience?.slice(0, 3) || []
+  };
+  
+  // 4. Validate using project helper
+  try {
+    const existingSlugs = new Set(allBoards.map(b => b.slug));
+    const existingNames = new Set(allBoards.map(b => b.name.toLowerCase()));
+    validateBoardData(newBoard, existingSlugs, existingNames);
+  } catch (err) {
+    console.error("Board validation failed on approve:", err);
+    return { success: false, error: err.message || "Failed to validate board data." };
+  }
+  
+  try {
+    // 5. Create /data/jobboards/[slug].js
+    const boardVarName = slug.replace(/[^a-zA-Z0-9_]/g, "_");
+    const boardFileContent = `const ${boardVarName} = ${JSON.stringify(newBoard, null, 2)};\n\nexport default ${boardVarName};\n`;
+    fs.writeFileSync(path.join(process.cwd(), "data", "jobboards", `${slug}.js`), boardFileContent, "utf-8");
+    
+    // 6. Update helpers / mappings
+    const prosConsPath = path.join(process.cwd(), "data", "boardProsCons.js");
+    const prosConsData = readMetadataFile(prosConsPath, "boardProsCons");
+    prosConsData[slug] = {
+      pros: ["Established platform in its niche", "Active user community", "Regular platform updates"],
+      cons: ["Limited public pricing information", "May not suit all industries"]
+    };
+    writeMetadataFile(prosConsPath, "boardProsCons", prosConsData);
+    
+    const tagsPath = path.join(process.cwd(), "data", "boardDecisionTags.js");
+    const tagsData = readMetadataFile(tagsPath, "boardDecisionTags");
+    tagsData[slug] = sub.targetAudience || ["Established", "Active Community"];
+    writeMetadataFile(tagsPath, "boardDecisionTags", tagsData);
+    
+    const highlightPath = path.join(process.cwd(), "data", "boardHighlightGroups.js");
+    const highlightData = readMetadataFile(highlightPath, "boardHighlightGroups");
+    highlightData[slug] = {
+      "Hiring Type": ["Full-time"],
+      "Industry Focus": [category],
+      "Pricing Model": [sub.pricingModel || "Custom Pricing"],
+      "Candidate Quality": ["Verified Pool"]
+    };
+    writeMetadataFile(highlightPath, "boardHighlightGroups", highlightData);
+    
+    const metricsPath = path.join(process.cwd(), "data", "boardMetrics.js");
+    const metricsData = readMetadataFile(metricsPath, "boardMetrics");
+    metricsData[slug] = {
+      candidateReach: "Growing",
+      reachLabel: "Candidates"
+    };
+    writeMetadataFile(metricsPath, "boardMetrics", metricsData);
+    
+    // 7. Update exports / indexes (data/index.js)
+    const jobboardsDir = path.join(process.cwd(), "data", "jobboards");
+    const files = fs.readdirSync(jobboardsDir).filter(f => f.endsWith(".js"));
+    
+    const imports = files.map(f => {
+      const boardSlug = f.slice(0, -3);
+      const varName = boardSlug.replace(/[^a-zA-Z0-9_]/g, "_");
+      return `import ${varName} from "./jobboards/${boardSlug}";`;
+    }).join("\n");
+    
+    const rawBoardsList = files.map(f => {
+      const boardSlug = f.slice(0, -3);
+      return `  ${boardSlug.replace(/[^a-zA-Z0-9_]/g, "_")}`;
+    }).join(",\n");
+    
+    const indexContent = `import { validateBoardData } from "./validation";
+import { categories } from "./categories";
+import { boardProsCons } from "./boardProsCons";
+import { boardDecisionTags } from "./boardDecisionTags";
+import { boardHighlightGroups } from "./boardHighlightGroups";
+import { boardMetrics } from "./boardMetrics";
+
+${imports}
+
+const rawBoards = [
+${rawBoardsList}
+];
+
+// Perform compile-time validation
+const seenSlugs = new Set();
+const seenNames = new Set();
+rawBoards.forEach(board => {
+  validateBoardData(board, seenSlugs, seenNames);
+});
+
+export const jobBoards = rawBoards;
+export { categories, boardProsCons, boardDecisionTags, boardHighlightGroups, boardMetrics };
+
+/* Helper Functions */
+export function getAllBoards() {
+  return jobBoards;
+}
+
+export function getBoardBySlug(slug) {
+  return jobBoards.find((b) => b.slug === slug) || null;
+}
+
+export function getBoardsByCategory(categorySlug) {
+  return jobBoards.filter((b) => b.categorySlug === categorySlug);
+}
+
+export function getAllCategories() {
+  return categories;
+}
+
+export function getCategoryBySlug(slug) {
+  return categories.find((c) => c.slug === slug) || null;
+}
+
+export function searchBoards(query) {
+  if (!query) return [];
+  const q = query.toLowerCase();
+  return jobBoards.filter((b) => {
+    const nameMatch = b.name.toLowerCase().includes(q);
+    const slugMatch = b.slug.toLowerCase().includes(q);
+    const catMatch = b.category.toLowerCase().includes(q);
+    const shortDescMatch = b.shortDescription?.toLowerCase().includes(q);
+    const fullDescMatch = b.fullDescription?.toLowerCase().includes(q);
+    const featuresMatch = b.features?.some(f => f.toLowerCase().includes(q));
+    const tags = getBoardDecisionTags(b.slug) || [];
+    const tagsMatch = tags.some(t => t.toLowerCase().includes(q));
+
+    return nameMatch || slugMatch || catMatch || shortDescMatch || fullDescMatch || featuresMatch || tagsMatch;
+  });
+}
+
+export function getBoardMetrics(slug) {
+  return boardMetrics[slug] || { candidateReach: "Growing", reachLabel: "Candidates" };
+}
+
+export function getBoardProsCons(slug) {
+  return boardProsCons[slug] || {
+    pros: ["Established platform in its niche", "Active user community", "Regular platform updates"],
+    cons: ["Limited public pricing information", "May not suit all industries"],
+  };
+}
+
+export function getBoardDecisionTags(slug) {
+  return boardDecisionTags[slug] || ["Established", "Active Community"];
+}
+`;
+    fs.writeFileSync(path.join(process.cwd(), "data", "index.js"), indexContent, "utf-8");
+    
+    // 8. Move submission status: pending -> approved
+    submissions[subIndex].status = "approved";
+    submissions[subIndex].updatedAt = new Date().toISOString();
+    submissions[subIndex].publishedSlug = slug;
+    fs.writeFileSync(submissionsPath, JSON.stringify(submissions, null, 2), "utf-8");
+    
+    revalidatePath("/admin");
+    return { success: true };
+  } catch (e) {
+    console.error("Error writing board:", e);
+    return { success: false, error: "Failed to publish listing and update imports." };
+  }
+}
+
+export async function updateSubmissionStatusAction(submissionId, status) {
+  const submissionsPath = path.join(process.cwd(), "storage", "submissions.json");
+  if (!fs.existsSync(submissionsPath)) {
+    return { success: false, error: "Submissions file not found." };
+  }
+  
+  try {
+    const fileData = fs.readFileSync(submissionsPath, "utf-8");
+    const submissions = JSON.parse(fileData);
+    const subIndex = submissions.findIndex(s => s.id === submissionId);
+    if (subIndex === -1) {
+      return { success: false, error: "Submission not found." };
+    }
+    
+    submissions[subIndex].status = status;
+    submissions[subIndex].updatedAt = new Date().toISOString();
+    
+    fs.writeFileSync(submissionsPath, JSON.stringify(submissions, null, 2), "utf-8");
+    revalidatePath("/admin");
+    return { success: true };
+  } catch (e) {
+    console.error("Error updating submission status:", e);
+    return { success: false, error: "Failed to update submission status." };
+  }
+}
+
+export async function hardDeleteSubmissionAction(submissionId) {
+  const submissionsPath = path.join(process.cwd(), "storage", "submissions.json");
+  if (!fs.existsSync(submissionsPath)) {
+    return { success: false, error: "Submissions file not found." };
+  }
+  
+  try {
+    const fileData = fs.readFileSync(submissionsPath, "utf-8");
+    let submissions = JSON.parse(fileData);
+    submissions = submissions.filter(s => s.id !== submissionId);
+    fs.writeFileSync(submissionsPath, JSON.stringify(submissions, null, 2), "utf-8");
+    revalidatePath("/admin");
+    return { success: true };
+  } catch (e) {
+    console.error("Error hard deleting submission:", e);
+    return { success: false, error: "Failed to hard delete submission." };
+  }
+}
+
+
+

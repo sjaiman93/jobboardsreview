@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getAllBoards } from "@/data/jobBoards";
 import JobBoardCard from "@/components/JobBoardCard";
+import EmailCapture from "@/components/EmailCapture";
 
 export const metadata = {
   title: "JobBoardsReview | Compare & Review Job Boards",
@@ -222,25 +223,7 @@ export default function HomePage() {
       <section className="py-20 bg-white overflow-hidden">
         <div className="max-w-7xl mx-auto px-6">
           <div className="bg-slate-900 rounded-[60px] p-16 md:p-24 relative overflow-hidden">
-            <div className="relative z-10 text-center max-w-3xl mx-auto">
-              <h2 className="text-5xl md:text-7xl font-black text-white mb-10 leading-tight">
-                Stop guessing. <br /> <span className="text-[#FF5630]">Start hiring.</span>
-              </h2>
-              <p className="text-xl text-slate-400 mb-14 font-medium">
-                Join 12,000+ recruiters who use JobBoardsReview to optimize their sourcing strategy daily.
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-5 justify-center">
-                <input
-                  type="email"
-                  placeholder="Your business email"
-                  className="bg-white/10 border border-white/20 text-white rounded-2xl px-8 py-5 text-lg outline-none focus:border-[#FF5630] transition-all w-full sm:w-80 placeholder:text-slate-500"
-                />
-                <button className="bg-[#FF5630] text-white font-black px-12 py-5 rounded-2xl hover:scale-105 transition-all duration-300 shadow-xl shadow-[#FF5630]/20 whitespace-nowrap">
-                  Get Free Access
-                </button>
-              </div>
-            </div>
+            <EmailCapture />
 
             {/* Animated background elements */}
             <div className="absolute top-0 left-0 w-64 h-64 bg-teal-500/10 rounded-full blur-[100px]"></div>
@@ -249,7 +232,7 @@ export default function HomePage() {
 
           <div className="mt-8 text-center">
             <Link href="/claim-listing" className="text-sm font-medium text-slate-400 hover:text-slate-900 transition-colors">
-              Are you a job board owner? <span className="underline underline-offset-4">Claim your listing</span>
+              Are you a job board owner? <span className="underline underline-offset-4">List Your Board</span>
             </Link>
           </div>
         </div>

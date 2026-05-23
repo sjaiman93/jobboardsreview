@@ -4,14 +4,25 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import CsvTools from "./CsvTools";
-import { saveBoard, saveSiteContentAction, saveBlogAction } from "./actions";
+import { saveBoard, saveSiteContentAction, saveBlogAction, approveSubmissionAction, updateSubmissionStatusAction, hardDeleteSubmissionAction } from "./actions";
 import "react-quill/dist/quill.snow.css";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
-export default function AdminDashboard({ boards, editingBoard, editProsCons, editTags, editSlug, siteContent, blogs = [] }) {
+export default function AdminDashboard({ boards, editingBoard, editProsCons, editTags, editSlug, siteContent, blogs = [], submissions = [] }) {
   const [activeTab, setActiveTab] = useState("jobBoards");
   const [isSaving, setIsSaving] = useState(false);
+
+  const [submissionsList, setSubmissionsList] = useState(submissions || []);
+  const [selectedSubmission, setSelectedSubmission] = useState(null);
+  const [statusFilter, setStatusFilter] = useState("pending");
+
+  useEffect(() => {
+    if (submissions) {
+      setSubmissionsList(submissions);
+    }
+  }, [submissions]);
+
 
   const [legalContent, setLegalContent] = useState({
     terms: "",
@@ -151,8 +162,68 @@ export default function AdminDashboard({ boards, editingBoard, editProsCons, edi
     alert("Blog unpublished (Draft mode)!");
   }
 
+  async function handleStatusAction(id, actionType) {
+    if (actionType === "approved") {
+      const confirmApprove = confirm("Are you sure you want to approve and publish this job board listing?");
+      if (!confirmApprove) return;
+    }
+    
+    setIsSaving(true);
+    try {
+      let res;
+      if (actionType === "approved") {
+        res = await approveSubmissionAction(id);
+      } else {
+        res = await updateSubmissionStatusAction(id, actionType);
+      }
+      
+      if (res.success) {
+        setSubmissionsList(prev => prev.map(s => s.id === id ? { ...s, status: actionType } : s));
+        if (selectedSubmission?.id === id) {
+          setSelectedSubmission(prev => ({ ...prev, status: actionType }));
+        }
+        alert(`Submission status updated to '${actionType}' successfully.`);
+      } else {
+        alert(`Error: ${res.error || "Failed to update submission status."}`);
+      }
+    } catch (e) {
+      alert("A network error occurred.");
+    } finally {
+      setIsSaving(false);
+    }
+  }
+
+  async function handleHardDelete(id) {
+    const confirmDelete = confirm("Are you sure you want to permanently delete this submission? This action cannot be undone.");
+    if (!confirmDelete) return;
+
+    setIsSaving(true);
+    try {
+      const res = await hardDeleteSubmissionAction(id);
+      if (res.success) {
+        setSubmissionsList(prev => prev.filter(s => s.id !== id));
+        if (selectedSubmission?.id === id) {
+          setSelectedSubmission(null);
+        }
+        alert("Submission deleted permanently.");
+      } else {
+        alert(`Error: ${res.error || "Failed to delete submission."}`);
+      }
+    } catch (e) {
+      alert("A network error occurred.");
+    } finally {
+      setIsSaving(false);
+    }
+  }
+
+  const filteredSubmissions = submissionsList.filter(s => {
+    const status = s.status || "pending";
+    return status === statusFilter;
+  });
+
   return (
     <div className="max-w-5xl mx-auto px-6 py-24">
+
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
         <div className="flex items-center gap-4">
           <h1 className="text-4xl font-black text-slate-900">Admin Panel</h1>
@@ -169,10 +240,12 @@ export default function AdminDashboard({ boards, editingBoard, editProsCons, edi
       <div className="flex gap-4 mb-10 border-b border-slate-200">
         {[
           { id: "jobBoards", label: "Job Boards" },
-          { id: "legalPages", label: "Legal Pages" },
-          { id: "homepage", label: "Homepage" },
+          { id: "submissions", label: "Submissions" },
           { id: "blog", label: "Blog" },
+          { id: "homepage", label: "Homepage" },
+          { id: "legalPages", label: "Legal Pages" },
         ].map((tab) => (
+
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
@@ -280,7 +353,181 @@ export default function AdminDashboard({ boards, editingBoard, editProsCons, edi
         </div>
       )}
 
+      {activeTab === "submissions" && (
+        <div className="bg-white p-8 sm:p-12 rounded-[48px] card-shadow border border-slate-100 space-y-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pb-6 border-b border-slate-100">
+            <div>
+              <h2 className="text-2xl font-black text-slate-900 mb-2">Submission Queue</h2>
+              <p className="text-slate-500 font-medium text-sm">
+                Review and moderate user or vendor submitted job boards.
+              </p>
+            </div>
+            
+            {/* Status Filter Buttons */}
+            <div className="flex flex-wrap gap-2">
+              {[
+                { id: "pending", label: "Pending" },
+                { id: "approved", label: "Approved" },
+                { id: "rejected", label: "Rejected" },
+                { id: "archived", label: "Archived" },
+              ].map(statusItem => {
+                const count = submissionsList.filter(s => (s.status || "pending") === statusItem.id).length;
+                const isActive = statusFilter === statusItem.id;
+                return (
+                  <button
+                    key={statusItem.id}
+                    onClick={() => setStatusFilter(statusItem.id)}
+                    className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 border ${
+                      isActive
+                        ? "bg-slate-900 border-slate-900 text-white shadow-sm"
+                        : "bg-white border-slate-200 hover:border-slate-300 text-slate-600 hover:text-slate-900"
+                    }`}
+                  >
+                    {statusItem.label}
+                    <span className={`inline-block px-1.5 py-0.5 rounded-md text-[10px] font-black ${
+                      isActive ? "bg-slate-800 text-white" : "bg-slate-100 text-slate-500"
+                    }`}>
+                      {count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {filteredSubmissions.length === 0 ? (
+            <div className="text-center py-20 bg-slate-50 rounded-[32px] border border-slate-100">
+              <span className="text-4xl mb-4 block">📥</span>
+              <h3 className="text-lg font-black text-slate-900">No {statusFilter} submissions</h3>
+              <p className="text-slate-400 font-medium text-sm mt-1">
+                Submissions matching this status will appear here.
+              </p>
+            </div>
+          ) : (
+            <div className="overflow-x-auto -mx-8 sm:-mx-12">
+              <div className="inline-block min-w-full align-middle px-8 sm:px-12">
+                <table className="min-w-full text-left border-collapse">
+                  <thead>
+                    <tr className="border-b border-slate-100 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                      <th className="py-4 px-4 pl-0">Board Name</th>
+                      <th className="py-4 px-4">Website</th>
+                      <th className="py-4 px-4">Submitted By</th>
+                      <th className="py-4 px-4">Type</th>
+                      <th className="py-4 px-4">Claimed</th>
+                      <th className="py-4 px-4">Category</th>
+                      <th className="py-4 px-4">Date</th>
+                      <th className="py-4 px-4">Status</th>
+                      <th className="py-4 px-4 pr-0 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-50">
+                    {filteredSubmissions.map((sub) => {
+                      const dateStr = new Date(sub.submittedAt || sub.id).toLocaleDateString();
+                      return (
+                        <tr key={sub.id} className="text-sm font-medium text-slate-700 hover:bg-slate-50/50 transition-colors">
+                          <td className="py-5 px-4 pl-0 font-bold text-slate-900">
+                            {sub.boardName}
+                          </td>
+                          <td className="py-5 px-4">
+                            <a href={sub.websiteUrl} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-[#FF5630] font-bold text-xs truncate max-w-[120px] inline-block">
+                              {sub.websiteUrl.replace(/^https?:\/\/(www\.)?/, '')}
+                            </a>
+                          </td>
+                          <td className="py-5 px-4">
+                            <div className="text-xs font-bold text-slate-800">{sub.contactName}</div>
+                            <div className="text-[10px] text-slate-400">{sub.contactEmail}</div>
+                          </td>
+                          <td className="py-5 px-4 text-xs font-semibold text-slate-500">
+                            {sub.submitterType || "Community"}
+                          </td>
+                          <td className="py-5 px-4">
+                            {sub.claimListing ? (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-teal-50 text-teal-700 border border-teal-100">Yes</span>
+                            ) : (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-50 text-slate-400 border border-slate-100">No</span>
+                            )}
+                          </td>
+                          <td className="py-5 px-4 text-xs text-slate-500">
+                            {sub.category}
+                          </td>
+                          <td className="py-5 px-4 text-xs text-slate-400">
+                            {dateStr}
+                          </td>
+                          <td className="py-5 px-4">
+                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${
+                              (sub.status || "pending") === "pending"
+                                ? "bg-amber-50 text-amber-700 border-amber-100"
+                                : (sub.status === "approved" || sub.status === "verified")
+                                ? "bg-teal-50 text-teal-700 border-teal-100"
+                                : sub.status === "rejected"
+                                ? "bg-rose-50 text-rose-700 border-rose-100"
+                                : "bg-slate-100 text-slate-600 border-slate-200"
+                            }`}>
+                              {sub.status || "pending"}
+                            </span>
+                          </td>
+                          <td className="py-5 px-4 pr-0 text-right">
+                            <div className="flex items-center justify-end gap-2.5">
+                              <button onClick={() => setSelectedSubmission(sub)} className="text-xs font-bold text-slate-400 hover:text-slate-900 transition-colors">
+                                View
+                              </button>
+                              
+                              {(sub.status || "pending") === "pending" && (
+                                <>
+                                  <button onClick={() => handleStatusAction(sub.id, "approved")} className="text-xs font-bold text-teal-600 hover:text-teal-900 transition-colors">
+                                    Approve
+                                  </button>
+                                  <button onClick={() => handleStatusAction(sub.id, "rejected")} className="text-xs font-bold text-rose-600 hover:text-rose-900 transition-colors">
+                                    Reject
+                                  </button>
+                                  <button onClick={() => handleStatusAction(sub.id, "archived")} className="text-xs font-bold text-slate-400 hover:text-slate-700 transition-colors">
+                                    Archive
+                                  </button>
+                                </>
+                              )}
+                              
+                              {sub.status === "approved" && (
+                                <button onClick={() => handleStatusAction(sub.id, "archived")} className="text-xs font-bold text-slate-400 hover:text-slate-700 transition-colors">
+                                  Archive
+                                </button>
+                              )}
+                              
+                              {sub.status === "rejected" && (
+                                <>
+                                  <button onClick={() => handleStatusAction(sub.id, "pending")} className="text-xs font-bold text-slate-500 hover:text-slate-900 transition-colors">
+                                    Restore
+                                  </button>
+                                  <button onClick={() => handleStatusAction(sub.id, "archived")} className="text-xs font-bold text-slate-400 hover:text-slate-700 transition-colors">
+                                    Archive
+                                  </button>
+                                </>
+                              )}
+
+                              {sub.status === "archived" && (
+                                <>
+                                  <button onClick={() => handleStatusAction(sub.id, "pending")} className="text-xs font-bold text-slate-500 hover:text-slate-900 transition-colors">
+                                    Restore
+                                  </button>
+                                  <button onClick={() => handleHardDelete(sub.id)} className="text-xs font-bold text-red-600 hover:text-red-900 transition-colors">
+                                    Delete
+                                  </button>
+                                </>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
       {activeTab === "legalPages" && (
+
         <div className="bg-white p-8 rounded-[32px] border border-slate-100 shadow-xl max-w-3xl">
           <h2 className="text-xl font-bold mb-6">Legal Pages Content</h2>
           <form action={handleSaveLegal} className="space-y-8">
@@ -446,6 +693,244 @@ export default function AdminDashboard({ boards, editingBoard, editProsCons, edi
                   </button>
                 </div>
               ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Detailed View Modal */}
+      {selectedSubmission && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm overflow-y-auto">
+          <div className="bg-white w-full max-w-2xl rounded-[32px] border border-slate-100 shadow-2xl overflow-hidden my-8 animate-in fade-in zoom-in-95 duration-200">
+            {/* Modal Header */}
+            <div className="px-8 py-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+              <div>
+                <h3 className="text-lg font-black text-slate-900">Submission Details</h3>
+                <p className="text-xs text-slate-400 font-medium mt-1">Submitted on {new Date(selectedSubmission.submittedAt || selectedSubmission.id).toLocaleString()}</p>
+              </div>
+              <button 
+                onClick={() => setSelectedSubmission(null)}
+                className="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-505 hover:text-slate-900 flex items-center justify-center font-bold text-lg transition-colors"
+              >
+                &times;
+              </button>
+            </div>
+            
+            {/* Modal Body */}
+            <div className="px-8 py-6 space-y-6 max-h-[60vh] overflow-y-auto">
+              
+              {/* Submission Target Board Section */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Board Name</span>
+                  <span className="text-base font-black text-slate-900">{selectedSubmission.boardName}</span>
+                </div>
+                
+                <div>
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Website</span>
+                  <a 
+                    href={selectedSubmission.websiteUrl} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="text-sm font-bold text-[#FF5630] hover:underline break-all"
+                  >
+                    {selectedSubmission.websiteUrl}
+                  </a>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <div>
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Category</span>
+                  <span className="text-sm font-bold text-slate-700">{selectedSubmission.category}</span>
+                </div>
+                <div>
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Tool/Product Type</span>
+                  <span className="text-sm font-bold text-slate-700">{selectedSubmission.toolType || "Job Board"}</span>
+                </div>
+                <div>
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Best For</span>
+                  <span className="text-sm font-semibold text-slate-600">{selectedSubmission.bestFor}</span>
+                </div>
+              </div>
+
+              <div>
+                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Short Description</span>
+                <p className="text-sm text-slate-600 font-medium leading-relaxed bg-slate-50 p-4 rounded-2xl border border-slate-100/80">
+                  {selectedSubmission.shortDescription}
+                </p>
+              </div>
+
+              {/* Submitter & Verification Info */}
+              <div className="border-t border-slate-100 pt-6">
+                <h4 className="text-xs font-black text-slate-800 uppercase tracking-wider mb-4">Submitter Information</h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div>
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Contact Name</span>
+                    <span className="text-sm font-bold text-slate-900">{selectedSubmission.contactName}</span>
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Contact Email</span>
+                    <span className="text-sm font-bold text-slate-700">{selectedSubmission.contactEmail}</span>
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Submitter Type</span>
+                    <span className="text-sm font-semibold text-slate-600">{selectedSubmission.submitterType || "User / Community Member"}</span>
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">LinkedIn Company Page</span>
+                    {selectedSubmission.linkedinPage ? (
+                      <a 
+                        href={selectedSubmission.linkedinPage} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="text-sm font-bold text-slate-600 hover:text-[#FF5630] hover:underline break-all"
+                      >
+                        {selectedSubmission.linkedinPage}
+                      </a>
+                    ) : (
+                      <span className="text-sm font-medium text-slate-400">Not provided</span>
+                    )}
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Wants to Claim Profile</span>
+                    {selectedSubmission.claimListing ? (
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-teal-50 text-teal-700 border border-teal-100">
+                        Yes, represents company
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-slate-50 text-slate-400 border border-slate-100">
+                        No, community submission
+                      </span>
+                    )}
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Current Moderation Status</span>
+                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold border capitalize ${
+                      (selectedSubmission.status || "pending") === "pending"
+                        ? "bg-amber-50 text-amber-700 border-amber-100"
+                        : selectedSubmission.status === "approved"
+                        ? "bg-teal-50 text-teal-700 border-teal-100"
+                        : selectedSubmission.status === "rejected"
+                        ? "bg-rose-50 text-rose-700 border-rose-100"
+                        : "bg-slate-100 text-slate-600 border-slate-200"
+                    }`}>
+                      {selectedSubmission.status || "pending"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Pricing details */}
+              <div className="border-t border-slate-100 pt-6">
+                <h4 className="text-xs font-black text-slate-800 uppercase tracking-wider mb-4">Pricing & Target Information</h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div>
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Pricing Model</span>
+                    <span className="text-sm font-bold text-slate-700">{selectedSubmission.pricingModel || "Custom Pricing"}</span>
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Free Trial Available?</span>
+                    <span className="text-sm font-semibold text-slate-600">{selectedSubmission.freeTrial || "Not Sure"}</span>
+                  </div>
+                  <div className="sm:col-span-2">
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Pricing Information</span>
+                    <p className="text-sm text-slate-600 font-medium whitespace-pre-wrap leading-relaxed bg-slate-50 p-4 rounded-2xl border border-slate-100/80">
+                      {selectedSubmission.pricingInfo || "No pricing description provided."}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Target Audience */}
+              <div>
+                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Target Audience</span>
+                {selectedSubmission.targetAudience && selectedSubmission.targetAudience.length > 0 ? (
+                  <div className="flex flex-wrap gap-2">
+                    {selectedSubmission.targetAudience.map(aud => (
+                      <span key={aud} className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-600 border border-slate-200/50">
+                        {aud}
+                      </span>
+                    ))}
+                  </div>
+                ) : (
+                  <span className="text-sm font-medium text-slate-400">None specified</span>
+                )}
+              </div>
+
+            </div>
+
+            {/* Modal Footer (Actions) */}
+            <div className="px-8 py-6 bg-slate-50/50 border-t border-slate-100 flex flex-wrap gap-3 items-center justify-between">
+              <div>
+                <button 
+                  onClick={() => {
+                    handleHardDelete(selectedSubmission.id);
+                  }}
+                  className="px-4 py-2.5 bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 rounded-xl text-xs font-bold transition-all"
+                >
+                  Hard Delete
+                </button>
+              </div>
+
+              <div className="flex flex-wrap gap-2.5">
+                {(selectedSubmission.status || "pending") === "pending" && (
+                  <>
+                    <button 
+                      onClick={() => handleStatusAction(selectedSubmission.id, "approved")}
+                      className="px-4 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-bold transition-all"
+                    >
+                      Approve & Publish
+                    </button>
+                    <button 
+                      onClick={() => handleStatusAction(selectedSubmission.id, "rejected")}
+                      className="px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-bold transition-all"
+                    >
+                      Reject
+                    </button>
+                    <button 
+                      onClick={() => handleStatusAction(selectedSubmission.id, "archived")}
+                      className="px-4 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl text-xs font-bold transition-all"
+                    >
+                      Archive
+                    </button>
+                  </>
+                )}
+
+                {selectedSubmission.status === "approved" && (
+                  <button 
+                    onClick={() => handleStatusAction(selectedSubmission.id, "archived")}
+                    className="px-4 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl text-xs font-bold transition-all"
+                  >
+                    Archive Profile
+                  </button>
+                )}
+
+                {(selectedSubmission.status === "rejected" || selectedSubmission.status === "archived") && (
+                  <button 
+                    onClick={() => handleStatusAction(selectedSubmission.id, "pending")}
+                    className="px-4 py-2.5 bg-slate-600 hover:bg-slate-700 text-white rounded-xl text-xs font-bold transition-all"
+                  >
+                    Restore to Pending
+                  </button>
+                )}
+
+                {selectedSubmission.status === "rejected" && (
+                  <button 
+                    onClick={() => handleStatusAction(selectedSubmission.id, "archived")}
+                    className="px-4 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl text-xs font-bold transition-all"
+                  >
+                    Archive
+                  </button>
+                )}
+
+                <button 
+                  onClick={() => setSelectedSubmission(null)}
+                  className="px-4 py-2.5 bg-white border border-slate-200 hover:border-slate-300 text-slate-700 rounded-xl text-xs font-bold transition-all"
+                >
+                  Close
+                </button>
+              </div>
             </div>
           </div>
         </div>

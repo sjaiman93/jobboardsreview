@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import { getAllBoards, getAllCategories } from "@/data/jobBoards";
 import JobBoardCard from "@/components/JobBoardCard";
 import CategoryFilter from "@/components/CategoryFilter";
+import CustomSelect from "@/components/CustomSelect";
 
 export default function DirectoryPage() {
   const boards = getAllBoards();
@@ -14,9 +15,12 @@ export default function DirectoryPage() {
   const [selectedPricing, setSelectedPricing] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [filterOpen, setFilterOpen] = useState(false);
+  const [sortBy, setSortBy] = useState("Most Relevant");
+
+  const sortOptions = ["Most Relevant", "Community Rating", "Newest Added"];
 
   const filtered = useMemo(() => {
-    return boards.filter((b) => {
+    const list = boards.filter((b) => {
       const matchCat = selectedCategory === "all" || b.categorySlug === selectedCategory;
       const matchPrice = selectedPricing === "all" || b.pricingModel === selectedPricing;
       const matchSearch =
@@ -25,7 +29,15 @@ export default function DirectoryPage() {
         b.shortDescription.toLowerCase().includes(searchQuery.toLowerCase());
       return matchCat && matchPrice && matchSearch;
     });
-  }, [boards, selectedCategory, selectedPricing, searchQuery]);
+
+    if (sortBy === "Community Rating") {
+      return [...list].sort((a, b) => (b.rating || 0) - (a.rating || 0));
+    }
+    if (sortBy === "Newest Added") {
+      return [...list].sort((a, b) => (b.id || 0) - (a.id || 0));
+    }
+    return list;
+  }, [boards, selectedCategory, selectedPricing, searchQuery, sortBy]);
 
   const activeFilterCount =
     (selectedCategory !== "all" ? 1 : 0) + (selectedPricing !== "all" ? 1 : 0);
@@ -170,12 +182,15 @@ export default function DirectoryPage() {
                 Showing <span className="text-slate-900 font-black">{filtered.length}</span> job board{filtered.length !== 1 ? "s" : ""}
               </div>
               <div className="flex items-center gap-4">
-                <span className="text-sm font-black text-slate-400 uppercase tracking-widest">Sort by:</span>
-                <select className="bg-transparent font-bold text-slate-900 border-none outline-none cursor-pointer min-h-[44px]">
-                  <option>Most Relevant</option>
-                  <option>Community Rating</option>
-                  <option>Newest Added</option>
-                </select>
+                <span className="text-sm font-black text-slate-400 uppercase tracking-widest shrink-0">Sort by:</span>
+                <CustomSelect
+                  options={sortOptions}
+                  value={sortBy}
+                  onChange={setSortBy}
+                  placeholder="Sort by..."
+                  className="w-48"
+                  triggerClassName="!bg-transparent !border-none !px-2 !py-2 !text-slate-900 !font-bold"
+                />
               </div>
             </div>
 

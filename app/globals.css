@@ -27,6 +27,69 @@
   ::selection {
     @apply bg-coral-500 text-white;
   }
+
+  /* Custom styled checkboxes and radio inputs to remove default browser blue states */
+  input[type="checkbox"],
+  input[type="radio"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    display: inline-block;
+    vertical-align: middle;
+    background-origin: border-box;
+    user-select: none;
+    flex-shrink: 0;
+    height: 1.25rem; /* w-5 */
+    width: 1.25rem; /* h-5 */
+    color: #0f172a; /* slate-900 */
+    background-color: #ffffff;
+    border: 2px solid #e2e8f0; /* border-slate-200 */
+    transition: all 0.2s ease-in-out;
+  }
+
+  input[type="checkbox"] {
+    border-radius: 0.375rem; /* rounded-md */
+  }
+
+  input[type="radio"] {
+    border-radius: 9999px; /* rounded-full */
+  }
+
+  input[type="checkbox"]:hover,
+  input[type="radio"]:hover {
+    border-color: #cbd5e1; /* border-slate-300 */
+  }
+
+  input[type="checkbox"]:focus,
+  input[type="radio"]:focus {
+    outline: none;
+    border-color: #0f172a; /* slate-900 */
+    box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.15); /* focus outline matching slate-900 focus style */
+  }
+
+  input[type="checkbox"]:checked {
+    background-color: #0f172a;
+    border-color: #0f172a;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M14 7L8.5 12.5L6 10' stroke='%23ffffff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  }
+
+  input[type="radio"]:checked {
+    background-color: #0f172a;
+    border-color: #0f172a;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Ccircle cx='10' cy='10' r='4' fill='%23ffffff'/%3E%3C/svg%3E");
+  }
+
+  select:focus {
+    outline: none;
+    border-color: #0f172a !important;
+    box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.15) !important;
+  }
 }
 
 @layer components {
