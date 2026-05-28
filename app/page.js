@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getAllBoards } from "@/data/jobBoards";
 import JobBoardCard from "@/components/JobBoardCard";
 import EmailCapture from "@/components/EmailCapture";
+import RotatingInsightCard from "@/components/RotatingInsightCard";
 
 export const metadata = {
   title: "JobBoardsReview | Compare & Review Job Boards",
@@ -16,24 +17,22 @@ export default function HomePage() {
   return (
     <>
       {/* ─── Hero Section ─── */}
-      <section className="relative pt-24 pb-48 overflow-hidden">
+      <section className="relative pt-24 pb-40 overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-16 items-center relative z-10">
           <div className="lg:col-span-7">
             <div className="inline-flex items-center gap-2 py-2 px-4 bg-teal-50 text-teal-700 text-xs font-bold tracking-wider uppercase rounded-xl mb-6 border border-teal-100">
               <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 9.134a1 1 0 010 1.732l-3.354 1.935-1.18 4.455a1 1 0 01-1.933 0L9.854 12.8 6.5 10.866a1 1 0 010-1.732l3.354-1.935 1.18-4.455A1 1 0 0112 2z" />
               </svg>
-              100% Verified Community Insights
+              Community-Sourced Recruiting Insights
             </div>
-            <h1 className="text-6xl lg:text-[84px] font-black text-slate-900 leading-[0.75] tracking-tight mb-6 flex flex-col">
-              <span>Hiring at</span>
-              <span className="mt-[-16px] lg:mt-[-32px]"><span className="text-[#FF5630]">jobboardsreview.com</span>:</span>
-              <span className="mt-[-16px] lg:mt-[-32px]"><span className="scribble-underline">better talent</span></span>
-              <span className="mt-[-16px] lg:mt-[-32px]">without the</span>
-              <span className="mt-[-16px] lg:mt-[-32px]">guesswork.</span>
+            <h1 className="text-6xl lg:text-[84px] font-black text-slate-900 leading-[0.95] lg:leading-[0.9] tracking-tight mb-8">
+              Choose the Right<br />
+              <span className="text-[#FF5630]">Recruiting Tools</span><br />
+              Before You <span className="scribble-underline">Spend</span>
             </h1>
-            <p className="text-xl text-slate-500 mb-12 leading-relaxed max-w-xl font-medium">
-              Stop burning recruitment budget on blind intuition. Access the definitive database of job board performance, cost, and candidate quality.
+            <p className="text-xl text-slate-500 mb-10 leading-relaxed max-w-xl font-medium">
+              Compare job boards, ATS platforms, and AI recruiting tools based on recruiter insights, pricing, features, and real-world recruiting workflows.
             </p>
             <div className="flex flex-wrap gap-5">
               <Link
@@ -61,30 +60,8 @@ export default function HomePage() {
               <div className="absolute -inset-10 bg-amber-100/30 rounded-[4rem] -rotate-6 -z-10"></div>
               <div className="absolute -inset-10 bg-teal-50/30 rounded-[4rem] rotate-3 -z-20"></div>
 
-              {/* Testimonial Card */}
-              <div className="bg-white p-6 rounded-[40px] shadow-2xl border border-slate-100 relative z-20 max-w-sm">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-12 h-12 bg-slate-900 rounded-xl flex items-center justify-center text-white text-xl">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <div className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-1">Verified Lead</div>
-                    <div className="text-xl font-black">Sr. Recruiter @ Stripe</div>
-                  </div>
-                </div>
-                <p className="text-slate-600 italic leading-relaxed mb-6 font-medium">
-                  &ldquo;JobBoardsReview saved us over $12k this quarter by steering us away from low-conversion tech boards. The applicant quality data is a goldmine.&rdquo;
-                </p>
-                <div className="flex text-amber-400 gap-1">
-                  {[...Array(5)].map((_, i) => (
-                    <svg key={i} className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  ))}
-                </div>
-              </div>
+              {/* Rotating JBR Insight Card */}
+              <RotatingInsightCard />
             </div>
           </div>
         </div>
@@ -158,7 +135,7 @@ export default function HomePage() {
                       </svg>
                     ),
                     title: "Proof of Intent",
-                    desc: "We don't just ask for ratings; we track actual hire conversions shared by TA leaders. Verified and validated.",
+                    desc: "Evaluate recruiting platforms using structured insights, feature breakdowns, and peer-driven intelligence from the recruiting community.",
                     colors: "bg-[#FF5630]/5 text-[#FF5630] group-hover:bg-[#FF5630] group-hover:text-white",
                   },
                   {
@@ -205,13 +182,7 @@ export default function HomePage() {
                   <p className="text-3xl font-medium text-slate-700 leading-tight mb-12 italic">
                     &ldquo;JobBoardsReview is the only platform that treats job boards with the rigor they deserve. It&apos;s the destination for recruitment intelligence, built by TA pros for TA pros.&rdquo;
                   </p>
-                  <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 bg-slate-200 rounded-full"></div>
-                    <div>
-                      <div className="text-xl font-black">Marcus Thorne</div>
-                      <div className="text-slate-400 font-bold uppercase tracking-widest text-xs">VP Talent @ Hubspot</div>
-                    </div>
-                  </div>
+                  <div className="text-xl font-black">JobBoardsReview</div>
                 </div>
               </div>
             </div>
