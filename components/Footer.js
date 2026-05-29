@@ -48,7 +48,7 @@ export default function Footer() {
               </span>
             </Link>
             <p className="text-xl text-slate-500 font-medium max-w-sm mb-12 leading-relaxed">
-              Empowering the recruitment community with radical transparency and peer-verified intelligence.
+              Helping recruitment teams discover, compare, and evaluate hiring technology with confidence.
             </p>
             <div className="flex gap-5">
               {/* Social Icons */}
@@ -102,7 +102,7 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="pt-12 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-6 text-slate-400 font-bold">
-          <p>© 2025 JobBoardsReview. All rights reserved.</p>
+          <p>© 2026 JobBoardsReview. All rights reserved.</p>
           <div className="flex gap-8">
             {[
               { label: "Terms", href: "/terms" },

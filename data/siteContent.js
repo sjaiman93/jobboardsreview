@@ -9,8 +9,8 @@ export const siteContent = {
     "heroTitle": "Hiring at jobboardsreview.com",
     "heroSubtitle": "better talent without the guesswork.",
     "highlightText": "100% Verified Community Insights",
-    "footerText": "Empowering the recruitment community with radical transparency and peer-verified intelligence.",
-    "copyrightText": "© 2025 JobBoardsReview. All rights reserved."
+    "footerText": "Helping recruitment teams discover, compare, and evaluate hiring technology with confidence.",
+    "copyrightText": "© 2026 JobBoardsReview. All rights reserved."
   }
 };
 
