@@ -13,15 +13,14 @@ export default function Footer() {
         { href: "/directory", label: "Directory" },
         { href: "/categories", label: "Categories" },
         { href: "/compare", label: "Compare" },
-        { href: "/directory", label: "Trends" },
+        { href: "/", label: "Trends" },
       ],
     },
     {
       title: "For Boards",
       links: [
         { href: "/claim-listing", label: "List Your Board" },
-        { href: "#", label: "Advertise" },
-        { href: "#", label: "Partners" },
+        { href: "/", label: "Advertise" },
       ],
     },
     {
@@ -103,7 +102,7 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="pt-12 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-6 text-slate-400 font-bold">
-          <p>© 2024 JobBoardsReview Inc. Built with love in London.</p>
+          <p>© 2025 JobBoardsReview. All rights reserved.</p>
           <div className="flex gap-8">
             {[
               { label: "Terms", href: "/terms" },

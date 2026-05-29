@@ -10,7 +10,7 @@ export const siteContent = {
     "heroSubtitle": "better talent without the guesswork.",
     "highlightText": "100% Verified Community Insights",
     "footerText": "Empowering the recruitment community with radical transparency and peer-verified intelligence.",
-    "copyrightText": "© 2024 JobBoardsReview Inc. Built with love in London."
+    "copyrightText": "© 2025 JobBoardsReview. All rights reserved."
   }
 };
 

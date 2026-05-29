@@ -86,11 +86,11 @@ export default function HomePage() {
           <div className="flex flex-col md:flex-row items-baseline justify-between mb-24 gap-6">
             <div className="max-w-xl">
               <h2 className="text-5xl font-black text-slate-900 mb-6">
-                Market leaders <br />
-                <span className="font-light italic text-[#FF5630]">performing right now</span>
+                Recruitment Platforms <br />
+                <span className="font-light italic text-[#FF5630]">that power hiring</span>
               </h2>
               <p className="text-lg text-slate-500 font-medium">
-                We track live conversion data and recruiter sentiment to find the gems.
+                Explore job boards, ATS software, and AI recruiting tools through structured research and side-by-side comparisons.
               </p>
             </div>
             <div className="relative">
@@ -98,7 +98,7 @@ export default function HomePage() {
                 href="/directory"
                 className="text-slate-900 text-xl font-black underline decoration-slate-900 decoration-4 underline-offset-8 hover:text-[#FF5630] hover:decoration-[#FF5630] transition-colors"
               >
-                Browse 500+ Boards
+                Browse {boards.length} Boards
               </Link>
               {/* Hand-drawn arrow SVG */}
               <svg className="absolute -right-20 -top-8 text-[#FF5630] hidden lg:block" width="80" height="60" viewBox="0 0 80 60" fill="none">
