@@ -32,21 +32,29 @@ export async function saveOptimizerSubmissionAction(payload) {
     }
 
     const numSpend = Number(spend);
-    const numApps = Number(applications);
-    const numInterviews = Number(interviews);
     const numPlacements = Number(placements);
 
     if (isNaN(numSpend) || numSpend <= 0) {
       return { success: false, error: "Monthly spend must be a positive number." };
     }
-    if (isNaN(numApps) || numApps < 0) {
-      return { success: false, error: "Applications count must be a non-negative number." };
-    }
-    if (isNaN(numInterviews) || numInterviews < 0) {
-      return { success: false, error: "Interviews count must be a non-negative number." };
-    }
     if (isNaN(numPlacements) || numPlacements < 0) {
       return { success: false, error: "Placements count must be a non-negative number." };
+    }
+
+    let numApps = null;
+    if (applications !== undefined && applications !== null && applications !== "") {
+      numApps = Number(applications);
+      if (isNaN(numApps) || numApps < 0) {
+        return { success: false, error: "Applications count must be a non-negative number." };
+      }
+    }
+
+    let numInterviews = null;
+    if (interviews !== undefined && interviews !== null && interviews !== "") {
+      numInterviews = Number(interviews);
+      if (isNaN(numInterviews) || numInterviews < 0) {
+        return { success: false, error: "Interviews count must be a non-negative number." };
+      }
     }
 
     // Additional validations based on userType

@@ -76,5 +76,57 @@
       "roi": 260,
       "savings": null
     }
+  },
+  {
+    "id": 1780228497496,
+    "timestamp": "2026-05-31T11:54:57.496Z",
+    "boardSlug": "alliedhealthjobcafe",
+    "boardName": "AlliedHealthJobCafe",
+    "sourceLocation": "header",
+    "userType": "agency",
+    "inputs": {
+      "spend": 1000,
+      "applications": 200,
+      "interviews": 10,
+      "placements": 2,
+      "placementFee": 3600,
+      "margin": 20,
+      "costPerHour": null
+    },
+    "results": {
+      "costPerApplication": 5,
+      "costPerInterview": 100,
+      "costPerPlacement": 500,
+      "revenue": 7200,
+      "profit": 440,
+      "roi": 44,
+      "savings": null
+    }
+  },
+  {
+    "id": 1780228719633,
+    "timestamp": "2026-05-31T11:58:39.633Z",
+    "boardSlug": "alliedhealthjobcafe",
+    "boardName": "AlliedHealthJobCafe",
+    "sourceLocation": "header",
+    "userType": "agency",
+    "inputs": {
+      "spend": 1000,
+      "applications": 200,
+      "interviews": 10,
+      "placements": 2,
+      "placementFee": 3600,
+      "margin": 20,
+      "costPerHour": null
+    },
+    "results": {
+      "costPerApplication": 5,
+      "costPerInterview": 100,
+      "costPerPlacement": 500,
+      "revenue": 7200,
+      "profit": 440,
+      "roi": 44,
+      "savings": null
+    }
   }
 ]

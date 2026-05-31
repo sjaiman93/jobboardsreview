@@ -64,7 +64,7 @@ export function generateBudgetPDF(data) {
   doc.setTextColor(...primaryColor);
   doc.setFont("Helvetica", "bold");
   doc.setFontSize(18);
-  doc.text("Hiring Budget Performance Report", margin, y);
+  doc.text("JobBoardsReview Hiring Budget Analysis", margin, y);
 
   y += 6.5;
   doc.setFont("Helvetica", "normal");
@@ -85,8 +85,16 @@ export function generateBudgetPDF(data) {
   doc.text("Report Parameters Summary", margin, y);
 
   y += 5.5;
+  const hasPreparedBy = data.preparedBy && data.preparedBy.trim() !== "";
+  const hasPreparedFor = data.preparedFor && data.preparedFor.trim() !== "";
+  
+  let boxHeight = 20;
+  if (hasPreparedBy || hasPreparedFor) {
+    boxHeight = 32;
+  }
+
   doc.setFillColor(...lightBg);
-  doc.rect(margin, y, contentW, 20, "F");
+  doc.rect(margin, y, contentW, boxHeight, "F");
 
   doc.setFont("Helvetica", "normal");
   doc.setFontSize(9);
@@ -108,8 +116,31 @@ export function generateBudgetPDF(data) {
   else if (data.sourceLocation === "footer") srcLabel = "Footer Navigation";
   doc.text(srcLabel, margin + 128, y + 13.5);
 
+  // Draw Prepared By / Prepared For side-by-side in columns, with labels and values stacked vertically
+  if (hasPreparedBy) {
+    doc.setFont("Helvetica", "normal");
+    doc.setTextColor(...mutedColor);
+    doc.setFontSize(9);
+    doc.text("Prepared By:", margin + 5, y + 20.5);
+    
+    doc.setFont("Helvetica", "bold");
+    doc.setTextColor(...primaryColor);
+    doc.text(data.preparedBy.trim(), margin + 5, y + 26);
+  }
+  
+  if (hasPreparedFor) {
+    doc.setFont("Helvetica", "normal");
+    doc.setTextColor(...mutedColor);
+    doc.setFontSize(9);
+    doc.text("Prepared For:", margin + 90, y + 20.5);
+    
+    doc.setFont("Helvetica", "bold");
+    doc.setTextColor(...primaryColor);
+    doc.text(data.preparedFor.trim(), margin + 90, y + 26);
+  }
+
   // Section: Executive Summary
-  y += 30;
+  y += boxHeight + 10;
   doc.setTextColor(...primaryColor);
   doc.setFont("Helvetica", "bold");
   doc.setFontSize(12);
@@ -129,39 +160,47 @@ export function generateBudgetPDF(data) {
   doc.line(margin, y, pageW - margin, y);
 
   // Section: Funnel Efficiency
-  y += 10;
-  doc.setTextColor(...primaryColor);
-  doc.setFont("Helvetica", "bold");
-  doc.setFontSize(12);
-  doc.text("Recruitment Funnel Metrics", margin, y);
+  const hasFunnel = data.applications !== null && data.applications !== undefined && data.applications !== "" &&
+                    data.interviews !== null && data.interviews !== undefined && data.interviews !== "";
 
-  y += 6;
-  doc.setFillColor(...lightBg);
-  doc.rect(margin, y, contentW, 28, "F");
+  if (hasFunnel) {
+    y += 10;
+    doc.setTextColor(...primaryColor);
+    doc.setFont("Helvetica", "bold");
+    doc.setFontSize(12);
+    doc.text("Recruitment Funnel Metrics", margin, y);
 
-  doc.setFont("Helvetica", "bold");
-  doc.setFontSize(8.5);
-  doc.setTextColor(...mutedColor);
-  doc.text("FUNNEL LEVEL", margin + 6, y + 6.5);
-  doc.text("METRIC VOLUME", margin + 65, y + 6.5);
-  doc.text("CONVERSION YIELD %", margin + 115, y + 6.5);
+    y += 6;
+    doc.setFillColor(...lightBg);
+    doc.rect(margin, y, contentW, 28, "F");
 
-  doc.setFont("Helvetica", "normal");
-  doc.setTextColor(...primaryColor);
-  doc.text("Applications Stage", margin + 6, y + 13);
-  doc.text(String(data.applications), margin + 65, y + 13);
-  doc.text("100% (Baseline)", margin + 115, y + 13);
+    doc.setFont("Helvetica", "bold");
+    doc.setFontSize(8.5);
+    doc.setTextColor(...mutedColor);
+    doc.text("FUNNEL LEVEL", margin + 6, y + 6.5);
+    doc.text("METRIC VOLUME", margin + 65, y + 6.5);
+    doc.text("CONVERSION YIELD %", margin + 115, y + 6.5);
 
-  doc.text("Interviews Stage", margin + 6, y + 18.5);
-  doc.text(String(data.interviews), margin + 65, y + 18.5);
-  doc.text(`${data.funnel.appToInterviewPct}% conversion (Apps to Interviews)`, margin + 115, y + 18.5);
+    doc.setFont("Helvetica", "normal");
+    doc.setTextColor(...primaryColor);
+    doc.text("Applications Stage", margin + 6, y + 13);
+    doc.text(String(data.applications), margin + 65, y + 13);
+    doc.text("100% (Baseline)", margin + 115, y + 13);
 
-  doc.text("Placements Stage", margin + 6, y + 24);
-  doc.text(String(data.placements), margin + 65, y + 24);
-  doc.text(`${data.funnel.interviewToPlacementPct}% conversion (Interviews to Placements)`, margin + 115, y + 24);
+    doc.text("Interviews Stage", margin + 6, y + 18.5);
+    doc.text(String(data.interviews), margin + 65, y + 18.5);
+    doc.text(`${data.funnel.appToInterviewPct}% conversion (Apps to Interviews)`, margin + 115, y + 18.5);
+
+    doc.text("Placements Stage", margin + 6, y + 24);
+    doc.text(String(data.placements), margin + 65, y + 24);
+    doc.text(`${data.funnel.interviewToPlacementPct}% conversion (Interviews to Placements)`, margin + 115, y + 24);
+
+    y += 38; // 28 height + 10 spacing
+  } else {
+    y += 10;
+  }
 
   // Section: Metrics Details Table
-  y += 38;
   doc.setTextColor(...primaryColor);
   doc.setFont("Helvetica", "bold");
   doc.setFontSize(12);
@@ -180,19 +219,28 @@ export function generateBudgetPDF(data) {
   doc.text("Functional Definition", margin + 110, y + 5);
 
   const formatCurrency = (val) =>
-    new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      maximumFractionDigits: 0,
-    }).format(val);
+    val === null || val === undefined
+      ? "N/A"
+      : new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "USD",
+          maximumFractionDigits: 0,
+        }).format(val);
 
   // Construct list of performance parameters to draw in table rows
   const tableData = [
     { label: "Total Monthly Spend", val: formatCurrency(data.spend), desc: "Total recruiting cost on this channel" },
-    { label: "Cost Per Application", val: formatCurrency(data.costPerApplication), desc: "Spend divided by applications volume" },
-    { label: "Cost Per Interview", val: formatCurrency(data.costPerInterview), desc: "Spend divided by interviews volume" },
-    { label: "Cost Per Placement (Cost per Hire)", val: formatCurrency(data.costPerPlacement), desc: "Spend divided by placements volume" },
   ];
+
+  if (data.applications !== null && data.applications !== undefined && data.applications !== "") {
+    tableData.push({ label: "Cost Per Application", val: formatCurrency(data.costPerApplication), desc: "Spend divided by applications volume" });
+  }
+
+  if (data.interviews !== null && data.interviews !== undefined && data.interviews !== "") {
+    tableData.push({ label: "Cost Per Interview", val: formatCurrency(data.costPerInterview), desc: "Spend divided by interviews volume" });
+  }
+
+  tableData.push({ label: "Cost Per Placement (Cost per Hire)", val: formatCurrency(data.costPerPlacement), desc: "Spend divided by placements volume" });
 
   if (data.userType === "agency") {
     tableData.push(
@@ -242,7 +290,7 @@ export function generateBudgetPDF(data) {
   doc.setFontSize(7.5);
   doc.setTextColor(...mutedColor);
   doc.text("JobBoardsReview Recruitment Intelligence — Professional Spend Report", margin, footerY + 5.5);
-  doc.text("CONFIDENTIAL INTERNAL REPORT", pageW - margin, footerY + 5.5, { align: "right" });
+  doc.text("Generated by JobBoardsReview", pageW - margin, footerY + 5.5, { align: "right" });
 
   // Download PDF
   const filename = `JobBoardsReview_Hiring_Budget_Analysis_${data.boardName.replace(/[^a-zA-Z0-9]/g, "_")}.pdf`;

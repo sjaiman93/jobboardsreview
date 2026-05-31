@@ -35,6 +35,10 @@ function OptimizerContent() {
   // Corporate specific
   const [costPerHour, setCostPerHour] = useState("");
 
+  // Report personalization (post-analysis)
+  const [preparedBy, setPreparedBy] = useState("");
+  const [preparedFor, setPreparedFor] = useState("");
+
   // Errors and Status
   const [errors, setErrors] = useState({});
   const [isCalculating, setIsCalculating] = useState(false);
@@ -117,6 +121,8 @@ function OptimizerContent() {
       setMargin("25");
       activeTargetCost = "";
       setCostPerHour("");
+      setPreparedBy("Acme Staffing");
+      setPreparedFor("CFO Review Meeting");
     }
 
     // Resolve Board Name
@@ -132,20 +138,29 @@ function OptimizerContent() {
     }
     
     const numSpend = Number(activeSpend);
-    const numApps = Number(activeApps);
-    const numInterviews = Number(activeInterviews);
     const numPlacements = Number(activePlacements);
 
-    if (!activeSpend || isNaN(numSpend) || numSpend <= 0) {
+    if (activeSpend === "" || isNaN(numSpend) || numSpend <= 0) {
       newErrors.spend = "Monthly spend must be a positive number.";
     }
-    if (!activeApps || isNaN(numApps) || numApps < 0) {
-      newErrors.applications = "Applications must be a positive number or zero.";
+    
+    let numApps = null;
+    if (activeApps !== "") {
+      numApps = Number(activeApps);
+      if (isNaN(numApps) || numApps < 0) {
+        newErrors.applications = "Applications must be a positive number or zero.";
+      }
     }
-    if (!activeInterviews || isNaN(numInterviews) || numInterviews < 0) {
-      newErrors.interviews = "Interviews must be a positive number or zero.";
+
+    let numInterviews = null;
+    if (activeInterviews !== "") {
+      numInterviews = Number(activeInterviews);
+      if (isNaN(numInterviews) || numInterviews < 0) {
+        newErrors.interviews = "Interviews must be a positive number or zero.";
+      }
     }
-    if (!activePlacements || isNaN(numPlacements) || numPlacements < 0) {
+
+    if (activePlacements === "" || isNaN(numPlacements) || numPlacements < 0) {
       newErrors.placements = "Placements must be a positive number or zero.";
     }
 
@@ -174,15 +189,19 @@ function OptimizerContent() {
     }
 
     // ─── Mathematical Calculations ───
-    const costPerApp = numApps > 0 ? numSpend / numApps : numSpend;
-    const costPerInt = numInterviews > 0 ? numSpend / numInterviews : numSpend;
+    const costPerApp = (numApps !== null && numApps > 0) ? numSpend / numApps : null;
+    const costPerInt = (numInterviews !== null && numInterviews > 0) ? numSpend / numInterviews : null;
     const costPerPlacement = numPlacements > 0 ? numSpend / numPlacements : numSpend;
 
     // Conversion rates
-    const appToInterviewPct = numApps > 0 ? ((numInterviews / numApps) * 100).toFixed(1) : "0.0";
-    const interviewToPlacementPct = numInterviews > 0 ? ((numPlacements / numInterviews) * 100).toFixed(1) : "0.0";
-    const appDropOffPct = (100 - parseFloat(appToInterviewPct)).toFixed(1);
-    const intDropOffPct = (100 - parseFloat(interviewToPlacementPct)).toFixed(1);
+    const hasApps = numApps !== null;
+    const hasInterviews = numInterviews !== null;
+    const hasFunnel = hasApps && hasInterviews;
+
+    const appToInterviewPct = (hasFunnel && numApps > 0) ? ((numInterviews / numApps) * 100).toFixed(1) : null;
+    const interviewToPlacementPct = (hasFunnel && numInterviews > 0) ? ((numPlacements / numInterviews) * 100).toFixed(1) : null;
+    const appDropOffPct = appToInterviewPct !== null ? (100 - parseFloat(appToInterviewPct)).toFixed(1) : null;
+    const intDropOffPct = interviewToPlacementPct !== null ? (100 - parseFloat(interviewToPlacementPct)).toFixed(1) : null;
 
     let revenue = 0;
     let profit = 0;
@@ -243,7 +262,11 @@ function OptimizerContent() {
             Number(activeTargetCost)
           )}, this channel exceeded target spend parameters by ${formatCurrency(
             Math.abs(savings)
-          )} (efficiency variance: ${roi.toFixed(1)}%). We recommend analyzing drop-off ratios to improve applicant-to-interview rates.`;
+          )} (efficiency variance: ${roi.toFixed(1)}%). We recommend ${
+            hasFunnel
+              ? "analyzing drop-off ratios to improve applicant-to-interview rates."
+              : "auditing channel placement parameters and volume yield to improve cost-efficiency."
+          }`;
         } else {
           summaryText += `The channel cost per hire aligns exactly with your cost target threshold of ${formatCurrency(
             Number(activeTargetCost)
@@ -331,7 +354,11 @@ function OptimizerContent() {
     if (!results) return;
     try {
       const { generateBudgetPDF } = await import("./pdfGenerator");
-      generateBudgetPDF(results);
+      generateBudgetPDF({
+        ...results,
+        preparedBy,
+        preparedFor,
+      });
     } catch (err) {
       console.error("Failed to generate PDF:", err);
     }
@@ -346,6 +373,8 @@ function OptimizerContent() {
     setPlacementFee("");
     setMargin("");
     setCostPerHour("");
+    setPreparedBy("");
+    setPreparedFor("");
     setErrors({});
   };
 
@@ -401,7 +430,7 @@ function OptimizerContent() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2m3 2v-4m3 2v-6m-9-4h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-black text-slate-900 mb-2">V1 Recruiting Intelligence</h3>
+              <h3 className="text-xl font-black text-slate-900 mb-2">Budget Intelligence</h3>
               <p className="text-sm text-slate-500 font-medium leading-relaxed">
                 Structured channel analysis designed to replace fragile budget spreadsheets.
               </p>
@@ -415,26 +444,26 @@ function OptimizerContent() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
             
-            {/* Left Column: Education and Timeline */}
-            <div className="lg:col-span-5 space-y-10">
+            {/* Left Column: Education */}
+            <div className="lg:col-span-5 space-y-8">
               <div>
-                <h2 className="text-3xl font-black text-slate-900 mb-6">Why analyze recruiting spend?</h2>
-                <p className="text-slate-500 font-medium leading-relaxed">
-                  Recruiters and staffing agencies spend millions on job boards and platforms without understanding their actual yield. Evaluated spend analysis aligns vendor billing with actual hires.
+                <h2 className="text-3xl font-black text-slate-900 mb-4">Why analyze recruiting spend?</h2>
+                <p className="text-slate-500 font-medium leading-relaxed text-sm">
+                  Evaluate recruitment channel yield to align vendor spend with hires. Track cost parameters and justify talent budgets with exact metrics.
                 </p>
               </div>
 
-              <div className="space-y-6">
+              <div className="space-y-4">
                 <h3 className="text-lg font-black text-slate-900">Key Outcomes</h3>
-                <ul className="space-y-4">
+                <ul className="space-y-3">
                   {[
                     "Identify low-yield vendor sources wasting budget.",
                     "Audit Cost Per Placement to justify talent resources.",
-                    "Provide hiring teams with structured, meeting-ready channel reports.",
-                    "Strengthen vendor renewal negotiations with exact yield numbers."
+                    "Generate meeting-ready channel reports.",
+                    "Strengthen vendor renewal negotiations."
                   ].map((text, idx) => (
-                    <li key={idx} className="flex items-start gap-3.5 text-sm text-slate-600 font-medium leading-relaxed">
-                      <svg className="w-5 h-5 text-teal-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <li key={idx} className="flex items-start gap-3 text-sm text-slate-600 font-medium leading-relaxed">
+                      <svg className="w-4 h-4 text-teal-500 shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                       </svg>
                       {text}
@@ -442,30 +471,16 @@ function OptimizerContent() {
                   ))}
                 </ul>
               </div>
-
-              {/* Visual Process Timeline */}
-              <div className="bg-[#F9F6F0] p-8 rounded-3xl border border-slate-200/50 space-y-6">
-                <h4 className="text-sm font-black text-slate-400 uppercase tracking-widest">Analysis Process</h4>
-                <div className="relative border-l-2 border-slate-200 pl-6 ml-2.5 space-y-8">
-                  {[
-                    { title: "Select Profile", desc: "Select between Staffing Agency and Corporate settings." },
-                    { title: "Choose Channel", desc: "Choose a directory job board or input a custom source." },
-                    { title: "Enter Metrics", desc: "Input spend, applicant count, interviews, and placements." },
-                    { title: "Review & Export", desc: "Inspect metrics cards, and download a professional PDF." }
-                  ].map((step, idx) => (
-                    <div key={idx} className="relative">
-                      <div className="absolute -left-[33px] top-0.5 w-4 h-4 rounded-full bg-slate-900 border-4 border-white flex items-center justify-center"></div>
-                      <h5 className="font-black text-sm text-slate-900 mb-1">{step.title}</h5>
-                      <p className="text-xs text-slate-500 font-medium leading-relaxed">{step.desc}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
             </div>
 
             {/* Right Column: Optimizer Panel */}
             <div className="lg:col-span-7 bg-white p-8 sm:p-10 rounded-[36px] border border-slate-100 card-shadow space-y-10">
-              <h2 className="text-2xl font-black text-slate-900">Optimizer Panel</h2>
+              <div>
+                <h2 className="text-2xl font-black text-slate-900 mb-3">Optimizer Panel</h2>
+                <p className="text-xs text-slate-400 font-bold leading-relaxed">
+                  Your data is stored anonymously to help improve JobBoardsReview's recruitment intelligence platform. No personally identifiable information is retained.
+                </p>
+              </div>
 
               <form onSubmit={calculateAnalysis} className="space-y-8">
                 {/* Step 1: User Type Selection */}
@@ -590,7 +605,7 @@ function OptimizerContent() {
                     {/* Applications */}
                     <div className="space-y-2">
                       <label htmlFor="apps-input" className="text-xs font-bold text-slate-500 block">
-                        Applications *
+                        Applications <span className="text-slate-400 font-normal">(optional)</span>
                       </label>
                       <input
                         type="number"
@@ -611,7 +626,7 @@ function OptimizerContent() {
                     {/* Interviews */}
                     <div className="space-y-2">
                       <label htmlFor="interviews-input" className="text-xs font-bold text-slate-500 block">
-                        Interviews *
+                        Interviews <span className="text-slate-400 font-normal">(optional)</span>
                       </label>
                       <input
                         type="number"
@@ -738,36 +753,72 @@ function OptimizerContent() {
                     Reset
                   </button>
                 </div>
-
-                <div className="pt-2 text-center text-xs text-slate-400 font-bold leading-relaxed">
-                  Your data is stored anonymously to help improve JobBoardsReview's recruitment intelligence platform. No personally identifiable information is retained.
-                </div>
               </form>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ─── Dashboard Results Section ─── */}
       {results && (
         <section ref={resultsRef} className="py-24 bg-white border-t border-slate-100 animate-slide-up scroll-mt-24">
           <div className="max-w-7xl mx-auto px-6 space-y-16">
             
-            {/* Header with PDF CTA */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-b border-slate-100 pb-8">
-              <div>
+            {/* Header and customization block */}
+            <div className="space-y-8">
+              <div className="border-b border-slate-100 pb-6">
                 <span className="text-xs font-black text-[#FF5630] uppercase tracking-widest block mb-2">Analysis Complete</span>
                 <h2 className="text-4xl font-black text-slate-900">Analysis Results Dashboard</h2>
               </div>
-              <button
-                onClick={handlePdfExport}
-                className="bg-[#FF5630] text-white font-black px-8 py-4 rounded-2xl shadow-xl shadow-[#FF5630]/20 hover:scale-105 transition-all text-sm flex items-center gap-2"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                Export Branded Report (PDF)
-              </button>
+
+              {/* Customization & Export Card */}
+              <div className="bg-[#FCFBF8] border border-slate-200/60 p-8 rounded-[32px] space-y-6">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-slate-100/80 pb-6">
+                  <div>
+                    <h3 className="text-xl font-black text-slate-900 mb-1.5">Personalize & Export Report</h3>
+                    <p className="text-xs text-slate-500 font-medium leading-relaxed">
+                      Add organization details to custom-brand your executive PDF document.
+                    </p>
+                  </div>
+                  <button
+                    onClick={handlePdfExport}
+                    className="bg-[#FF5630] text-white font-black px-8 py-4 rounded-2xl shadow-xl shadow-[#FF5630]/20 hover:scale-105 transition-all text-sm flex items-center gap-2 shrink-0 self-start md:self-auto"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Export Branded Report (PDF)
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label htmlFor="pdf-prepared-by" className="text-xs font-bold text-slate-500 block">
+                      Prepared By <span className="text-slate-400 font-normal">(optional)</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="pdf-prepared-by"
+                      placeholder="e.g. Acme Staffing"
+                      value={preparedBy}
+                      onChange={(e) => setPreparedBy(e.target.value)}
+                      className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-bold text-slate-900 focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label htmlFor="pdf-prepared-for" className="text-xs font-bold text-slate-500 block">
+                      Prepared For <span className="text-slate-400 font-normal">(optional)</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="pdf-prepared-for"
+                      placeholder="e.g. CFO Review Meeting"
+                      value={preparedFor}
+                      onChange={(e) => setPreparedFor(e.target.value)}
+                      className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-bold text-slate-900 focus:outline-none focus:border-slate-900 focus:ring-2 focus:ring-slate-900/10"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Dynamic Summary Card */}
@@ -781,25 +832,35 @@ function OptimizerContent() {
               </div>
             </div>
 
-            {/* 3 Main KPIs & User Type specific metrics */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* KPIs Grid */}
+            <div className={`grid grid-cols-1 gap-8 ${
+              (results.costPerApplication !== null && results.costPerInterview !== null)
+                ? "md:grid-cols-3"
+                : (results.costPerApplication !== null || results.costPerInterview !== null)
+                  ? "md:grid-cols-2"
+                  : "md:grid-cols-1"
+            }`}>
               {/* Cost Per Application */}
-              <div className="bg-slate-50 p-8 rounded-3xl border border-slate-100 flex flex-col justify-between h-48 transition-all hover:scale-102 hover:shadow-lg">
-                <div className="text-xs font-black text-slate-400 uppercase tracking-[0.12em]">Cost Per Application</div>
-                <div className="text-4xl font-black text-slate-900 my-4">
-                  {new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(results.costPerApplication)}
+              {results.costPerApplication !== null && (
+                <div className="bg-slate-50 p-8 rounded-3xl border border-slate-100 flex flex-col justify-between h-48 transition-all hover:scale-102 hover:shadow-lg">
+                  <div className="text-xs font-black text-slate-400 uppercase tracking-[0.12em]">Cost Per Application</div>
+                  <div className="text-4xl font-black text-slate-900 my-4">
+                    {new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(results.costPerApplication)}
+                  </div>
+                  <div className="text-xs text-slate-500 font-bold">Total Spend / Applications count</div>
                 </div>
-                <div className="text-xs text-slate-500 font-bold">Total Spend / Applications count</div>
-              </div>
+              )}
 
               {/* Cost Per Interview */}
-              <div className="bg-slate-50 p-8 rounded-3xl border border-slate-100 flex flex-col justify-between h-48 transition-all hover:scale-102 hover:shadow-lg">
-                <div className="text-xs font-black text-slate-400 uppercase tracking-[0.12em]">Cost Per Interview</div>
-                <div className="text-4xl font-black text-slate-900 my-4">
-                  {new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(results.costPerInterview)}
+              {results.costPerInterview !== null && (
+                <div className="bg-slate-50 p-8 rounded-3xl border border-slate-100 flex flex-col justify-between h-48 transition-all hover:scale-102 hover:shadow-lg">
+                  <div className="text-xs font-black text-slate-400 uppercase tracking-[0.12em]">Cost Per Interview</div>
+                  <div className="text-4xl font-black text-slate-900 my-4">
+                    {new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(results.costPerInterview)}
+                  </div>
+                  <div className="text-xs text-slate-500 font-bold">Total Spend / Interviews count</div>
                 </div>
-                <div className="text-xs text-slate-500 font-bold">Total Spend / Interviews count</div>
-              </div>
+              )}
 
               {/* Cost Per Placement */}
               <div className="bg-slate-50 p-8 rounded-3xl border border-slate-100 flex flex-col justify-between h-48 transition-all hover:scale-102 hover:shadow-lg">
@@ -814,129 +875,136 @@ function OptimizerContent() {
             </div>
 
             {/* Custom Profiles metrics */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-              {/* Profile specific KPIs card */}
-              <div className="bg-white p-8 rounded-[32px] border border-slate-100 card-shadow space-y-6">
-                <h3 className="text-lg font-black text-slate-900 border-b border-slate-100 pb-4">
-                  {results.userType === "agency" ? "Agency ROI & Placements Yield" : "Hiring Spend Analysis"}
-                </h3>
+            {(() => {
+              const hasFunnel = results.applications !== null && results.interviews !== null;
+              return (
+                <div className={`grid grid-cols-1 gap-12 ${hasFunnel ? "lg:grid-cols-2" : "lg:grid-cols-1"}`}>
+                  {/* Profile specific KPIs card */}
+                  <div className="bg-white p-8 rounded-[32px] border border-slate-100 card-shadow space-y-6">
+                    <h3 className="text-lg font-black text-slate-900 border-b border-slate-100 pb-4">
+                      {results.userType === "agency" ? "Agency ROI & Placements Yield" : "Hiring Spend Analysis"}
+                    </h3>
 
-                <dl className="space-y-4">
-                  {results.userType === "agency" ? (
-                    <>
-                      <div className="flex justify-between items-center text-sm py-2">
-                        <dt className="text-slate-500 font-bold">Gross Placements Revenue</dt>
-                        <dd className="text-slate-900 font-black text-lg">
-                          {new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(results.revenue)}
-                        </dd>
-                      </div>
-                      <div className="flex justify-between items-center text-sm py-2 border-t border-slate-50">
-                        <dt className="text-slate-500 font-bold">Contract Yield Net Profit</dt>
-                        <dd className="text-slate-900 font-black text-lg text-teal-600">
-                          {new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(results.profit)}
-                        </dd>
-                      </div>
-                      <div className="flex justify-between items-center text-sm py-2 border-t border-slate-50">
-                        <dt className="text-slate-500 font-bold">Return on Investment (ROI)</dt>
-                        <dd className={`text-xl font-black ${results.roi > 0 ? "text-teal-600" : "text-red-500"}`}>
-                          {results.roi.toFixed(1)}%
-                        </dd>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div className="flex justify-between items-center text-sm py-2">
-                        <dt className="text-slate-500 font-bold">Actual Monthly Spend</dt>
-                        <dd className="text-slate-900 font-black text-lg">
-                          {new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(results.spend)}
-                        </dd>
-                      </div>
-                      {results.costPerHour ? (
+                    <dl className="space-y-4">
+                      {results.userType === "agency" ? (
                         <>
-                          <div className="flex justify-between items-center text-sm py-2 border-t border-slate-50">
-                            <dt className="text-slate-500 font-bold">Target Cost Per Hire</dt>
+                          <div className="flex justify-between items-center text-sm py-2">
+                            <dt className="text-slate-500 font-bold">Gross Placements Revenue</dt>
                             <dd className="text-slate-900 font-black text-lg">
-                              {new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(results.costPerHour)}
+                              {new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(results.revenue)}
                             </dd>
                           </div>
                           <div className="flex justify-between items-center text-sm py-2 border-t border-slate-50">
-                            <dt className="text-slate-500 font-bold">Total Budget Savings</dt>
-                            <dd className={`text-lg font-black ${results.savings > 0 ? "text-teal-600" : "text-red-500"}`}>
-                              {new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(results.savings)}
+                            <dt className="text-slate-500 font-bold">Contract Yield Net Profit</dt>
+                            <dd className="text-slate-900 font-black text-lg text-teal-600">
+                              {new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(results.profit)}
                             </dd>
                           </div>
                           <div className="flex justify-between items-center text-sm py-2 border-t border-slate-50">
-                            <dt className="text-slate-500 font-bold">Cost Efficiency Yield</dt>
+                            <dt className="text-slate-500 font-bold">Return on Investment (ROI)</dt>
                             <dd className={`text-xl font-black ${results.roi > 0 ? "text-teal-600" : "text-red-500"}`}>
                               {results.roi.toFixed(1)}%
                             </dd>
                           </div>
                         </>
                       ) : (
-                        <div className="p-4 bg-amber-50 text-amber-800 text-xs rounded-xl border border-amber-100 font-bold leading-relaxed">
-                          To compute cost savings / cost-efficiency ROI metrics against target budget baselines, enter your Target Cost Per Hire parameter in the inputs.
-                        </div>
+                        <>
+                          <div className="flex justify-between items-center text-sm py-2">
+                            <dt className="text-slate-500 font-bold">Actual Monthly Spend</dt>
+                            <dd className="text-slate-900 font-black text-lg">
+                              {new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(results.spend)}
+                            </dd>
+                          </div>
+                          {results.costPerHour ? (
+                            <>
+                              <div className="flex justify-between items-center text-sm py-2 border-t border-slate-50">
+                                <dt className="text-slate-500 font-bold">Target Cost Per Hire</dt>
+                                <dd className="text-slate-900 font-black text-lg">
+                                  {new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(results.costPerHour)}
+                                </dd>
+                              </div>
+                              <div className="flex justify-between items-center text-sm py-2 border-t border-slate-50">
+                                <dt className="text-slate-500 font-bold">Total Budget Savings</dt>
+                                <dd className={`text-lg font-black ${results.savings > 0 ? "text-teal-600" : "text-red-500"}`}>
+                                  {new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(results.savings)}
+                                </dd>
+                              </div>
+                              <div className="flex justify-between items-center text-sm py-2 border-t border-slate-50">
+                                <dt className="text-slate-500 font-bold">Cost Efficiency Yield</dt>
+                                <dd className={`text-xl font-black ${results.roi > 0 ? "text-teal-600" : "text-red-500"}`}>
+                                  {results.roi.toFixed(1)}%
+                                </dd>
+                              </div>
+                            </>
+                          ) : (
+                            <div className="p-4 bg-amber-50 text-amber-800 text-xs rounded-xl border border-amber-100 font-bold leading-relaxed">
+                              To compute cost savings / cost-efficiency ROI metrics against target budget baselines, enter your Target Cost Per Hire parameter in the inputs.
+                            </div>
+                          )}
+                        </>
                       )}
-                    </>
+                    </dl>
+                  </div>
+
+                  {/* Conversion Funnel Card */}
+                  {hasFunnel && (
+                    <div className="bg-white p-8 rounded-[32px] border border-slate-100 card-shadow space-y-6">
+                      <h3 className="text-lg font-black text-slate-900 border-b border-slate-100 pb-4">
+                        Recruitment Funnel Visualization
+                      </h3>
+
+                      <div className="space-y-4">
+                        {/* Applications Level */}
+                        <div className="relative">
+                          <div className="bg-slate-900 text-white px-5 py-4 rounded-xl font-black text-sm flex justify-between items-center">
+                            <span>Applications</span>
+                            <span>{results.applications}</span>
+                          </div>
+                        </div>
+
+                        {/* App to Interview Conversion */}
+                        <div className="flex justify-between items-center px-4 text-xs font-bold text-slate-500">
+                          <span className="flex items-center gap-1">
+                            <svg className="w-4 h-4 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 13l-7 7-7-7m14-6l-7 7-7-7" />
+                            </svg>
+                            {results.funnel.appToInterviewPct}% conversion
+                          </span>
+                          <span>Drop-off: {results.funnel.appDropOffPct}%</span>
+                        </div>
+
+                        {/* Interviews Level */}
+                        <div className="relative mx-auto w-[85%]">
+                          <div className="bg-teal-600 text-white px-5 py-3.5 rounded-xl font-black text-sm flex justify-between items-center">
+                            <span>Interviews</span>
+                            <span>{results.interviews}</span>
+                          </div>
+                        </div>
+
+                        {/* Interview to Placement Conversion */}
+                        <div className="flex justify-between items-center px-12 text-xs font-bold text-slate-500">
+                          <span className="flex items-center gap-1">
+                            <svg className="w-4 h-4 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 13l-7 7-7-7m14-6l-7 7-7-7" />
+                            </svg>
+                            {results.funnel.interviewToPlacementPct}% conversion
+                          </span>
+                          <span>Drop-off: {results.funnel.intDropOffPct}%</span>
+                        </div>
+
+                        {/* Placements Level */}
+                        <div className="relative mx-auto w-[70%]">
+                          <div className="bg-[#FF5630] text-white px-5 py-3 rounded-xl font-black text-sm flex justify-between items-center shadow-lg shadow-[#FF5630]/20">
+                            <span>Placements</span>
+                            <span>{results.placements}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   )}
-                </dl>
-              </div>
-
-              {/* Conversion Funnel Card */}
-              <div className="bg-white p-8 rounded-[32px] border border-slate-100 card-shadow space-y-6">
-                <h3 className="text-lg font-black text-slate-900 border-b border-slate-100 pb-4">
-                  Recruitment Funnel Visualization
-                </h3>
-
-                <div className="space-y-4">
-                  {/* Applications Level */}
-                  <div className="relative">
-                    <div className="bg-slate-900 text-white px-5 py-4 rounded-xl font-black text-sm flex justify-between items-center">
-                      <span>Applications</span>
-                      <span>{results.applications}</span>
-                    </div>
-                  </div>
-
-                  {/* App to Interview Conversion */}
-                  <div className="flex justify-between items-center px-4 text-xs font-bold text-slate-500">
-                    <span className="flex items-center gap-1">
-                      <svg className="w-4 h-4 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 13l-7 7-7-7m14-6l-7 7-7-7" />
-                      </svg>
-                      {results.funnel.appToInterviewPct}% conversion
-                    </span>
-                    <span>Drop-off: {results.funnel.appDropOffPct}%</span>
-                  </div>
-
-                  {/* Interviews Level */}
-                  <div className="relative mx-auto w-[85%]">
-                    <div className="bg-teal-600 text-white px-5 py-3.5 rounded-xl font-black text-sm flex justify-between items-center">
-                      <span>Interviews</span>
-                      <span>{results.interviews}</span>
-                    </div>
-                  </div>
-
-                  {/* Interview to Placement Conversion */}
-                  <div className="flex justify-between items-center px-12 text-xs font-bold text-slate-500">
-                    <span className="flex items-center gap-1">
-                      <svg className="w-4 h-4 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 13l-7 7-7-7m14-6l-7 7-7-7" />
-                      </svg>
-                      {results.funnel.interviewToPlacementPct}% conversion
-                    </span>
-                    <span>Drop-off: {results.funnel.intDropOffPct}%</span>
-                  </div>
-
-                  {/* Placements Level */}
-                  <div className="relative mx-auto w-[70%]">
-                    <div className="bg-[#FF5630] text-white px-5 py-3 rounded-xl font-black text-sm flex justify-between items-center shadow-lg shadow-[#FF5630]/20">
-                      <span>Placements</span>
-                      <span>{results.placements}</span>
-                    </div>
-                  </div>
                 </div>
-              </div>
-            </div>
+              );
+            })()}
 
             {/* Post-Analysis Engagement Section */}
             <div className="bg-[#FCFBF8] border border-slate-200/60 p-8 rounded-[32px] space-y-6">
