@@ -42,19 +42,24 @@ export default async function BoardDetailPage({ params }) {
 
   const hasReviews = board.reviews && board.reviews.length > 0;
   const hasPricingData = board.pricingDetails && board.pricingDetails.employerCost;
+  const hasPros = prosCons && prosCons.pros && prosCons.pros.length > 0;
+  const hasCons = prosCons && prosCons.cons && prosCons.cons.length > 0;
+  const hasHighlights = highlightGroups && Object.keys(highlightGroups).length > 0;
 
   // Feature grouping
   const featureGroups = [];
-  const featureLabels = ["Core", "Recruiting", "Experience", "Other"];
-  const chunkSize = Math.ceil(
-    board.features.length /
-      Math.min(featureLabels.length, Math.ceil(board.features.length / 2))
-  );
-  for (let i = 0; i < board.features.length; i += chunkSize) {
-    featureGroups.push({
-      label: featureLabels[Math.floor(i / chunkSize)] || "Other",
-      items: board.features.slice(i, i + chunkSize),
-    });
+  if (board.features && board.features.length > 0) {
+    const featureLabels = ["Core", "Recruiting", "Experience", "Other"];
+    const chunkSize = Math.ceil(
+      board.features.length /
+        Math.min(featureLabels.length, Math.ceil(board.features.length / 2))
+    );
+    for (let i = 0; i < board.features.length; i += chunkSize) {
+      featureGroups.push({
+        label: featureLabels[Math.floor(i / chunkSize)] || "Other",
+        items: board.features.slice(i, i + chunkSize),
+      });
+    }
   }
 
 
@@ -89,7 +94,9 @@ export default async function BoardDetailPage({ params }) {
             <div className="flex-grow min-w-0">
               <div className="flex flex-wrap items-center gap-4 mb-3">
                 <h1 className="text-4xl font-black text-slate-900">{board.name}</h1>
-                <span className="tag-coral">Best for {board.bestFor}</span>
+                {board.bestFor && board.bestFor.trim() !== "" && (
+                  <span className="tag-coral">Best for {board.bestFor}</span>
+                )}
               </div>
               <div className="flex flex-wrap items-center gap-3 mb-6">
                 <StarRating rating={board.rating} reviewCount={board.reviewCount} />
@@ -156,68 +163,78 @@ export default async function BoardDetailPage({ params }) {
               {/* ── Overview ── */}
               <div id="overview" className="space-y-14">
                 {/* Who it's best for */}
-                <div>
-                  <h2 className="text-3xl font-black text-slate-900 mb-8">
-                    Who is {board.name} best for?
-                  </h2>
-                  <ul className="space-y-5">
-                    {board.idealFor.map((item, i) => (
-                      <li key={i} className="flex items-start gap-4 text-slate-700 font-medium">
-                        <svg className="w-5 h-5 text-teal-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                {board.idealFor && board.idealFor.length > 0 && (
+                  <div>
+                    <h2 className="text-3xl font-black text-slate-900 mb-8">
+                      Who is {board.name} best for?
+                    </h2>
+                    <ul className="space-y-5">
+                      {board.idealFor.map((item, i) => (
+                        <li key={i} className="flex items-start gap-4 text-slate-700 font-medium">
+                          <svg className="w-5 h-5 text-teal-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          </svg>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
 
                 {/* Pros & Cons */}
-                <div>
-                  <h3 className="text-xl font-black text-slate-900 mb-8">Pros & Cons</h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div className="bg-white p-7 rounded-[24px] border border-slate-100 card-shadow">
-                      <div className="text-[10px] font-black text-teal-600 uppercase tracking-[0.12em] mb-5">Pros</div>
-                      <Collapsible label="View all pros" collapseLabel="Show less" maxHeight={120} fade={true}>
-                        <ul className="space-y-4">
-                          {prosCons.pros.map((pro, i) => (
-                            <li key={i} className="flex items-start gap-3 text-sm text-slate-700 font-medium">
-                              <svg className="w-4 h-4 text-teal-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                              </svg>
-                              {pro}
-                            </li>
-                          ))}
-                        </ul>
-                      </Collapsible>
-                    </div>
-                    <div className="bg-white p-7 rounded-[24px] border border-slate-100 card-shadow">
-                      <div className="text-[10px] font-black text-red-500 uppercase tracking-[0.12em] mb-5">Cons</div>
-                      <Collapsible label="View all cons" collapseLabel="Show less" maxHeight={120} fade={true}>
-                        <ul className="space-y-4">
-                          {prosCons.cons.map((con, i) => (
-                            <li key={i} className="flex items-start gap-3 text-sm text-slate-700 font-medium">
-                              <svg className="w-4 h-4 text-red-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                              </svg>
-                              {con}
-                            </li>
-                          ))}
-                        </ul>
-                      </Collapsible>
+                {(hasPros || hasCons) && (
+                  <div>
+                    <h3 className="text-xl font-black text-slate-900 mb-8">Pros & Cons</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                      {hasPros && (
+                        <div className="bg-white p-7 rounded-[24px] border border-slate-100 card-shadow">
+                          <div className="text-[10px] font-black text-teal-600 uppercase tracking-[0.12em] mb-5">Pros</div>
+                          <Collapsible label="View all pros" collapseLabel="Show less" maxHeight={120} fade={true}>
+                            <ul className="space-y-4">
+                              {prosCons.pros.map((pro, i) => (
+                                <li key={i} className="flex items-start gap-3 text-sm text-slate-700 font-medium">
+                                  <svg className="w-4 h-4 text-teal-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                  </svg>
+                                  {pro}
+                                </li>
+                              ))}
+                            </ul>
+                          </Collapsible>
+                        </div>
+                      )}
+                      {hasCons && (
+                        <div className="bg-white p-7 rounded-[24px] border border-slate-100 card-shadow">
+                          <div className="text-[10px] font-black text-red-500 uppercase tracking-[0.12em] mb-5">Cons</div>
+                          <Collapsible label="View all cons" collapseLabel="Show less" maxHeight={120} fade={true}>
+                            <ul className="space-y-4">
+                              {prosCons.cons.map((con, i) => (
+                                <li key={i} className="flex items-start gap-3 text-sm text-slate-700 font-medium">
+                                  <svg className="w-4 h-4 text-red-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                  </svg>
+                                  {con}
+                                </li>
+                              ))}
+                            </ul>
+                          </Collapsible>
+                        </div>
+                      )}
                     </div>
                   </div>
-                </div>
+                )}
 
                 {/* Full Overview — collapsible */}
-                <div>
-                  <h3 className="text-xl font-black text-slate-900 mb-5">Full Overview</h3>
-                  <Collapsible label="Read full analysis" collapseLabel="Show less" maxHeight={100} fade={true}>
-                    <p className="text-sm text-slate-600 font-medium leading-relaxed">
-                      {board.fullDescription}
-                    </p>
-                  </Collapsible>
-                </div>
+                {board.fullDescription && board.fullDescription.trim() !== "" && (
+                  <div>
+                    <h3 className="text-xl font-black text-slate-900 mb-5">Full Overview</h3>
+                    <Collapsible label="Read full analysis" collapseLabel="Show less" maxHeight={100} fade={true}>
+                      <p className="text-sm text-slate-600 font-medium leading-relaxed">
+                        {board.fullDescription}
+                      </p>
+                    </Collapsible>
+                  </div>
+                )}
               </div>
 
               {/* ── Pricing & Commercial Model ── */}
@@ -284,19 +301,54 @@ export default async function BoardDetailPage({ params }) {
               </div>
 
               {/* ── Key Highlights ── */}
-              <div>
-                <h2 className="text-3xl font-black text-slate-900 mb-8">
-                  Key Highlights
-                </h2>
-                <div className="bg-white p-8 rounded-[32px] border border-slate-100 card-shadow">
-                  <Collapsible label="+ View more highlights" collapseLabel="Show less" maxHeight={200} fade={true}>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                      {Object.entries(highlightGroups).map(([groupLabel, tags]) => (
-                        <div key={groupLabel} className="highlight-group">
-                          <div className="highlight-group__label">{groupLabel}</div>
-                          <div className="highlight-group__tags">
-                            {tags.map((t, i) => (
-                              <span key={i} className="tag">{t}</span>
+              {hasHighlights && (
+                <div>
+                  <h2 className="text-3xl font-black text-slate-900 mb-8">
+                    Key Highlights
+                  </h2>
+                  <div className="bg-white p-8 rounded-[32px] border border-slate-100 card-shadow">
+                    <Collapsible label="+ View more highlights" collapseLabel="Show less" maxHeight={200} fade={true}>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                        {Object.entries(highlightGroups).map(([groupLabel, tags]) => (
+                          <div key={groupLabel} className="highlight-group">
+                            <div className="highlight-group__label">{groupLabel}</div>
+                            <div className="highlight-group__tags">
+                              {tags.map((t, i) => (
+                                <span key={i} className="tag">{t}</span>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </Collapsible>
+                  </div>
+                </div>
+              )}
+
+              {/* ── Features ── */}
+              {board.features && board.features.length > 0 && (
+                <div id="features">
+                  <h2 className="text-3xl font-black text-slate-900 mb-8">
+                    Key Platform Features
+                  </h2>
+                  <Collapsible
+                    label={`View all ${board.features.length} features`}
+                    collapseLabel="Show less"
+                    maxHeight={220}
+                    fade={true}
+                  >
+                    <div className="space-y-8">
+                      {featureGroups.map((group, gi) => (
+                        <div key={gi}>
+                          <div className="text-[10px] font-black text-slate-400 uppercase tracking-[0.12em] mb-4">{group.label}</div>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            {group.items.map((feature, fi) => (
+                              <div key={fi} className="flex items-center gap-3 bg-white p-5 rounded-2xl border border-slate-100 card-shadow">
+                                <svg className="w-4 h-4 text-teal-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                </svg>
+                                <span className="text-sm font-black text-slate-900">{feature}</span>
+                              </div>
                             ))}
                           </div>
                         </div>
@@ -304,38 +356,7 @@ export default async function BoardDetailPage({ params }) {
                     </div>
                   </Collapsible>
                 </div>
-              </div>
-
-              {/* ── Features ── */}
-              <div id="features">
-                <h2 className="text-3xl font-black text-slate-900 mb-8">
-                  Key Platform Features
-                </h2>
-                <Collapsible
-                  label={`View all ${board.features.length} features`}
-                  collapseLabel="Show less"
-                  maxHeight={220}
-                  fade={true}
-                >
-                  <div className="space-y-8">
-                    {featureGroups.map((group, gi) => (
-                      <div key={gi}>
-                        <div className="text-[10px] font-black text-slate-400 uppercase tracking-[0.12em] mb-4">{group.label}</div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                          {group.items.map((feature, fi) => (
-                            <div key={fi} className="flex items-center gap-3 bg-white p-5 rounded-2xl border border-slate-100 card-shadow">
-                              <svg className="w-4 h-4 text-teal-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                              </svg>
-                              <span className="text-sm font-black text-slate-900">{feature}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </Collapsible>
-              </div>
+              )}
 
               {/* ── Reviews ── */}
               <div id="reviews">
@@ -389,21 +410,27 @@ export default async function BoardDetailPage({ params }) {
                   {[
                     {
                       q: `Is ${board.name} worth the cost for mid-volume hiring?`,
-                      a: `It depends on your role types and volume. ${board.name} charges ${board.pricingDetails.employerCost} on the employer side. For niche or senior roles, the quality-to-cost ratio is generally favorable. For high-volume entry-level hiring, consider alternatives.`,
+                      a: board.pricingDetails?.employerCost
+                        ? `It depends on your role types and volume. ${board.name} charges ${board.pricingDetails.employerCost} on the employer side. For niche or senior roles, the quality-to-cost ratio is generally favorable. For high-volume entry-level hiring, consider alternatives.`
+                        : `It depends on your role types and volume. ${board.name} operates under a ${board.pricing || "contact for pricing"} model. For specialized vertical positions, the targeted exposure is generally favorable. For high-volume entry-level hiring, consider generalist alternatives.`,
                     },
                     {
                       q: `How does ${board.name} compare to other ${board.category.toLowerCase()} boards?`,
-                      a: `${board.name} is best known for "${board.bestFor}". Use our comparison tool to see how it stacks up on pricing, features, and recruiter reviews against similar boards.`,
+                      a: board.bestFor
+                        ? `${board.name} is best known for "${board.bestFor}". Use our comparison tool to see how it stacks up on pricing, features, and recruiter reviews against similar boards.`
+                        : `${board.name} is a dedicated recruiting platform in the ${board.category} sector. Use our comparison tool to see how it stacks up on pricing and features against similar options.`,
                     },
                     {
                       q: `What kinds of roles get the best results on ${board.name}?`,
-                      a: `Based on recruiter feedback, ${board.name} works best for: ${board.idealFor.slice(0, 2).join(", ")}. It may underperform for roles outside its core ${board.category.toLowerCase()} focus.`,
+                      a: board.idealFor && board.idealFor.length > 0
+                        ? `Based on recruiter feedback, ${board.name} works best for: ${board.idealFor.slice(0, 2).join(", ")}. It may underperform for roles outside its core ${board.category.toLowerCase()} focus.`
+                        : `Based on recruiter feedback, ${board.name} works best for specialized roles within the ${board.category.toLowerCase()} vertical. It may underperform for general business positions outside its core area.`,
                     },
                     {
                       q: `Can I try ${board.name} before committing?`,
                       a: board.pricingModel === "free"
                         ? `Yes — ${board.name} is free to use. You can explore the platform without any upfront commitment.`
-                        : `${board.name} offers a ${board.pricing} model. Check their website for any trial or demo options before committing.`,
+                        : `${board.name} offers a ${board.pricing || "paid"} model. Check their website for any trial or demo options before committing.`,
                     },
                   ].map((faq, i) => (
                     <details
@@ -442,12 +469,14 @@ export default async function BoardDetailPage({ params }) {
                     ["Year Founded", board.yearFounded],
                     ["Headquarters", board.headquarters],
                     ["Category", board.category],
-                  ].map(([label, value]) => (
-                    <div key={label} className="flex justify-between items-center text-sm">
-                      <dt className="text-slate-400 font-bold">{label}</dt>
-                      <dd className="text-slate-900 font-black">{value}</dd>
-                    </div>
-                  ))}
+                  ]
+                    .filter(([_, value]) => value !== undefined && value !== null && String(value).trim() !== "")
+                    .map(([label, value]) => (
+                      <div key={label} className="flex justify-between items-center text-sm">
+                        <dt className="text-slate-400 font-bold">{label}</dt>
+                        <dd className="text-slate-900 font-black">{value}</dd>
+                      </div>
+                    ))}
                 </dl>
                 <Link
                   href="/compare"

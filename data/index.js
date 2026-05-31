@@ -90,21 +90,13 @@ export function getBoardMetrics(slug) {
 }
 
 export function getBoardProsCons(slug) {
-  return boardProsCons[slug] || {
-    pros: ["Established platform in its niche", "Active user community", "Regular platform updates"],
-    cons: ["Limited public pricing information", "May not suit all industries"],
-  };
+  return boardProsCons[slug] || null;
 }
 
 export function getBoardDecisionTags(slug) {
-  return boardDecisionTags[slug] || ["Established", "Active Community"];
+  return boardDecisionTags[slug] || [];
 }
 
 export function getBoardHighlightGroups(slug) {
-  return boardHighlightGroups[slug] || {
-    "Hiring Type": ["Full-time", "Various Levels"],
-    "Industry Focus": [slug ? "Specialized" : "Generalist"],
-    "Pricing Model": ["Contact for Pricing"],
-    "Candidate Quality": ["Standard Pool"],
-  };
+  return boardHighlightGroups[slug] || null;
 }
