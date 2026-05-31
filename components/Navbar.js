@@ -43,6 +43,7 @@ export default function Navbar() {
     { href: "/directory", label: "Directory" },
     { href: "/categories", label: "Categories" },
     { href: "/compare", label: "Compare Tool" },
+    { href: "/optimizer?source=header", label: "Hiring Budget Optimizer" },
     { href: "/blog", label: "Blog" },
     { href: "/about", label: "About" },
   ];

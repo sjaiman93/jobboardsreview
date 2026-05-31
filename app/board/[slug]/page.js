@@ -470,6 +470,22 @@ export default async function BoardDetailPage({ params }) {
                 </div>
               </div>
 
+              {/* Analyze Your Spend Card */}
+              <div className="bg-white p-8 rounded-[32px] border border-slate-100 card-shadow">
+                <h3 className="text-sm font-black text-slate-400 uppercase tracking-[0.12em] mb-4">
+                  Analyze Your Spend
+                </h3>
+                <p className="text-sm text-slate-500 font-medium mb-6 leading-relaxed">
+                  Evaluate the performance of this recruiting channel and generate a professional hiring budget report.
+                </p>
+                <Link
+                  href={`/optimizer?board=${board.slug}&source=board_page`}
+                  className="block w-full py-3.5 bg-slate-900 text-white font-black text-center rounded-2xl hover:bg-[#FF5630] hover:shadow-xl hover:shadow-[#FF5630]/20 transition-all duration-300 active:scale-95 text-sm"
+                >
+                  Launch Optimizer
+                </Link>
+              </div>
+
               {/* Decision Tags — separate from Board Details */}
               {decisionTags.length > 0 && (
                 <div className="flex flex-wrap gap-2">

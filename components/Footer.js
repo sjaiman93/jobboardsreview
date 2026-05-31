@@ -13,6 +13,7 @@ export default function Footer() {
         { href: "/directory", label: "Directory" },
         { href: "/categories", label: "Categories" },
         { href: "/compare", label: "Compare" },
+        { href: "/optimizer?source=footer", label: "Hiring Budget Optimizer" },
         { href: "/", label: "Trends" },
       ],
     },
