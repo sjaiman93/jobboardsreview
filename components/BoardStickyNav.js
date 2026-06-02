@@ -20,7 +20,7 @@ export default function BoardStickyNav() {
   const itemRefs = useRef({});
   const isClickScrolling = useRef(false);
 
-  // Intersection Observer for sticky detection
+  // Sentinel IntersectionObserver for sticky detection
   useEffect(() => {
     const sentinel = sentinelRef.current;
     if (!sentinel) return;
@@ -36,91 +36,52 @@ export default function BoardStickyNav() {
     return () => observer.disconnect();
   }, []);
 
-  // Helper: find the single closest section to the activation zone
-  const findActiveSection = useCallback(() => {
-    const ids = NAV_ITEMS.map((item) => item.id);
-    // Activation point = 120px from top (header + nav region)
-    const activationY = 120;
-    let closest = null;
-    let closestDist = Infinity;
+  // Primary: Scroll spy handler
+  const handleScroll = useCallback(() => {
+    if (isClickScrolling.current) return;
 
-    for (const id of ids) {
-      const el = document.getElementById(id);
-      if (!el) continue;
-      const rect = el.getBoundingClientRect();
-      const dist = Math.abs(rect.top - activationY);
-      if (rect.top <= activationY + 200 && dist < closestDist) {
-        closestDist = dist;
-        closest = id;
-      }
-    }
-    return closest;
-  }, []);
-
-  // Primary: IntersectionObserver scroll spy
-  useEffect(() => {
+    const scrollY = window.scrollY;
+    const windowHeight = window.innerHeight;
+    const scrollHeight = document.documentElement.scrollHeight;
+    
+    // Check if we are at the bottom of the page
+    const isAtBottom = scrollY + windowHeight >= scrollHeight - 30;
+    
     const ids = NAV_ITEMS.map((item) => item.id);
     const elements = ids
-      .map((id) => document.getElementById(id))
-      .filter(Boolean);
+      .map((id) => ({ id, el: document.getElementById(id) }))
+      .filter((x) => x.el !== null);
 
     if (elements.length === 0) return;
 
-    // Track which sections are currently intersecting
-    const visibleSections = new Set();
+    if (isAtBottom) {
+      setActiveId(elements[elements.length - 1].id);
+      return;
+    }
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (isClickScrolling.current) return;
+    // Offset of Header (96px) + Sticky Nav (48px) + padding buffer = ~160px
+    const threshold = 160;
+    let activeSection = elements[0].id;
 
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            visibleSections.add(entry.target.id);
-          } else {
-            visibleSections.delete(entry.target.id);
-          }
-        });
-
-        // Pick the first visible section in document order (ensures only ONE is active)
-        if (visibleSections.size > 0) {
-          for (const id of ids) {
-            if (visibleSections.has(id)) {
-              setActiveId(id);
-              break;
-            }
-          }
-        }
-      },
-      {
-        rootMargin: "-120px 0px -65% 0px",
-        threshold: 0,
+    for (let i = 0; i < elements.length; i++) {
+      const rect = elements[i].el.getBoundingClientRect();
+      if (rect.top <= threshold + 10) {
+        activeSection = elements[i].id;
+      } else {
+        break;
       }
-    );
+    }
 
-    elements.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
+    setActiveId(activeSection);
   }, []);
 
-  // Fallback: scroll event listener for edge cases IO might miss
+  // Set up scroll event listener
   useEffect(() => {
-    let ticking = false;
-
-    const handleScroll = () => {
-      if (isClickScrolling.current || ticking) return;
-      ticking = true;
-
-      requestAnimationFrame(() => {
-        const active = findActiveSection();
-        if (active) {
-          setActiveId(active);
-        }
-        ticking = false;
-      });
-    };
-
     window.addEventListener("scroll", handleScroll, { passive: true });
+    // Run once on mount to establish correct initial active tab
+    handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [findActiveSection]);
+  }, [handleScroll]);
 
   // Animate the pill indicator to follow the active tab
   useEffect(() => {
@@ -141,7 +102,6 @@ export default function BoardStickyNav() {
     const target = document.getElementById(id);
     if (!target) return;
 
-    // Dynamically measure offset from actual DOM elements
     const siteHeader = document.querySelector("header");
     const stickyNav = navRef.current;
     const headerH = siteHeader ? siteHeader.getBoundingClientRect().height : 96;
@@ -150,7 +110,7 @@ export default function BoardStickyNav() {
 
     const targetPosition = target.getBoundingClientRect().top + window.scrollY;
 
-    // Suppress observer updates during programmatic scroll
+    // Suppress scroll handler during click-induced scroll animation
     isClickScrolling.current = true;
     setActiveId(id);
 
@@ -159,7 +119,6 @@ export default function BoardStickyNav() {
       behavior: "smooth",
     });
 
-    // Re-enable observer after scroll completes
     setTimeout(() => {
       isClickScrolling.current = false;
     }, 800);

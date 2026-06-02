@@ -6,6 +6,7 @@ import {
   getBoardProsCons,
   getBoardDecisionTags,
   getBoardHighlightGroups,
+  getBoardMetrics,
 } from "@/data/jobBoards";
 import JobBoardCard from "@/components/JobBoardCard";
 import BoardStickyNav from "@/components/BoardStickyNav";
@@ -95,6 +96,7 @@ export default async function BoardDetailPage({ params }) {
   const prosCons = getBoardProsCons(slug);
   const decisionTags = getBoardDecisionTags(slug);
   const highlightGroups = getBoardHighlightGroups(slug);
+  const metrics = getBoardMetrics(slug);
   const allBoards = getAllBoards();
   const related = allBoards
     .filter((b) => b.categorySlug === board.categorySlug && b.slug !== board.slug)
@@ -190,23 +192,32 @@ export default async function BoardDetailPage({ params }) {
           </div>
         </div>
 
-        {/* Stats Row — real verified data only */}
-        <div className="grid grid-cols-2 gap-4 mt-10">
-          <div className="bg-white p-6 rounded-3xl border border-slate-100 card-shadow">
-            <div className="text-slate-400 text-[10px] font-black uppercase tracking-[0.12em] mb-2">Pricing Model</div>
-            <div className="text-lg font-black text-slate-900">{board.pricing}</div>
+        {/* Quick Facts Bar */}
+        <div className="flex flex-wrap items-center gap-x-12 gap-y-4 bg-slate-50 border border-slate-100 p-6 rounded-[28px] mt-10">
+          <div>
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.12em] block mb-1">Category</span>
+            <span className="text-sm font-black text-slate-900">{board.category}</span>
           </div>
-          <div className="bg-white p-6 rounded-3xl border border-slate-100 card-shadow">
-            <div className="text-slate-400 text-[10px] font-black uppercase tracking-[0.12em] mb-2">Category</div>
-            <div className="text-lg font-black text-slate-900">
-              {board.category}
-              {board.subcategory && (
-                <span className="text-slate-400 font-medium text-sm ml-2">
-                  → {board.subcategory}
-                </span>
-              )}
+          <div>
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.12em] block mb-1">Pricing Model</span>
+            <span className="text-sm font-black text-slate-900">
+              {board.pricingModel ? board.pricingModel.charAt(0).toUpperCase() + board.pricingModel.slice(1) : "Paid"}
+            </span>
+          </div>
+          {metrics && metrics.candidateReach && (
+            <div>
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.12em] block mb-1">Candidate Reach</span>
+              <span className="text-sm font-black text-slate-900">{metrics.candidateReach}</span>
             </div>
-          </div>
+          )}
+          {highlightGroups && highlightGroups["Hiring Type"] && highlightGroups["Hiring Type"].length > 0 && (
+            <div>
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.12em] block mb-1">Hiring Type</span>
+              <span className="text-sm font-black text-slate-900">
+                {highlightGroups["Hiring Type"].join(", ")}
+              </span>
+            </div>
+          )}
         </div>
       </div>
 
