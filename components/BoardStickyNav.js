@@ -14,13 +14,56 @@ const NAV_ITEMS = [
 export default function BoardStickyNav() {
   const [activeId, setActiveId] = useState("overview");
   const [isSticky, setIsSticky] = useState(false);
+  const [headerHeight, setHeaderHeight] = useState(96);
+  const [navHeight, setNavHeight] = useState(48);
+
   const sentinelRef = useRef(null);
   const navRef = useRef(null);
   const activePillRef = useRef(null);
   const itemRefs = useRef({});
   const isClickScrolling = useRef(false);
 
-  // Sentinel IntersectionObserver for sticky detection
+  // Dynamically observe header and nav heights to handle responsive layout changes and mobile menu expansion
+  useEffect(() => {
+    const siteHeader = document.querySelector("header");
+    const stickyNav = navRef.current;
+
+    const updateHeights = () => {
+      if (siteHeader) {
+        setHeaderHeight(siteHeader.getBoundingClientRect().height);
+      }
+      if (stickyNav) {
+        setNavHeight(stickyNav.getBoundingClientRect().height);
+      }
+    };
+
+    updateHeights();
+    window.addEventListener("resize", updateHeights);
+
+    let headerObserver;
+    if (siteHeader && typeof ResizeObserver !== "undefined") {
+      headerObserver = new ResizeObserver(() => {
+        updateHeights();
+      });
+      headerObserver.observe(siteHeader);
+    }
+
+    let navObserver;
+    if (stickyNav && typeof ResizeObserver !== "undefined") {
+      navObserver = new ResizeObserver(() => {
+        updateHeights();
+      });
+      navObserver.observe(stickyNav);
+    }
+
+    return () => {
+      window.removeEventListener("resize", updateHeights);
+      if (headerObserver) headerObserver.disconnect();
+      if (navObserver) navObserver.disconnect();
+    };
+  }, []);
+
+  // Sentinel IntersectionObserver for sticky detection, synced with dynamic header height
   useEffect(() => {
     const sentinel = sentinelRef.current;
     if (!sentinel) return;
@@ -29,12 +72,12 @@ export default function BoardStickyNav() {
       ([entry]) => {
         setIsSticky(!entry.isIntersecting);
       },
-      { threshold: 0, rootMargin: "0px 0px 0px 0px" }
+      { threshold: 0, rootMargin: `-${headerHeight}px 0px 0px 0px` }
     );
 
     observer.observe(sentinel);
     return () => observer.disconnect();
-  }, []);
+  }, [headerHeight]);
 
   // Primary: Scroll spy handler
   const handleScroll = useCallback(() => {
@@ -59,13 +102,12 @@ export default function BoardStickyNav() {
       return;
     }
 
-    // Offset of Header (96px) + Sticky Nav (48px) + padding buffer = ~160px
-    const threshold = 160;
+    const threshold = headerHeight + navHeight + 30; // Matches dynamic landing limit with subpixel tolerance
     let activeSection = elements[0].id;
 
     for (let i = 0; i < elements.length; i++) {
       const rect = elements[i].el.getBoundingClientRect();
-      if (rect.top <= threshold + 10) {
+      if (rect.top <= threshold) {
         activeSection = elements[i].id;
       } else {
         break;
@@ -73,12 +115,12 @@ export default function BoardStickyNav() {
     }
 
     setActiveId(activeSection);
-  }, []);
+  }, [headerHeight, navHeight]);
 
   // Set up scroll event listener
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, { passive: true });
-    // Run once on mount to establish correct initial active tab
+    // Run once on mount or height changes to establish correct initial active tab
     handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
@@ -102,12 +144,7 @@ export default function BoardStickyNav() {
     const target = document.getElementById(id);
     if (!target) return;
 
-    const siteHeader = document.querySelector("header");
-    const stickyNav = navRef.current;
-    const headerH = siteHeader ? siteHeader.getBoundingClientRect().height : 96;
-    const navH = stickyNav ? stickyNav.getBoundingClientRect().height : 48;
-    const offset = headerH + navH + 24;
-
+    const offset = headerHeight + navHeight + 24;
     const targetPosition = target.getBoundingClientRect().top + window.scrollY;
 
     // Suppress scroll handler during click-induced scroll animation
@@ -122,7 +159,7 @@ export default function BoardStickyNav() {
     setTimeout(() => {
       isClickScrolling.current = false;
     }, 800);
-  }, []);
+  }, [headerHeight, navHeight]);
 
   return (
     <>
@@ -132,6 +169,7 @@ export default function BoardStickyNav() {
       <nav
         ref={navRef}
         className={`board-sticky-nav ${isSticky ? "board-sticky-nav--stuck" : ""}`}
+        style={isSticky ? { top: `${headerHeight}px` } : {}}
       >
         <div className="max-w-7xl mx-auto px-6 relative">
           {/* Animated pill background */}
