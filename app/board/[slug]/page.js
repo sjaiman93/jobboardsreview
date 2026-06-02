@@ -88,6 +88,21 @@ function segmentOverviewText(text) {
   return resultParagraphs;
 }
 
+function formatDetailedPricing(text) {
+  if (!text) return [];
+  const subheaders = [
+    "Single Job Slot —",
+    "Annual Contract Plans",
+    "Month-to-Month Plans",
+    "Enterprise —"
+  ];
+  let formatted = text;
+  subheaders.forEach(h => {
+    formatted = formatted.replace(h, `\n\n${h}`);
+  });
+  return formatted.split("\n\n").map(p => p.trim()).filter(Boolean);
+}
+
 export default async function BoardDetailPage({ params }) {
   const { slug } = await params;
   const board = getBoardBySlug(slug);
@@ -104,6 +119,11 @@ export default async function BoardDetailPage({ params }) {
 
   const hasReviews = board.reviews && board.reviews.length > 0;
   const hasPricingData = board.pricingDetails && board.pricingDetails.employerCost;
+  const isDice = board.slug === "dice";
+  let detailedEmployerPricing = "";
+  if (isDice && board._originalPricing && board._originalPricing.includes("||")) {
+    detailedEmployerPricing = board._originalPricing.split("||")[1].trim();
+  }
   const hasPros = prosCons && prosCons.pros && prosCons.pros.length > 0;
   const hasCons = prosCons && prosCons.cons && prosCons.cons.length > 0;
   const hasHighlights = highlightGroups && Object.keys(highlightGroups).length > 0;
@@ -334,29 +354,51 @@ export default async function BoardDetailPage({ params }) {
                 </h2>
                 <div className="bg-white p-8 rounded-[32px] border border-slate-100 card-shadow">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-6">
-                    {hasPricingData ? (
-                      <div>
-                        <div className="text-[10px] font-black text-slate-400 uppercase tracking-[0.12em] mb-2">Employer Pricing</div>
-                        <p className="text-slate-600 leading-relaxed font-normal">{board.pricingDetails.employerCost}</p>
-                      </div>
+                    {isDice ? (
+                      <>
+                        <div>
+                          <div className="text-[10px] font-black text-slate-400 uppercase tracking-[0.12em] mb-2">Employer Starting Cost</div>
+                          <p className="text-slate-600 leading-relaxed font-normal">{board.pricingDetails.employerCost}</p>
+                        </div>
+                        <div>
+                          <div className="text-[10px] font-black text-slate-400 uppercase tracking-[0.12em] mb-2">Candidate Pricing</div>
+                          <p className="text-slate-600 leading-relaxed font-normal">{board.seekerPricing}</p>
+                        </div>
+                        <div>
+                          <div className="text-[10px] font-black text-slate-400 uppercase tracking-[0.12em] mb-2">Transparency</div>
+                          <div className="flex items-center gap-2">
+                            <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
+                            <span className="text-sm font-bold text-slate-700">Medium — varies by contract</span>
+                          </div>
+                        </div>
+                      </>
                     ) : (
-                      <div>
-                        <div className="text-[10px] font-black text-slate-400 uppercase tracking-[0.12em] mb-2">Pricing Model</div>
-                        <p className="text-slate-600 leading-relaxed font-normal">{board.pricing}</p>
-                      </div>
-                    )}
-                    <div>
-                      <div className="text-[10px] font-black text-slate-400 uppercase tracking-[0.12em] mb-2">Transparency</div>
-                      <div className="flex items-center gap-2">
-                        <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
-                        <span className="text-sm font-bold text-slate-700">Medium — varies by contract</span>
-                      </div>
-                    </div>
-                    {!hasPricingData && (
-                      <div>
-                        <div className="text-[10px] font-black text-slate-400 uppercase tracking-[0.12em] mb-2">Typical Structure</div>
-                        <div className="text-sm font-bold text-slate-700">Varies by role and volume</div>
-                      </div>
+                      <>
+                        {hasPricingData ? (
+                          <div>
+                            <div className="text-[10px] font-black text-slate-400 uppercase tracking-[0.12em] mb-2">Employer Pricing</div>
+                            <p className="text-slate-600 leading-relaxed font-normal">{board.pricingDetails.employerCost}</p>
+                          </div>
+                        ) : (
+                          <div>
+                            <div className="text-[10px] font-black text-slate-400 uppercase tracking-[0.12em] mb-2">Pricing Model</div>
+                            <p className="text-slate-600 leading-relaxed font-normal">{board.pricing}</p>
+                          </div>
+                        )}
+                        <div>
+                          <div className="text-[10px] font-black text-slate-400 uppercase tracking-[0.12em] mb-2">Transparency</div>
+                          <div className="flex items-center gap-2">
+                            <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
+                            <span className="text-sm font-bold text-slate-700">Medium — varies by contract</span>
+                          </div>
+                        </div>
+                        {!hasPricingData && (
+                          <div>
+                            <div className="text-[10px] font-black text-slate-400 uppercase tracking-[0.12em] mb-2">Typical Structure</div>
+                            <div className="text-sm font-bold text-slate-700">Varies by role and volume</div>
+                          </div>
+                        )}
+                      </>
                     )}
                   </div>
                   <p className="text-sm text-slate-500 font-medium leading-relaxed mb-6">
@@ -364,7 +406,57 @@ export default async function BoardDetailPage({ params }) {
                       ? "Exact pricing varies based on hiring volume, role seniority, and contract terms."
                       : "Public pricing is not disclosed. Costs typically depend on hiring volume, role type, and geographic reach."}
                   </p>
-                  {hasPricingData ? (
+                  {isDice ? (
+                    <Collapsible label="View detailed pricing insights" collapseLabel="Hide details" maxHeight={0} fade={false}>
+                      <div className="pt-6 mt-2 border-t border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                          <div className="text-[10px] font-black text-slate-400 uppercase tracking-[0.12em] mb-4">Detailed Rates & Plans</div>
+                          <div className="space-y-4">
+                            {formatDetailedPricing(detailedEmployerPricing).map((paragraph, i) => {
+                              const colonIdx = paragraph.indexOf(":");
+                              const dashIdx = paragraph.indexOf("—");
+                              let title = "";
+                              let body = paragraph;
+                              
+                              if (colonIdx !== -1 && (colonIdx < 45 || paragraph.startsWith("Annual") || paragraph.startsWith("Month"))) {
+                                title = paragraph.substring(0, colonIdx + 1);
+                                body = paragraph.substring(colonIdx + 1).trim();
+                              } else if (dashIdx !== -1 && dashIdx < 20) {
+                                title = paragraph.substring(0, dashIdx + 1);
+                                body = paragraph.substring(dashIdx + 1).trim();
+                              }
+                              
+                              return (
+                                <div key={i} className="text-sm text-slate-600 leading-relaxed font-normal">
+                                  {title ? (
+                                    <>
+                                      <strong className="text-slate-800 block mb-1">{title}</strong>
+                                      {body}
+                                    </>
+                                  ) : (
+                                    body
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-[10px] font-black text-slate-400 uppercase tracking-[0.12em] mb-4">Included Features</div>
+                          <ul className="space-y-3">
+                            {board.pricingDetails.includes.map((item, i) => (
+                              <li key={i} className="flex items-center gap-3 text-sm text-slate-600 font-medium">
+                                <svg className="w-4 h-4 text-teal-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                </svg>
+                                {item}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    </Collapsible>
+                  ) : hasPricingData ? (
                     <Collapsible label="View detailed pricing insights" collapseLabel="Hide details" maxHeight={0} fade={false}>
                       <div className="pt-6 mt-2 border-t border-slate-100 space-y-5">
                         <div>
