@@ -9,7 +9,7 @@ import CustomSelect from "@/components/CustomSelect";
 export default function DirectoryPage() {
   const boards = getAllBoards();
   const categories = getAllCategories();
-  const pricingOptions = ["free", "freemium", "paid"];
+  const pricingOptions = ["free", "paid", "quote-based"];
 
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedPricing, setSelectedPricing] = useState("all");

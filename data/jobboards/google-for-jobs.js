@@ -33,7 +33,10 @@ const google_for_jobs = {
     "Free for All"
   ],
   "idealFor": [],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "Free",
+  "seekerPricing": "Free",
+  "_originalPricing": "Free"
 };
 
 export default google_for_jobs;

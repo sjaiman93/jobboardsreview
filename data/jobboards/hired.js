@@ -38,7 +38,10 @@ const hired = {
     "Higher Intent Leads"
   ],
   "idealFor": [],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "$500/post",
+  "seekerPricing": "Free",
+  "_originalPricing": "Free for job seekers"
 };
 
 export default hired;

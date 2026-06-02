@@ -10,9 +10,9 @@ const teamwork_online = {
   "categorySlug": "generalist",
   "subcategory": "",
   "pricing": "Free account: Browse jobs, create a profile, apply, and set job alerts. MVP Access (optional): $5/month + $59.99 one-time activation fee ($64.99 total to start). Activation fee is waived for students at TeamWork U partner schools. || Pricing is not publicly listed. You schedule a demo and get a tailored plan based on your organization and hiring volume.",
-  "pricingModel": "paid",
+  "pricingModel": "quote-based",
   "pricingDetails": {
-    "employerCost": "Free account: Browse jobs, create a profile, apply, and set job alerts. MVP Access (optional): $5/month + $59.99 one-time activation fee ($64.99 total to start). Activation fee is waived for students at TeamWork U partner schools. || Pricing is not publicly listed. You schedule a demo and get a tailored plan based on your organization and hiring volume.",
+    "employerCost": "Pricing is not publicly listed. You schedule a demo and get a tailored plan based on your organization and hiring volume.",
     "includes": []
   },
   "website": "https://www.teamworkonline.com",
@@ -41,7 +41,10 @@ const teamwork_online = {
     "Sports Media Jobs",
     "Sports Business Careers"
   ],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "Contact for Quote",
+  "seekerPricing": "Free account: Browse jobs, create a profile, apply, and set job alerts. MVP Access (optional): $5/month + $59.99 one-time activation fee ($64.99 total to start). Activation fee is waived for students at TeamWork U partner schools.",
+  "_originalPricing": "Free account: Browse jobs, create a profile, apply, and set job alerts. MVP Access (optional): $5/month + $59.99 one-time activation fee ($64.99 total to start). Activation fee is waived for students at TeamWork U partner schools. || Pricing is not publicly listed. You schedule a demo and get a tailored plan based on your organization and hiring volume."
 };
 
 export default teamwork_online;

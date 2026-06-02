@@ -10,9 +10,9 @@ const alliedtravelcareers = {
   "categorySlug": "healthcare",
   "subcategory": "",
   "pricing": "Completely free to use Access to job search, recruiter comparisons, and agency insights || No publicly available pricing Operates as a marketplace/lead generation platform for staffing agencies Pricing and partnerships are typically handled via direct sales engagement Limited pricing transparency may make it harder for agencies to compare ROI with other job boards.",
-  "pricingModel": "paid",
+  "pricingModel": "quote-based",
   "pricingDetails": {
-    "employerCost": "Completely free to use Access to job search, recruiter comparisons, and agency insights || No publicly available pricing Operates as a marketplace/lead generation platform for staffing agencies Pricing and partnerships are typically handled via direct sales engagement Limited pricing transparency may make it harder for agencies to compare ROI with other job boards.",
+    "employerCost": "No publicly available pricing Operates as a marketplace/lead generation platform for staffing agencies Pricing and partnerships are typically handled via direct sales engagement Limited pricing transparency may make it harder for agencies to compare ROI with other job boards.",
     "includes": []
   },
   "website": "https://www.alliedtravelcareers.com",
@@ -32,7 +32,10 @@ const alliedtravelcareers = {
     "Travel Therapy Contracts",
     "Allied Health Travel Assignments"
   ],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "Contact for Quote",
+  "seekerPricing": "Completely free to use Access to job search, recruiter comparisons, and agency insights",
+  "_originalPricing": "Completely free to use Access to job search, recruiter comparisons, and agency insights || No publicly available pricing Operates as a marketplace/lead generation platform for staffing agencies Pricing and partnerships are typically handled via direct sales engagement Limited pricing transparency may make it harder for agencies to compare ROI with other job boards."
 };
 
 export default alliedtravelcareers;

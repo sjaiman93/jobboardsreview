@@ -20,7 +20,10 @@ const techladies = {
   "reviews": [],
   "highlights": [],
   "idealFor": [],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "Free",
+  "seekerPricing": "Free",
+  "_originalPricing": "Free"
 };
 
 export default techladies;

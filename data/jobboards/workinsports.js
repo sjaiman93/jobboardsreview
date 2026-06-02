@@ -10,9 +10,9 @@ const workinsports = {
   "categorySlug": "generalist",
   "subcategory": "",
   "pricing": "Free basic; Premium plans available",
-  "pricingModel": "paid",
+  "pricingModel": "quote-based",
   "pricingDetails": {
-    "employerCost": "Free basic; Premium plans available",
+    "employerCost": "Premium plans available",
     "includes": []
   },
   "website": "https://www.workinsports.com",
@@ -20,7 +20,10 @@ const workinsports = {
   "reviews": [],
   "highlights": [],
   "idealFor": [],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "Contact for Quote",
+  "seekerPricing": "Free basic",
+  "_originalPricing": "Free basic; Premium plans available"
 };
 
 export default workinsports;

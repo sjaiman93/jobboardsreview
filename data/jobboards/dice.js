@@ -44,7 +44,10 @@ const dice = {
     "DevOps Hiring",
     "Enterprise Tech Teams"
   ],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "$395/post",
+  "seekerPricing": "Free — create a profile, search listings, apply, and access salary data and career resources at no cost.",
+  "_originalPricing": "Free — create a profile, search listings, apply, and access salary data and career resources at no cost. || Single Job Slot — $399 30-day active listing, promoted across Dice channels. Online support and training included. Annual Contract Plans (billed monthly): Starter — $499/month (annual contract) — 3 job slots, 1 user, 50 candidate views/month, branded company profile, jobs promoted across channels Standard — $799/month (annual contract) — Unlimited job posts, unlimited users, 100 shared candidate views/month, branded and featured jobs, ATS integrations, onboarding and training Month-to-Month Plans (no annual contract): Starter — $649/month — 3 job slots, 1 user, 250 candidate views/month, online support Standard — $899/month — 5 job slots, 2 users, 500 shared candidate views/month, branded jobs, branded company profile, dedicated account manager and client success partner Enterprise — Contact sales for custom options with greater access and reach. Pricing subject to change. Valid for new customers only. Annual contract rates require commitment for full year."
 };
 
 export default dice;

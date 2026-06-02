@@ -10,9 +10,9 @@ const hospitalrecruiting = {
   "categorySlug": "healthcare",
   "subcategory": "",
   "pricing": "Free for job seekers; Employer plans vary",
-  "pricingModel": "paid",
+  "pricingModel": "quote-based",
   "pricingDetails": {
-    "employerCost": "Free for job seekers; Employer plans vary",
+    "employerCost": "Employer plans vary",
     "includes": []
   },
   "website": "https://www.hospitalrecruiting.com",
@@ -20,7 +20,10 @@ const hospitalrecruiting = {
   "reviews": [],
   "highlights": [],
   "idealFor": [],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "Contact for Quote",
+  "seekerPricing": "Free for job seekers",
+  "_originalPricing": "Free for job seekers; Employer plans vary"
 };
 
 export default hospitalrecruiting;

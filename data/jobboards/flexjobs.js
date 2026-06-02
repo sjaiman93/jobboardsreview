@@ -37,7 +37,10 @@ const flexjobs = {
   "idealFor": [
     "No free or pay-per-post option Not suitable for in-office roles Lower applicant volume vs free platforms Not ideal for highly niche hiring Limited public scale data"
   ],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "$299/post",
+  "seekerPricing": "Subscription required: Weekly ~$9.95 Monthly ~$24.95 Annual ~$59.95",
+  "_originalPricing": "Subscription required: Weekly ~$9.95 Monthly ~$24.95 Annual ~$59.95 || Unlimited postings — ~$299/month or ~$2699/year"
 };
 
 export default flexjobs;

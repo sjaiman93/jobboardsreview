@@ -12,7 +12,7 @@ const edsurge_jobs = {
   "pricing": "Free to browse and apply. || Single Job Post — ~$230–$399 depending on exposure Bulk and enterprise packages available",
   "pricingModel": "paid",
   "pricingDetails": {
-    "employerCost": "Free to browse and apply. || Single Job Post — ~$230–$399 depending on exposure Bulk and enterprise packages available",
+    "employerCost": "Single Job Post — ~$230–$399 depending on exposure Bulk and enterprise packages available",
     "includes": []
   },
   "website": "https://www.edsurge.com/jobs",
@@ -24,7 +24,10 @@ const edsurge_jobs = {
   "idealFor": [
     "Not suitable for non-education roles Expensive for occasional hiring Limited public traffic data Not ideal for staffing firms"
   ],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "$230/post",
+  "seekerPricing": "Free to browse and apply.",
+  "_originalPricing": "Free to browse and apply. || Single Job Post — ~$230–$399 depending on exposure Bulk and enterprise packages available"
 };
 
 export default edsurge_jobs;

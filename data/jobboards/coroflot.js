@@ -12,7 +12,7 @@ const coroflot = {
   "pricing": "Job Seekers Free — create a portfolio, browse listings, and apply at no cost. || Single Job Posting (90 days) — $295 3-Job Package — $265 per post 5-Job Package — $235 per post 10-Job Package — $200 per post Designer Search Subscription — $145/month Designer Search 30-Day Access — $195 one-time Visibility Upgrades: Feature Your Job — $195 per listing Highlight Your Job — $50 per listing All job posts include 90-day listing, job ad distribution, social media promotion, and access to freelancer profiles with direct messaging.",
   "pricingModel": "paid",
   "pricingDetails": {
-    "employerCost": "Job Seekers Free — create a portfolio, browse listings, and apply at no cost. || Single Job Posting (90 days) — $295 3-Job Package — $265 per post 5-Job Package — $235 per post 10-Job Package — $200 per post Designer Search Subscription — $145/month Designer Search 30-Day Access — $195 one-time Visibility Upgrades: Feature Your Job — $195 per listing Highlight Your Job — $50 per listing All job posts include 90-day listing, job ad distribution, social media promotion, and access to freelancer profiles with direct messaging.",
+    "employerCost": "Single Job Posting (90 days) — $295 3-Job Package — $265 per post 5-Job Package — $235 per post 10-Job Package — $200 per post Designer Search Subscription — $145/month Designer Search 30-Day Access — $195 one-time Visibility Upgrades: Feature Your Job — $195 per listing Highlight Your Job — $50 per listing All job posts include 90-day listing, job ad distribution, social media promotion, and access to freelancer profiles with direct messaging.",
     "includes": []
   },
   "website": "https://www.coroflot.com/jobs",
@@ -33,7 +33,10 @@ const coroflot = {
     "Creative Staffing",
     "Senior Design Roles"
   ],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "$295/post",
+  "seekerPricing": "Job Seekers Free — create a portfolio, browse listings, and apply at no cost.",
+  "_originalPricing": "Job Seekers Free — create a portfolio, browse listings, and apply at no cost. || Single Job Posting (90 days) — $295 3-Job Package — $265 per post 5-Job Package — $235 per post 10-Job Package — $200 per post Designer Search Subscription — $145/month Designer Search 30-Day Access — $195 one-time Visibility Upgrades: Feature Your Job — $195 per listing Highlight Your Job — $50 per listing All job posts include 90-day listing, job ad distribution, social media promotion, and access to freelancer profiles with direct messaging."
 };
 
 export default coroflot;

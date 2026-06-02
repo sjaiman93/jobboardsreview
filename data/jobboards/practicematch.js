@@ -10,7 +10,7 @@ const practicematch = {
   "categorySlug": "healthcare",
   "subcategory": "",
   "pricing": "Contact for pricing",
-  "pricingModel": "paid",
+  "pricingModel": "quote-based",
   "pricingDetails": {
     "employerCost": "Contact for pricing",
     "includes": []
@@ -31,7 +31,10 @@ const practicematch = {
     "Hospital Hiring",
     "Physician Sourcing"
   ],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "Contact for Quote",
+  "seekerPricing": "Free",
+  "_originalPricing": "Contact for pricing"
 };
 
 export default practicematch;

@@ -12,7 +12,7 @@ const linkedin_jobs = {
   "pricing": "LinkedIn Jobs is free for job seekers to search and apply; you only pay if you choose optional LinkedIn Premium features. || LinkedIn pricing has two main layers: job ads and sourcing tools. Job posts You can create free job posts, but reach is limited in competitive markets. To get more visibility, you set a daily budget and run promoted job ads (PPC model). Typical benchmarks: Minimum daily budget: about $7–$10/day per job. ​ Average cost‑per‑click (CPC): roughly $1.50–$4.50, higher in hot tech/metro markets. ​ Average cost per applicant: $1–$8, with a US average around $2.83. ​ LinkedIn Recruiter (for sourcing) LinkedIn Recruiter Corporate: about $8,999 per seat per year (~$750/month) as of 2026. ​ Agency‑oriented Recruiter Professional Services: typically $800–$1,080 per month ($9,600–$12,960 annually) per seat, with custom pricing and some volume discounts.",
   "pricingModel": "paid",
   "pricingDetails": {
-    "employerCost": "LinkedIn Jobs is free for job seekers to search and apply; you only pay if you choose optional LinkedIn Premium features. || LinkedIn pricing has two main layers: job ads and sourcing tools. Job posts You can create free job posts, but reach is limited in competitive markets. To get more visibility, you set a daily budget and run promoted job ads (PPC model). Typical benchmarks: Minimum daily budget: about $7–$10/day per job. ​ Average cost‑per‑click (CPC): roughly $1.50–$4.50, higher in hot tech/metro markets. ​ Average cost per applicant: $1–$8, with a US average around $2.83. ​ LinkedIn Recruiter (for sourcing) LinkedIn Recruiter Corporate: about $8,999 per seat per year (~$750/month) as of 2026. ​ Agency‑oriented Recruiter Professional Services: typically $800–$1,080 per month ($9,600–$12,960 annually) per seat, with custom pricing and some volume discounts.",
+    "employerCost": "LinkedIn pricing has two main layers: job ads and sourcing tools. Job posts You can create free job posts, but reach is limited in competitive markets. To get more visibility, you set a daily budget and run promoted job ads (PPC model). Typical benchmarks: Minimum daily budget: about $7–$10/day per job. ​ Average cost‑per‑click (CPC): roughly $1.50–$4.50, higher in hot tech/metro markets. ​ Average cost per applicant: $1–$8, with a US average around $2.83. ​ LinkedIn Recruiter (for sourcing) LinkedIn Recruiter Corporate: about $8,999 per seat per year (~$750/month) as of 2026. ​ Agency‑oriented Recruiter Professional Services: typically $800–$1,080 per month ($9,600–$12,960 annually) per seat, with custom pricing and some volume discounts.",
     "includes": []
   },
   "website": "https://www.linkedin.com/jobs",
@@ -40,7 +40,10 @@ const linkedin_jobs = {
     "Global Job Board",
     "Social Recruiting"
   ],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "$7/day",
+  "seekerPricing": "LinkedIn Jobs is free for job seekers to search and apply; you only pay if you choose optional LinkedIn Premium features.",
+  "_originalPricing": "LinkedIn Jobs is free for job seekers to search and apply; you only pay if you choose optional LinkedIn Premium features. || LinkedIn pricing has two main layers: job ads and sourcing tools. Job posts You can create free job posts, but reach is limited in competitive markets. To get more visibility, you set a daily budget and run promoted job ads (PPC model). Typical benchmarks: Minimum daily budget: about $7–$10/day per job. ​ Average cost‑per‑click (CPC): roughly $1.50–$4.50, higher in hot tech/metro markets. ​ Average cost per applicant: $1–$8, with a US average around $2.83. ​ LinkedIn Recruiter (for sourcing) LinkedIn Recruiter Corporate: about $8,999 per seat per year (~$750/month) as of 2026. ​ Agency‑oriented Recruiter Professional Services: typically $800–$1,080 per month ($9,600–$12,960 annually) per seat, with custom pricing and some volume discounts."
 };
 
 export default linkedin_jobs;

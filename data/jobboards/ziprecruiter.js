@@ -12,7 +12,7 @@ const ziprecruiter = {
   "pricing": "Free for Jobseekers. || ZipRecruiter uses a monthly subscription model. There is no long‑term contract, and you can cancel anytime. Free Trial 4‑day free trial to test the platform before committing. No credit card required to start. Daily Plans (per active job post): Basic Job Post: ~$24/day Premium Job Post: ~$35/day Professional Job Post: ~$45/day Monthly Subscription Plans: Standard: ~$399/month – AI matching, wide distribution, 5 job slots, email alerts Premium: ~$519/month – Adds resume database access, enhanced matching, better visibility Pro: ~$899/month – TrafficBoost (priority placement), multi‑user collaboration, ATS integrations, unlimited resume access Note: Pricing can vary based on location, industry, and company size. Annual subscriptions typically come at a discount.",
   "pricingModel": "paid",
   "pricingDetails": {
-    "employerCost": "Free for Jobseekers. || ZipRecruiter uses a monthly subscription model. There is no long‑term contract, and you can cancel anytime. Free Trial 4‑day free trial to test the platform before committing. No credit card required to start. Daily Plans (per active job post): Basic Job Post: ~$24/day Premium Job Post: ~$35/day Professional Job Post: ~$45/day Monthly Subscription Plans: Standard: ~$399/month – AI matching, wide distribution, 5 job slots, email alerts Premium: ~$519/month – Adds resume database access, enhanced matching, better visibility Pro: ~$899/month – TrafficBoost (priority placement), multi‑user collaboration, ATS integrations, unlimited resume access Note: Pricing can vary based on location, industry, and company size. Annual subscriptions typically come at a discount.",
+    "employerCost": "ZipRecruiter uses a monthly subscription model. There is no long‑term contract, and you can cancel anytime. Free Trial 4‑day free trial to test the platform before committing. No credit card required to start. Daily Plans (per active job post): Basic Job Post: ~$24/day Premium Job Post: ~$35/day Professional Job Post: ~$45/day Monthly Subscription Plans: Standard: ~$399/month – AI matching, wide distribution, 5 job slots, email alerts Premium: ~$519/month – Adds resume database access, enhanced matching, better visibility Pro: ~$899/month – TrafficBoost (priority placement), multi‑user collaboration, ATS integrations, unlimited resume access Note: Pricing can vary based on location, industry, and company size. Annual subscriptions typically come at a discount.",
     "includes": []
   },
   "website": "https://www.ziprecruiter.com",
@@ -40,7 +40,10 @@ const ziprecruiter = {
     "Job Syndication",
     "Monthly Subscription Job Board"
   ],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "$24/day",
+  "seekerPricing": "Free for Jobseekers.",
+  "_originalPricing": "Free for Jobseekers. || ZipRecruiter uses a monthly subscription model. There is no long‑term contract, and you can cancel anytime. Free Trial 4‑day free trial to test the platform before committing. No credit card required to start. Daily Plans (per active job post): Basic Job Post: ~$24/day Premium Job Post: ~$35/day Professional Job Post: ~$45/day Monthly Subscription Plans: Standard: ~$399/month – AI matching, wide distribution, 5 job slots, email alerts Premium: ~$519/month – Adds resume database access, enhanced matching, better visibility Pro: ~$899/month – TrafficBoost (priority placement), multi‑user collaboration, ATS integrations, unlimited resume access Note: Pricing can vary based on location, industry, and company size. Annual subscriptions typically come at a discount."
 };
 
 export default ziprecruiter;

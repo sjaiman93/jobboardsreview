@@ -35,7 +35,10 @@ const careervitals = {
     "Healthcare Staffing",
     "Healthcare Recruiting Platform"
   ],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "$199/post",
+  "seekerPricing": "Free",
+  "_originalPricing": "CareerVitals offers a mix of pay-per-post and subscription-based pricing models. Single job posting: $199 5 job postings: $399 10 job postings: $499 Subscription-based plans include: 2 job slots: $299 per month (annual commitment) 20 job slots: $499 per month (annual commitment) Unlimited job postings: $999 per month (annual subscription) Most subscription plans require an annual agreement, with promotional offers such as a free first month for new users. Additional pricing references (such as “Standard” and “Premium” plans) suggest tiered monthly options and pay-as-you-go flexibility, but the structure above represents the most consistent framework for comparison."
 };
 
 export default careervitals;

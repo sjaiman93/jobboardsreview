@@ -10,9 +10,9 @@ const y_combinator_jobs = {
   "categorySlug": "startups",
   "subcategory": "",
   "pricing": "100% free. No account required, no sign‑up, no paid tier. Browse, filter, and click through to company career pages at no cost. || This is a curated aggregator, not a traditional job board. Employers cannot post jobs directly, purchase placements, or manage listings. Jobs appear based on the site's independent curation and scraping process.",
-  "pricingModel": "paid",
+  "pricingModel": "quote-based",
   "pricingDetails": {
-    "employerCost": "100% free. No account required, no sign‑up, no paid tier. Browse, filter, and click through to company career pages at no cost. || This is a curated aggregator, not a traditional job board. Employers cannot post jobs directly, purchase placements, or manage listings. Jobs appear based on the site's independent curation and scraping process.",
+    "employerCost": "This is a curated aggregator, not a traditional job board. Employers cannot post jobs directly, purchase placements, or manage listings. Jobs appear based on the site's independent curation and scraping process.",
     "includes": []
   },
   "website": "https://www.ycombinator.com/jobs",
@@ -40,7 +40,10 @@ const y_combinator_jobs = {
     "YC Company Jobs",
     "Startup Career Portal"
   ],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "Contact for Quote",
+  "seekerPricing": "100% free. No account required, no sign‑up, no paid tier. Browse, filter, and click through to company career pages at no cost.",
+  "_originalPricing": "100% free. No account required, no sign‑up, no paid tier. Browse, filter, and click through to company career pages at no cost. || This is a curated aggregator, not a traditional job board. Employers cannot post jobs directly, purchase placements, or manage listings. Jobs appear based on the site's independent curation and scraping process."
 };
 
 export default y_combinator_jobs;

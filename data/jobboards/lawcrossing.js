@@ -10,9 +10,9 @@ const lawcrossing = {
   "categorySlug": "legal",
   "subcategory": "",
   "pricing": "Start with the intro offer: $5 for 4 weeks. Then $29/month. || Paid membership for full access; fees and promotions change regularly. Check the LawCrossing website for current subscription options.",
-  "pricingModel": "paid",
+  "pricingModel": "quote-based",
   "pricingDetails": {
-    "employerCost": "Start with the intro offer: $5 for 4 weeks. Then $29/month. || Paid membership for full access; fees and promotions change regularly. Check the LawCrossing website for current subscription options.",
+    "employerCost": "Paid membership for full access; fees and promotions change regularly. Check the LawCrossing website for current subscription options.",
     "includes": []
   },
   "website": "https://www.lawcrossing.com",
@@ -36,7 +36,10 @@ const lawcrossing = {
     "US Legal Jobs",
     "Global Legal Jobs"
   ],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "Contact for Quote",
+  "seekerPricing": "Start with the intro offer: $5 for 4 weeks. Then $29/month.",
+  "_originalPricing": "Start with the intro offer: $5 for 4 weeks. Then $29/month. || Paid membership for full access; fees and promotions change regularly. Check the LawCrossing website for current subscription options."
 };
 
 export default lawcrossing;

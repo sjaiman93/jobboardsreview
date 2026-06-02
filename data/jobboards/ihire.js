@@ -33,7 +33,10 @@ const ihire = {
     "Technology Job Boards",
     "Engineering Job Boards"
   ],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "$349/month",
+  "seekerPricing": "Free",
+  "_originalPricing": "Public pricing is not clearly displayed on every iHire niche site, but other site reviews of iHire communities show a fairly consistent employer pricing structure starting at $349 per month."
 };
 
 export default ihire;

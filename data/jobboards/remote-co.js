@@ -34,7 +34,10 @@ const remote_co = {
     "Culture Resources"
   ],
   "idealFor": [],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "$299/post",
+  "seekerPricing": "Free",
+  "_originalPricing": "Free for job seekers"
 };
 
 export default remote_co;

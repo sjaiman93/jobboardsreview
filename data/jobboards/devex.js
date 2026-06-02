@@ -12,7 +12,7 @@ const devex = {
   "pricing": "Free basic membership — create a profile, search jobs, and access career content at no cost. Career Account (paid) — from approximately $9.50/month billed annually (or $19/month billed monthly) Includes: exclusive job listings, additional career tools, and increased visibility to recruiters. || Standard Job Posting (30 days) — $399 Featured Job Posting (30 days, boosted visibility) — $598 Bundle Postings and Membership-Linked Plans — pricing on request Additional Services: Employer branding profile pages — available Candidate database access and sourcing services — available Contact Devex directly for bundle and volume pricing. Note: Devex does not include a built-in ATS. Employers typically manage applications through an external applicant tracking system.",
   "pricingModel": "paid",
   "pricingDetails": {
-    "employerCost": "Free basic membership — create a profile, search jobs, and access career content at no cost. Career Account (paid) — from approximately $9.50/month billed annually (or $19/month billed monthly) Includes: exclusive job listings, additional career tools, and increased visibility to recruiters. || Standard Job Posting (30 days) — $399 Featured Job Posting (30 days, boosted visibility) — $598 Bundle Postings and Membership-Linked Plans — pricing on request Additional Services: Employer branding profile pages — available Candidate database access and sourcing services — available Contact Devex directly for bundle and volume pricing. Note: Devex does not include a built-in ATS. Employers typically manage applications through an external applicant tracking system.",
+    "employerCost": "Standard Job Posting (30 days) — $399 Featured Job Posting (30 days, boosted visibility) — $598 Bundle Postings and Membership-Linked Plans — pricing on request Additional Services: Employer branding profile pages — available Candidate database access and sourcing services — available Contact Devex directly for bundle and volume pricing. Note: Devex does not include a built-in ATS. Employers typically manage applications through an external applicant tracking system.",
     "includes": []
   },
   "website": "https://www.devex.com",
@@ -34,7 +34,10 @@ const devex = {
     "Development Banks",
     "Mission-Driven Professionals"
   ],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "$399/post",
+  "seekerPricing": "Free basic membership — create a profile, search jobs, and access career content at no cost. Career Account (paid) — from approximately $9.50/month billed annually (or $19/month billed monthly) Includes: exclusive job listings, additional career tools, and increased visibility to recruiters.",
+  "_originalPricing": "Free basic membership — create a profile, search jobs, and access career content at no cost. Career Account (paid) — from approximately $9.50/month billed annually (or $19/month billed monthly) Includes: exclusive job listings, additional career tools, and increased visibility to recruiters. || Standard Job Posting (30 days) — $399 Featured Job Posting (30 days, boosted visibility) — $598 Bundle Postings and Membership-Linked Plans — pricing on request Additional Services: Employer branding profile pages — available Candidate database access and sourcing services — available Contact Devex directly for bundle and volume pricing. Note: Devex does not include a built-in ATS. Employers typically manage applications through an external applicant tracking system."
 };
 
 export default devex;

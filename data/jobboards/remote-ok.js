@@ -10,9 +10,9 @@ const remote_ok = {
   "categorySlug": "remote-flexible",
   "subcategory": "",
   "pricing": "Free for job seekers; Employer plans vary",
-  "pricingModel": "paid",
+  "pricingModel": "quote-based",
   "pricingDetails": {
-    "employerCost": "Free for job seekers; Employer plans vary",
+    "employerCost": "Employer plans vary",
     "includes": []
   },
   "website": "https://remoteok.com",
@@ -20,7 +20,10 @@ const remote_ok = {
   "reviews": [],
   "highlights": [],
   "idealFor": [],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "Contact for Quote",
+  "seekerPricing": "Free for job seekers",
+  "_originalPricing": "Free for job seekers; Employer plans vary"
 };
 
 export default remote_ok;

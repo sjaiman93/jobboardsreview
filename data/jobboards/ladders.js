@@ -20,7 +20,10 @@ const ladders = {
   "reviews": [],
   "highlights": [],
   "idealFor": [],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "$27.99/month",
+  "seekerPricing": "Free",
+  "_originalPricing": "Subscription from $27.99/mo for job seekers"
 };
 
 export default ladders;

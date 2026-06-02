@@ -10,7 +10,7 @@ const glassdoor = {
   "categorySlug": "generalist",
   "subcategory": "",
   "pricing": "Contact for pricing",
-  "pricingModel": "paid",
+  "pricingModel": "quote-based",
   "pricingDetails": {
     "employerCost": "Contact for pricing",
     "includes": []
@@ -20,7 +20,10 @@ const glassdoor = {
   "reviews": [],
   "highlights": [],
   "idealFor": [],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "Contact for Quote",
+  "seekerPricing": "Free",
+  "_originalPricing": "Contact for pricing"
 };
 
 export default glassdoor;

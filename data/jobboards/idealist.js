@@ -10,7 +10,7 @@ const idealist = {
   "categorySlug": "nonprofit-impact",
   "subcategory": "",
   "pricing": "Free for Job Seekers || Non‑US Organizations & Global Volunteer Opportunities: Jobs and volunteer listings are often free or very low cost, especially outside the US/Canada/UK. Nonprofit Organizations & Government Agencies (US/major markets): Jobs: around $145 per 30‑day post. Internships: around $25 per 30‑day post. Consultants & Recruiters: Jobs: around $175 per 30‑day post. Internships: around $35 per 30‑day post. Social Enterprises & Other Businesses: Jobs: around $195 per 30‑day post in the US/Canada/UK, typically cheaper in other regions. Note: Credit packs and discounts are available, and many non‑US jobs plus all global volunteer posts remain free, which is attractive for international NGOs.",
-  "pricingModel": "paid",
+  "pricingModel": "free",
   "pricingDetails": {
     "employerCost": "Free for nonprofits",
     "includes": [
@@ -50,7 +50,10 @@ const idealist = {
     "Nonprofit Recruiters",
     "Social Enterprise Jobs"
   ],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "Free",
+  "seekerPricing": "Free for Job Seekers",
+  "_originalPricing": "Free for Job Seekers || Non‑US Organizations & Global Volunteer Opportunities: Jobs and volunteer listings are often free or very low cost, especially outside the US/Canada/UK. Nonprofit Organizations & Government Agencies (US/major markets): Jobs: around $145 per 30‑day post. Internships: around $25 per 30‑day post. Consultants & Recruiters: Jobs: around $175 per 30‑day post. Internships: around $35 per 30‑day post. Social Enterprises & Other Businesses: Jobs: around $195 per 30‑day post in the US/Canada/UK, typically cheaper in other regions. Note: Credit packs and discounts are available, and many non‑US jobs plus all global volunteer posts remain free, which is attractive for international NGOs."
 };
 
 export default idealist;

@@ -12,7 +12,7 @@ const financial_job_bank = {
   "pricing": "Free to browse and apply. || Plans start from ~$199/month Additional upgrades available for visibility",
   "pricingModel": "paid",
   "pricingDetails": {
-    "employerCost": "Free to browse and apply. || Plans start from ~$199/month Additional upgrades available for visibility",
+    "employerCost": "Plans start from ~$199/month Additional upgrades available for visibility",
     "includes": []
   },
   "website": "https://www.financialjobbank.com",
@@ -31,7 +31,10 @@ const financial_job_bank = {
     "CPA Jobs",
     "Corporate Finance Hiring"
   ],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "$199/month",
+  "seekerPricing": "Free to browse and apply.",
+  "_originalPricing": "Free to browse and apply. || Plans start from ~$199/month Additional upgrades available for visibility"
 };
 
 export default financial_job_bank;

@@ -10,7 +10,7 @@ const alliedhealthjobcafe = {
   "categorySlug": "healthcare",
   "subcategory": "",
   "pricing": "Free. Profile creation, CV upload, job search, job alerts, and applications all cost nothing. || Pricing is not publicly listed.",
-  "pricingModel": "paid",
+  "pricingModel": "quote-based",
   "pricingDetails": {
     "employerCost": "Pricing is not publicly listed.",
     "includes": []
@@ -46,7 +46,10 @@ const alliedhealthjobcafe = {
     "US Allied Health Jobs",
     "Niche Healthcare Job Board"
   ],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "Contact for Quote",
+  "seekerPricing": "Free. Profile creation, CV upload, job search, job alerts, and applications all cost nothing.",
+  "_originalPricing": "Free. Profile creation, CV upload, job search, job alerts, and applications all cost nothing. || Pricing is not publicly listed."
 };
 
 export default alliedhealthjobcafe;

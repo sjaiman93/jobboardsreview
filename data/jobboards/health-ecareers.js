@@ -10,9 +10,9 @@ const health_ecareers = {
   "categorySlug": "healthcare",
   "subcategory": "",
   "pricing": "Free for Job Seekers || Pricing is not publicly Listed. Reach out to site contact directly.",
-  "pricingModel": "paid",
+  "pricingModel": "quote-based",
   "pricingDetails": {
-    "employerCost": "Free for Job Seekers || Pricing is not publicly Listed. Reach out to site contact directly.",
+    "employerCost": "Pricing is not publicly Listed. Reach out to site contact directly.",
     "includes": []
   },
   "website": "https://www.healthecareers.com",
@@ -34,7 +34,10 @@ const health_ecareers = {
     "Physician Recruitment",
     "Advanced Practice Hiring"
   ],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "Contact for Quote",
+  "seekerPricing": "Free for Job Seekers",
+  "_originalPricing": "Free for Job Seekers || Pricing is not publicly Listed. Reach out to site contact directly."
 };
 
 export default health_ecareers;

@@ -35,7 +35,10 @@ const himalayas = {
     "Modern UX"
   ],
   "idealFor": [],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "$99/post",
+  "seekerPricing": "Free",
+  "_originalPricing": "Free for job seekers"
 };
 
 export default himalayas;

@@ -12,7 +12,7 @@ const dribbble_jobs = {
   "pricing": "Free to browse and apply to jobs. Optional Pro plans available for designers who want increased profile visibility, portfolio features, and access to exclusive job listings. Contact Dribbble for current Pro plan pricing. || Single Job Post (30 days) — approximately $150 Hiring Suite — approximately $300/month (includes multiple job posts, enhanced visibility, and candidate management tools) Freelance Project Posting — approximately 7.5% service fee on project value Pricing subject to change. Verify current rates on Dribbble's website before purchasing.",
   "pricingModel": "paid",
   "pricingDetails": {
-    "employerCost": "Free to browse and apply to jobs. Optional Pro plans available for designers who want increased profile visibility, portfolio features, and access to exclusive job listings. Contact Dribbble for current Pro plan pricing. || Single Job Post (30 days) — approximately $150 Hiring Suite — approximately $300/month (includes multiple job posts, enhanced visibility, and candidate management tools) Freelance Project Posting — approximately 7.5% service fee on project value Pricing subject to change. Verify current rates on Dribbble's website before purchasing.",
+    "employerCost": "Single Job Post (30 days) — approximately $150 Hiring Suite — approximately $300/month (includes multiple job posts, enhanced visibility, and candidate management tools) Freelance Project Posting — approximately 7.5% service fee on project value Pricing subject to change. Verify current rates on Dribbble's website before purchasing.",
     "includes": []
   },
   "website": "https://dribbble.com/jobs",
@@ -34,7 +34,10 @@ const dribbble_jobs = {
     "Freelance Design Projects",
     "Remote Design Roles"
   ],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "$150/post",
+  "seekerPricing": "Free to browse and apply to jobs. Optional Pro plans available for designers who want increased profile visibility, portfolio features, and access to exclusive job listings. Contact Dribbble for current Pro plan pricing.",
+  "_originalPricing": "Free to browse and apply to jobs. Optional Pro plans available for designers who want increased profile visibility, portfolio features, and access to exclusive job listings. Contact Dribbble for current Pro plan pricing. || Single Job Post (30 days) — approximately $150 Hiring Suite — approximately $300/month (includes multiple job posts, enhanced visibility, and candidate management tools) Freelance Project Posting — approximately 7.5% service fee on project value Pricing subject to change. Verify current rates on Dribbble's website before purchasing."
 };
 
 export default dribbble_jobs;

@@ -10,9 +10,9 @@ const talent_com = {
   "categorySlug": "generalist",
   "subcategory": "",
   "pricing": "Free basic; Paid options available",
-  "pricingModel": "paid",
+  "pricingModel": "quote-based",
   "pricingDetails": {
-    "employerCost": "Free basic; Paid options available",
+    "employerCost": "Paid options available",
     "includes": []
   },
   "website": "https://www.talent.com",
@@ -20,7 +20,10 @@ const talent_com = {
   "reviews": [],
   "highlights": [],
   "idealFor": [],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "Contact for Quote",
+  "seekerPricing": "Free basic",
+  "_originalPricing": "Free basic; Paid options available"
 };
 
 export default talent_com;

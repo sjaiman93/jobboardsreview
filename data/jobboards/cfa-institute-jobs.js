@@ -12,7 +12,7 @@ const cfa_institute_jobs = {
   "pricing": "All services — Free (job search, applications, career resources, Job Flash email) || Standard Job Posting — From $399 (30-day job posting) Job Flash™ Package (Standard) — $599 (30-day posting + featured placement in monthly Job Flash email + inclusion in that month's email send if purchased by the Sunday before the 3rd Tuesday) Job Flash™ Package (CFA UK Member Discount) — $399 (same as above, $200 discount) Custom/Premium Upgrades — Contact for pricing (exclusive banner placements, multi-posting packages)",
   "pricingModel": "paid",
   "pricingDetails": {
-    "employerCost": "All services — Free (job search, applications, career resources, Job Flash email) || Standard Job Posting — From $399 (30-day job posting) Job Flash™ Package (Standard) — $599 (30-day posting + featured placement in monthly Job Flash email + inclusion in that month's email send if purchased by the Sunday before the 3rd Tuesday) Job Flash™ Package (CFA UK Member Discount) — $399 (same as above, $200 discount) Custom/Premium Upgrades — Contact for pricing (exclusive banner placements, multi-posting packages)",
+    "employerCost": "Standard Job Posting — From $399 (30-day job posting) Job Flash™ Package (Standard) — $599 (30-day posting + featured placement in monthly Job Flash email + inclusion in that month's email send if purchased by the Sunday before the 3rd Tuesday) Job Flash™ Package (CFA UK Member Discount) — $399 (same as above, $200 discount) Custom/Premium Upgrades — Contact for pricing (exclusive banner placements, multi-posting packages)",
     "includes": []
   },
   "website": "https://careers.cfainstitute.org",
@@ -45,7 +45,10 @@ const cfa_institute_jobs = {
     "candidate filtering",
     "financial services recruitment"
   ],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "$399/post",
+  "seekerPricing": "All services — Free (job search, applications, career resources, Job Flash email)",
+  "_originalPricing": "All services — Free (job search, applications, career resources, Job Flash email) || Standard Job Posting — From $399 (30-day job posting) Job Flash™ Package (Standard) — $599 (30-day posting + featured placement in monthly Job Flash email + inclusion in that month's email send if purchased by the Sunday before the 3rd Tuesday) Job Flash™ Package (CFA UK Member Discount) — $399 (same as above, $200 discount) Custom/Premium Upgrades — Contact for pricing (exclusive banner placements, multi-posting packages)"
 };
 
 export default cfa_institute_jobs;

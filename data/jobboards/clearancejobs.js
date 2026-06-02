@@ -10,9 +10,9 @@ const clearancejobs = {
   "categorySlug": "generalist",
   "subcategory": "",
   "pricing": "Job Seekers Free — create a profile, search listings, and apply at no cost. || Employers Quote-based pricing — no public rate card available. Contact ClearanceJobs sales for current subscription and pay-per-click options. Plans vary based on hiring volume, clearance level targeting, and resume database access needs. Staffing firms and high-volume contractors may have access to custom bundle pricing.",
-  "pricingModel": "paid",
+  "pricingModel": "quote-based",
   "pricingDetails": {
-    "employerCost": "Job Seekers Free — create a profile, search listings, and apply at no cost. || Employers Quote-based pricing — no public rate card available. Contact ClearanceJobs sales for current subscription and pay-per-click options. Plans vary based on hiring volume, clearance level targeting, and resume database access needs. Staffing firms and high-volume contractors may have access to custom bundle pricing.",
+    "employerCost": "Employers Quote-based pricing — no public rate card available. Contact ClearanceJobs sales for current subscription and pay-per-click options. Plans vary based on hiring volume, clearance level targeting, and resume database access needs. Staffing firms and high-volume contractors may have access to custom bundle pricing.",
     "includes": []
   },
   "website": "https://www.clearancejobs.com",
@@ -32,7 +32,10 @@ const clearancejobs = {
     "Government Subcontractors",
     "Cleared Professionals"
   ],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "Contact for Quote",
+  "seekerPricing": "Job Seekers Free — create a profile, search listings, and apply at no cost.",
+  "_originalPricing": "Job Seekers Free — create a profile, search listings, and apply at no cost. || Employers Quote-based pricing — no public rate card available. Contact ClearanceJobs sales for current subscription and pay-per-click options. Plans vary based on hiring volume, clearance level targeting, and resume database access needs. Staffing firms and high-volume contractors may have access to custom bundle pricing."
 };
 
 export default clearancejobs;

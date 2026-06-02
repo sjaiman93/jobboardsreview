@@ -10,7 +10,7 @@ const wall_street_oasis_jobs = {
   "categorySlug": "finance",
   "subcategory": "",
   "pricing": "Free for job seekers",
-  "pricingModel": "paid",
+  "pricingModel": "free",
   "pricingDetails": {
     "employerCost": "Free for job seekers",
     "includes": []
@@ -20,7 +20,10 @@ const wall_street_oasis_jobs = {
   "reviews": [],
   "highlights": [],
   "idealFor": [],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "Free",
+  "seekerPricing": "Free",
+  "_originalPricing": "Free for job seekers"
 };
 
 export default wall_street_oasis_jobs;

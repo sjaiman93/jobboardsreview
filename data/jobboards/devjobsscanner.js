@@ -10,9 +10,9 @@ const devjobsscanner = {
   "categorySlug": "technology",
   "subcategory": "",
   "pricing": "Free — search listings, apply filters, set up email alerts, and browse at no cost. || DevJobsScanner does not publish standard employer job posting pricing. Most listings are aggregated automatically from other developer job boards. Employers looking to reach this audience should post on developer-focused source boards that feed into the DevJobsScanner index. A small number of direct paid postings may be available — contact DevJobsScanner directly for current options.",
-  "pricingModel": "paid",
+  "pricingModel": "quote-based",
   "pricingDetails": {
-    "employerCost": "Free — search listings, apply filters, set up email alerts, and browse at no cost. || DevJobsScanner does not publish standard employer job posting pricing. Most listings are aggregated automatically from other developer job boards. Employers looking to reach this audience should post on developer-focused source boards that feed into the DevJobsScanner index. A small number of direct paid postings may be available — contact DevJobsScanner directly for current options.",
+    "employerCost": "DevJobsScanner does not publish standard employer job posting pricing. Most listings are aggregated automatically from other developer job boards. Employers looking to reach this audience should post on developer-focused source boards that feed into the DevJobsScanner index. A small number of direct paid postings may be available — contact DevJobsScanner directly for current options.",
     "includes": []
   },
   "website": "https://www.devjobsscanner.com",
@@ -32,7 +32,10 @@ const devjobsscanner = {
     "IT Specialists",
     "Developer Job Aggregator"
   ],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "Contact for Quote",
+  "seekerPricing": "Free — search listings, apply filters, set up email alerts, and browse at no cost.",
+  "_originalPricing": "Free — search listings, apply filters, set up email alerts, and browse at no cost. || DevJobsScanner does not publish standard employer job posting pricing. Most listings are aggregated automatically from other developer job boards. Employers looking to reach this audience should post on developer-focused source boards that feed into the DevJobsScanner index. A small number of direct paid postings may be available — contact DevJobsScanner directly for current options."
 };
 
 export default devjobsscanner;

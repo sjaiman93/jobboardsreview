@@ -12,7 +12,7 @@ const mediabistro = {
   "pricing": "Free for Job Seekers || Current Mediabistro pricing has moved to monthly subscription plans, with job packs also available: Starter – $199/month Post 1 job each month, stays active 30 days. Featured employer profile, ATS/career‑site auto‑sync, live support. ​ Boutique – $349/month Post 3 jobs each month, 30 days active. Featured employer profile, ATS/career‑site auto‑sync, live support. ​ Growth – $799/month (Unlimited) Unlimited jobs each month (for direct employers only). 30‑day listings, featured employer profile, ATS/career‑site auto‑sync, live support. ​ They also mention one‑time job posts and custom job packs; older per‑post pricing was around $297 for a single job and up from there for packs. For agencies posting at scale or doing programmatic distribution, Mediabistro offers custom volume pricing.",
   "pricingModel": "paid",
   "pricingDetails": {
-    "employerCost": "Free for Job Seekers || Current Mediabistro pricing has moved to monthly subscription plans, with job packs also available: Starter – $199/month Post 1 job each month, stays active 30 days. Featured employer profile, ATS/career‑site auto‑sync, live support. ​ Boutique – $349/month Post 3 jobs each month, 30 days active. Featured employer profile, ATS/career‑site auto‑sync, live support. ​ Growth – $799/month (Unlimited) Unlimited jobs each month (for direct employers only). 30‑day listings, featured employer profile, ATS/career‑site auto‑sync, live support. ​ They also mention one‑time job posts and custom job packs; older per‑post pricing was around $297 for a single job and up from there for packs. For agencies posting at scale or doing programmatic distribution, Mediabistro offers custom volume pricing.",
+    "employerCost": "Current Mediabistro pricing has moved to monthly subscription plans, with job packs also available: Starter – $199/month Post 1 job each month, stays active 30 days. Featured employer profile, ATS/career‑site auto‑sync, live support. ​ Boutique – $349/month Post 3 jobs each month, 30 days active. Featured employer profile, ATS/career‑site auto‑sync, live support. ​ Growth – $799/month (Unlimited) Unlimited jobs each month (for direct employers only). 30‑day listings, featured employer profile, ATS/career‑site auto‑sync, live support. ​ They also mention one‑time job posts and custom job packs; older per‑post pricing was around $297 for a single job and up from there for packs. For agencies posting at scale or doing programmatic distribution, Mediabistro offers custom volume pricing.",
     "includes": []
   },
   "website": "https://www.mediabistro.com",
@@ -37,7 +37,10 @@ const mediabistro = {
     "Niche Creative Job Board",
     "Employers In Media And Marketing"
   ],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "$199/month",
+  "seekerPricing": "Free for Job Seekers",
+  "_originalPricing": "Free for Job Seekers || Current Mediabistro pricing has moved to monthly subscription plans, with job packs also available: Starter – $199/month Post 1 job each month, stays active 30 days. Featured employer profile, ATS/career‑site auto‑sync, live support. ​ Boutique – $349/month Post 3 jobs each month, 30 days active. Featured employer profile, ATS/career‑site auto‑sync, live support. ​ Growth – $799/month (Unlimited) Unlimited jobs each month (for direct employers only). 30‑day listings, featured employer profile, ATS/career‑site auto‑sync, live support. ​ They also mention one‑time job posts and custom job packs; older per‑post pricing was around $297 for a single job and up from there for packs. For agencies posting at scale or doing programmatic distribution, Mediabistro offers custom volume pricing."
 };
 
 export default mediabistro;

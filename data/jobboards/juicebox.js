@@ -35,7 +35,10 @@ const juicebox = {
     "AI Hiring Tool",
     "Outbound Recruiting Platform"
   ],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "$139/month",
+  "seekerPricing": "Free",
+  "_originalPricing": "Pricing (Employer / Recruiter) Free Plan – Limited access Starter – $139/user/month Growth – $199/user/month Juicebox Agents – $199/agent/month (Add-on) (Includes credits, outreach tools, and AI features depending on plan)"
 };
 
 export default juicebox;

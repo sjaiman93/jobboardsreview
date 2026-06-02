@@ -12,7 +12,7 @@ const foundation_list = {
   "pricing": "Free for Job Seekers || Around $115–$169 per listing",
   "pricingModel": "paid",
   "pricingDetails": {
-    "employerCost": "Free for Job Seekers || Around $115–$169 per listing",
+    "employerCost": "Around $115–$169 per listing",
     "includes": []
   },
   "website": "https://www.foundationlist.org",
@@ -31,7 +31,10 @@ const foundation_list = {
     "Social Impact Jobs",
     "Nonprofit Hiring"
   ],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "$115/post",
+  "seekerPricing": "Free for Job Seekers",
+  "_originalPricing": "Free for Job Seekers || Around $115–$169 per listing"
 };
 
 export default foundation_list;

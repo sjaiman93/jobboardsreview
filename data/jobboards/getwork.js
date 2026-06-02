@@ -10,7 +10,7 @@ const getwork = {
   "categorySlug": "generalist",
   "subcategory": "",
   "pricing": "Free for job seekers",
-  "pricingModel": "paid",
+  "pricingModel": "free",
   "pricingDetails": {
     "employerCost": "Free (aggregator)",
     "includes": [
@@ -34,7 +34,10 @@ const getwork = {
     "Career Page Sync"
   ],
   "idealFor": [],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "Free",
+  "seekerPricing": "Free",
+  "_originalPricing": "Free for job seekers"
 };
 
 export default getwork;

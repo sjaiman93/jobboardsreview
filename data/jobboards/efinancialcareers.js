@@ -12,7 +12,7 @@ const efinancialcareers = {
   "pricing": "Free || $1,995 /2-month subscription Post up to 10 jobs and view up to 250 CV's per month",
   "pricingModel": "paid",
   "pricingDetails": {
-    "employerCost": "Free || $1,995 /2-month subscription Post up to 10 jobs and view up to 250 CV's per month",
+    "employerCost": "$1,995 /2-month subscription Post up to 10 jobs and view up to 250 CV's per month",
     "includes": []
   },
   "website": "https://www.efinancialcareers.com",
@@ -20,7 +20,10 @@ const efinancialcareers = {
   "reviews": [],
   "highlights": [],
   "idealFor": [],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "$1,995/month",
+  "seekerPricing": "Free",
+  "_originalPricing": "Free || $1,995 /2-month subscription Post up to 10 jobs and view up to 250 CV's per month"
 };
 
 export default efinancialcareers;

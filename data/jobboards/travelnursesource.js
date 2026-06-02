@@ -10,7 +10,7 @@ const travelnursesource = {
   "categorySlug": "healthcare",
   "subcategory": "",
   "pricing": "TravelNurseSource does not publicly display standardized pricing on its website. Employers and staffing agencies generally work directly with the platform through partnerships, job feed integrations, or sales-led agreements to distribute their job listings. Pricing structures may vary depending on volume, integration needs, and level of visibility within the platform.",
-  "pricingModel": "paid",
+  "pricingModel": "quote-based",
   "pricingDetails": {
     "employerCost": "TravelNurseSource does not publicly display standardized pricing on its website. Employers and staffing agencies generally work directly with the platform through partnerships, job feed integrations, or sales-led agreements to distribute their job listings. Pricing structures may vary depending on volume, integration needs, and level of visibility within the platform.",
     "includes": []
@@ -33,7 +33,10 @@ const travelnursesource = {
     "Travel Nurse Recruiter Reviews",
     "Travel Nursing Careers"
   ],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "Contact for Quote",
+  "seekerPricing": "Free",
+  "_originalPricing": "TravelNurseSource does not publicly display standardized pricing on its website. Employers and staffing agencies generally work directly with the platform through partnerships, job feed integrations, or sales-led agreements to distribute their job listings. Pricing structures may vary depending on volume, integration needs, and level of visibility within the platform."
 };
 
 export default travelnursesource;

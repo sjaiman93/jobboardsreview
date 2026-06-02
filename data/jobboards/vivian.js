@@ -12,7 +12,7 @@ const vivian = {
   "pricing": "Free for nurses and other clinicians. || Introductory Prices Starts from $5000/month and models are either Pay-per application or subscriptions based.",
   "pricingModel": "paid",
   "pricingDetails": {
-    "employerCost": "Free for nurses and other clinicians. || Introductory Prices Starts from $5000/month and models are either Pay-per application or subscriptions based.",
+    "employerCost": "Introductory Prices Starts from $5000/month and models are either Pay-per application or subscriptions based.",
     "includes": []
   },
   "website": "https://www.vivian.com",
@@ -35,7 +35,10 @@ const vivian = {
     "Hospital And Clinic Jobs",
     "Nurse Staffing Platform"
   ],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "$5000/month",
+  "seekerPricing": "Free for nurses and other clinicians.",
+  "_originalPricing": "Free for nurses and other clinicians. || Introductory Prices Starts from $5000/month and models are either Pay-per application or subscriptions based."
 };
 
 export default vivian;

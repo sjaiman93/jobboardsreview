@@ -12,7 +12,7 @@ const crunchboard = {
   "pricing": "Job Seekers Free — browse listings, apply, and set up job alerts at no cost. || Single Job Posting (30 days) — $349 5-Job Pack (never expires) — $1,295 ($259 per post) 10-Job Pack (never expires) — $2,495 ($249.50 per post) 5-Pack Featured Jobs — $1,695 Optional Upgrades: Mark as Urgent — +$49 per job Featured Job (pinned at top for 7 days) — +$149 per job All postings include visibility on Crunchboard and across TechCrunch's website, newsletters, and social channels.",
   "pricingModel": "paid",
   "pricingDetails": {
-    "employerCost": "Job Seekers Free — browse listings, apply, and set up job alerts at no cost. || Single Job Posting (30 days) — $349 5-Job Pack (never expires) — $1,295 ($259 per post) 10-Job Pack (never expires) — $2,495 ($249.50 per post) 5-Pack Featured Jobs — $1,695 Optional Upgrades: Mark as Urgent — +$49 per job Featured Job (pinned at top for 7 days) — +$149 per job All postings include visibility on Crunchboard and across TechCrunch's website, newsletters, and social channels.",
+    "employerCost": "Single Job Posting (30 days) — $349 5-Job Pack (never expires) — $1,295 ($259 per post) 10-Job Pack (never expires) — $2,495 ($249.50 per post) 5-Pack Featured Jobs — $1,695 Optional Upgrades: Mark as Urgent — +$49 per job Featured Job (pinned at top for 7 days) — +$149 per job All postings include visibility on Crunchboard and across TechCrunch's website, newsletters, and social channels.",
     "includes": []
   },
   "website": "https://www.crunchboard.com",
@@ -32,7 +32,10 @@ const crunchboard = {
     "Startup Talent Acquisition",
     "DevOps Hiring"
   ],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "$349/post",
+  "seekerPricing": "Job Seekers Free — browse listings, apply, and set up job alerts at no cost.",
+  "_originalPricing": "Job Seekers Free — browse listings, apply, and set up job alerts at no cost. || Single Job Posting (30 days) — $349 5-Job Pack (never expires) — $1,295 ($259 per post) 10-Job Pack (never expires) — $2,495 ($249.50 per post) 5-Pack Featured Jobs — $1,695 Optional Upgrades: Mark as Urgent — +$49 per job Featured Job (pinned at top for 7 days) — +$149 per job All postings include visibility on Crunchboard and across TechCrunch's website, newsletters, and social channels."
 };
 
 export default crunchboard;

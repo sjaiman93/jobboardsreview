@@ -35,7 +35,10 @@ const wellfound = {
     "1-click Apply"
   ],
   "idealFor": [],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "$149/month",
+  "seekerPricing": "Free for job seekers",
+  "_originalPricing": "Free for job seekers; Employer plans vary"
 };
 
 export default wellfound;

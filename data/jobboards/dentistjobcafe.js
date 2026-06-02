@@ -10,9 +10,9 @@ const dentistjobcafe = {
   "categorySlug": "healthcare",
   "subcategory": "",
   "pricing": "Completely free to use. Free job search, applications, resume upload, and job alerts. || No publicly listed pricing (quote-based model) 3-day free trial available for new employers Pricing varies based on job postings, resume access, and add-ons Requires contacting sales for customized packages Lack of transparent pricing can make comparison with competitors slightly difficult.",
-  "pricingModel": "paid",
+  "pricingModel": "quote-based",
   "pricingDetails": {
-    "employerCost": "Completely free to use. Free job search, applications, resume upload, and job alerts. || No publicly listed pricing (quote-based model) 3-day free trial available for new employers Pricing varies based on job postings, resume access, and add-ons Requires contacting sales for customized packages Lack of transparent pricing can make comparison with competitors slightly difficult.",
+    "employerCost": "No publicly listed pricing (quote-based model) 3-day free trial available for new employers Pricing varies based on job postings, resume access, and add-ons Requires contacting sales for customized packages Lack of transparent pricing can make comparison with competitors slightly difficult.",
     "includes": []
   },
   "website": "https://www.dentistjobcafe.com",
@@ -35,7 +35,10 @@ const dentistjobcafe = {
     "Dental Practice Jobs",
     "DSO Dental Jobs"
   ],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "Contact for Quote",
+  "seekerPricing": "Completely free to use. Free job search, applications, resume upload, and job alerts.",
+  "_originalPricing": "Completely free to use. Free job search, applications, resume upload, and job alerts. || No publicly listed pricing (quote-based model) 3-day free trial available for new employers Pricing varies based on job postings, resume access, and add-ons Requires contacting sales for customized packages Lack of transparent pricing can make comparison with competitors slightly difficult."
 };
 
 export default dentistjobcafe;

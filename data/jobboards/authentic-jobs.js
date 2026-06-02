@@ -12,7 +12,7 @@ const authentic_jobs = {
   "pricing": "100% free. Browse, search, and apply at no cost. || Job Posting Plans (30‑day subscription, renews monthly, cancel anytime) Standard Job Listing – $149/month → Basic job post with standard visibility Featured Job Listing – $199/month → Enhanced visibility, highlighted placement",
   "pricingModel": "paid",
   "pricingDetails": {
-    "employerCost": "100% free. Browse, search, and apply at no cost. || Job Posting Plans (30‑day subscription, renews monthly, cancel anytime) Standard Job Listing – $149/month → Basic job post with standard visibility Featured Job Listing – $199/month → Enhanced visibility, highlighted placement",
+    "employerCost": "Job Posting Plans (30‑day subscription, renews monthly, cancel anytime) Standard Job Listing – $149/month → Basic job post with standard visibility Featured Job Listing – $199/month → Enhanced visibility, highlighted placement",
     "includes": []
   },
   "website": "https://www.authenticjobs.com",
@@ -39,7 +39,10 @@ const authentic_jobs = {
     "Startup Hiring",
     "Creative Studio Hiring"
   ],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "$149/month",
+  "seekerPricing": "100% free. Browse, search, and apply at no cost.",
+  "_originalPricing": "100% free. Browse, search, and apply at no cost. || Job Posting Plans (30‑day subscription, renews monthly, cancel anytime) Standard Job Listing – $149/month → Basic job post with standard visibility Featured Job Listing – $199/month → Enhanced visibility, highlighted placement"
 };
 
 export default authentic_jobs;

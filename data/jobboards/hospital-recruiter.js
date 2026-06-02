@@ -38,7 +38,10 @@ const hospital_recruiter = {
     "Physician job seekers",
     "Healthcare recruiters",
     "Advanced practice providers"
-  ]
+  ],
+  "pricingSummary": "$399/month",
+  "seekerPricing": "Free",
+  "_originalPricing": "Subscription"
 };
 
 export default hospital_recruiter;

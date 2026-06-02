@@ -12,7 +12,7 @@ const bluepipes = {
   "pricing": "All services — Free (Profile creation, resume builder, skills checklists, credential storage, pay calculator, job search & apply, blog/resources) || Free Recruiter Account — $0 (join, claim company page, view public profiles) Job Posting — $5 per posting Recruitment Subscription — Contact for pricing (includes Advanced Search, BlueMail messaging, connection requests) Custom Recruitment Packages — Contact for pricing",
   "pricingModel": "paid",
   "pricingDetails": {
-    "employerCost": "All services — Free (Profile creation, resume builder, skills checklists, credential storage, pay calculator, job search & apply, blog/resources) || Free Recruiter Account — $0 (join, claim company page, view public profiles) Job Posting — $5 per posting Recruitment Subscription — Contact for pricing (includes Advanced Search, BlueMail messaging, connection requests) Custom Recruitment Packages — Contact for pricing",
+    "employerCost": "Free Recruiter Account — $0 (join, claim company page, view public profiles) Job Posting — $5 per posting Recruitment Subscription — Contact for pricing (includes Advanced Search, BlueMail messaging, connection requests) Custom Recruitment Packages — Contact for pricing",
     "includes": []
   },
   "website": "https://www.bluepipes.com",
@@ -43,7 +43,10 @@ const bluepipes = {
     "recruitment subscription",
     "niche job board"
   ],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "$5/post",
+  "seekerPricing": "All services — Free (Profile creation, resume builder, skills checklists, credential storage, pay calculator, job search & apply, blog/resources)",
+  "_originalPricing": "All services — Free (Profile creation, resume builder, skills checklists, credential storage, pay calculator, job search & apply, blog/resources) || Free Recruiter Account — $0 (join, claim company page, view public profiles) Job Posting — $5 per posting Recruitment Subscription — Contact for pricing (includes Advanced Search, BlueMail messaging, connection requests) Custom Recruitment Packages — Contact for pricing"
 };
 
 export default bluepipes;

@@ -12,7 +12,7 @@ const we_work_remotely = {
   "pricing": "Free for job seekers; Employer plans from $299",
   "pricingModel": "paid",
   "pricingDetails": {
-    "employerCost": "Free for job seekers; Employer plans from $299",
+    "employerCost": "Employer plans from $299",
     "includes": []
   },
   "website": "https://weworkremotely.com",
@@ -20,7 +20,10 @@ const we_work_remotely = {
   "reviews": [],
   "highlights": [],
   "idealFor": [],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "$299/post",
+  "seekerPricing": "Free for job seekers",
+  "_originalPricing": "Free for job seekers; Employer plans from $299"
 };
 
 export default we_work_remotely;

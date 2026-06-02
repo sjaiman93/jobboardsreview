@@ -10,7 +10,7 @@ const nalp_job_board = {
   "categorySlug": "legal",
   "subcategory": "",
   "pricing": "Member access",
-  "pricingModel": "paid",
+  "pricingModel": "quote-based",
   "pricingDetails": {
     "employerCost": "Member access",
     "includes": []
@@ -20,7 +20,10 @@ const nalp_job_board = {
   "reviews": [],
   "highlights": [],
   "idealFor": [],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "Contact for Quote",
+  "seekerPricing": "Free",
+  "_originalPricing": "Member access"
 };
 
 export default nalp_job_board;

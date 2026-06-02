@@ -10,7 +10,7 @@ const lawyer_com_jobs = {
   "categorySlug": "legal",
   "subcategory": "",
   "pricing": "Free for job seekers",
-  "pricingModel": "paid",
+  "pricingModel": "free",
   "pricingDetails": {
     "employerCost": "Free for job seekers",
     "includes": []
@@ -20,7 +20,10 @@ const lawyer_com_jobs = {
   "reviews": [],
   "highlights": [],
   "idealFor": [],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "Free",
+  "seekerPricing": "Free",
+  "_originalPricing": "Free for job seekers"
 };
 
 export default lawyer_com_jobs;

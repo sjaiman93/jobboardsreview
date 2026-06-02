@@ -12,7 +12,7 @@ const monster = {
   "pricing": "Free for Job Seekers || Monster Free – $0 1 active job every 30 days. Up to 3 applicants per job. Appears on website and mobile app. ​ Monster+ Standard – from about $8/day (PPC) Pay‑per‑click on job ads. Distribution across Monster, CareerBuilder, and partner network. Monster+ Pro – around $299/month (or ~$2,990/year) Promoted postings plus resume search. Monthly “Monster Credits” to spend on ad boosts and resume views. Candidate messaging and unlimited users on the account. Enterprise / custom plans Volume‑based pricing, deeper ATS integrations, and strategic support for high‑volume recruitment.",
   "pricingModel": "paid",
   "pricingDetails": {
-    "employerCost": "Free for Job Seekers || Monster Free – $0 1 active job every 30 days. Up to 3 applicants per job. Appears on website and mobile app. ​ Monster+ Standard – from about $8/day (PPC) Pay‑per‑click on job ads. Distribution across Monster, CareerBuilder, and partner network. Monster+ Pro – around $299/month (or ~$2,990/year) Promoted postings plus resume search. Monthly “Monster Credits” to spend on ad boosts and resume views. Candidate messaging and unlimited users on the account. Enterprise / custom plans Volume‑based pricing, deeper ATS integrations, and strategic support for high‑volume recruitment.",
+    "employerCost": "Monster Free – $0 1 active job every 30 days. Up to 3 applicants per job. Appears on website and mobile app. ​ Monster+ Standard – from about $8/day (PPC) Pay‑per‑click on job ads. Distribution across Monster, CareerBuilder, and partner network. Monster+ Pro – around $299/month (or ~$2,990/year) Promoted postings plus resume search. Monthly “Monster Credits” to spend on ad boosts and resume views. Candidate messaging and unlimited users on the account. Enterprise / custom plans Volume‑based pricing, deeper ATS integrations, and strategic support for high‑volume recruitment.",
     "includes": []
   },
   "website": "https://www.monster.com",
@@ -44,7 +44,10 @@ const monster = {
     "Job Search Platform",
     "Recruiting Platform"
   ],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "$8/day",
+  "seekerPricing": "Free for Job Seekers",
+  "_originalPricing": "Free for Job Seekers || Monster Free – $0 1 active job every 30 days. Up to 3 applicants per job. Appears on website and mobile app. ​ Monster+ Standard – from about $8/day (PPC) Pay‑per‑click on job ads. Distribution across Monster, CareerBuilder, and partner network. Monster+ Pro – around $299/month (or ~$2,990/year) Promoted postings plus resume search. Monthly “Monster Credits” to spend on ad boosts and resume views. Candidate messaging and unlimited users on the account. Enterprise / custom plans Volume‑based pricing, deeper ATS integrations, and strategic support for high‑volume recruitment."
 };
 
 export default monster;

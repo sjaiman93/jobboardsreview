@@ -51,7 +51,10 @@ const indeed = {
     "International Jobs",
     "Candidate Matching Platform"
   ],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "$5/day",
+  "seekerPricing": "Free for Job Seekers.",
+  "_originalPricing": "Free for Job Seekers. || Indeed constantly tweaks pricing, but the current patterns look like this: Free job posts You can post jobs for free, but visibility is limited and they sink in results quickly in competitive markets. Sponsored jobs – PPC / daily budget You set a daily or campaign budget; you pay when candidates click. Recent changes: many markets now enforce higher minimums per job (e.g., guidance around $25/day per job in the US after mid‑2025), so running many roles in parallel can get expensive. ​ Subscription / “Indeed for Employers” type plans Some regions offer subscription packages for ongoing hiring, often starting in the low‑hundreds of dollars per month and scaling with volume and features (resume search, more invites, analytics). Net‑net: Indeed is cheap to test (free posts), but serious reach comes from sponsored campaigns, and those costs need to be managed carefully with good targeting and caps."
 };
 
 export default indeed;

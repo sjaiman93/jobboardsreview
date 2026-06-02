@@ -12,7 +12,7 @@ const healthjobsnationwide = {
   "pricing": "Job seekers can use the platform for free. || HealthJobsNationwide follows a credit-based pricing model for healthcare job postings and resume access: 1 Job Credit (30-day listing): $299 3 Job Credits: $499 (non-expiring) 10 Job Credits: $799 (non-expiring) Resume Database Access: 10 resume views: $29 25 resume views: $39 50 resume views: $79 Add-ons & Upgrades: Featured Job Listing: $75 Job Refresh: $75 Custom recruitment packages available via sales",
   "pricingModel": "paid",
   "pricingDetails": {
-    "employerCost": "Job seekers can use the platform for free. || HealthJobsNationwide follows a credit-based pricing model for healthcare job postings and resume access: 1 Job Credit (30-day listing): $299 3 Job Credits: $499 (non-expiring) 10 Job Credits: $799 (non-expiring) Resume Database Access: 10 resume views: $29 25 resume views: $39 50 resume views: $79 Add-ons & Upgrades: Featured Job Listing: $75 Job Refresh: $75 Custom recruitment packages available via sales",
+    "employerCost": "HealthJobsNationwide follows a credit-based pricing model for healthcare job postings and resume access: 1 Job Credit (30-day listing): $299 3 Job Credits: $499 (non-expiring) 10 Job Credits: $799 (non-expiring) Resume Database Access: 10 resume views: $29 25 resume views: $39 50 resume views: $79 Add-ons & Upgrades: Featured Job Listing: $75 Job Refresh: $75 Custom recruitment packages available via sales",
     "includes": []
   },
   "website": "https://www.healthjobsnationwide.com",
@@ -36,7 +36,10 @@ const healthjobsnationwide = {
     "Third‑Party Healthcare Recruiters",
     "US Healthcare Jobs"
   ],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "$299/post",
+  "seekerPricing": "Job seekers can use the platform for free.",
+  "_originalPricing": "Job seekers can use the platform for free. || HealthJobsNationwide follows a credit-based pricing model for healthcare job postings and resume access: 1 Job Credit (30-day listing): $299 3 Job Credits: $499 (non-expiring) 10 Job Credits: $799 (non-expiring) Resume Database Access: 10 resume views: $29 25 resume views: $39 50 resume views: $79 Add-ons & Upgrades: Featured Job Listing: $75 Job Refresh: $75 Custom recruitment packages available via sales"
 };
 
 export default healthjobsnationwide;

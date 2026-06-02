@@ -10,7 +10,7 @@ const smashing_magazine_jobs = {
   "categorySlug": "technology",
   "subcategory": "",
   "pricing": "Free for job seekers",
-  "pricingModel": "paid",
+  "pricingModel": "free",
   "pricingDetails": {
     "employerCost": "Free for job seekers",
     "includes": []
@@ -20,7 +20,10 @@ const smashing_magazine_jobs = {
   "reviews": [],
   "highlights": [],
   "idealFor": [],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "Free",
+  "seekerPricing": "Free",
+  "_originalPricing": "Free for job seekers"
 };
 
 export default smashing_magazine_jobs;

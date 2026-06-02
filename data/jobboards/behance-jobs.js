@@ -12,7 +12,7 @@ const behance_jobs = {
   "pricing": "Free for Job Seekers. || Free Plan: Full access to portfolio creation and browsing Adobe Creative Cloud (Optional): Paid plans starting ~$20/month (not required for Behance use)",
   "pricingModel": "paid",
   "pricingDetails": {
-    "employerCost": "Free for Job Seekers. || Free Plan: Full access to portfolio creation and browsing Adobe Creative Cloud (Optional): Paid plans starting ~$20/month (not required for Behance use)",
+    "employerCost": "Free Plan: Full access to portfolio creation and browsing Adobe Creative Cloud (Optional): Paid plans starting ~$20/month (not required for Behance use)",
     "includes": []
   },
   "website": "https://www.behance.net/joblist",
@@ -35,7 +35,10 @@ const behance_jobs = {
     "talent discovery",
     "digital art showcase"
   ],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "$20/month",
+  "seekerPricing": "Free for Job Seekers.",
+  "_originalPricing": "Free for Job Seekers. || Free Plan: Full access to portfolio creation and browsing Adobe Creative Cloud (Optional): Paid plans starting ~$20/month (not required for Behance use)"
 };
 
 export default behance_jobs;

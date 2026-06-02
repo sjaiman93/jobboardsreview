@@ -12,7 +12,7 @@ const cybersecjobs = {
   "pricing": "Free — create a profile, upload a resume, search listings, apply, and set up job alerts at no cost. || Direct employers only — staffing agencies and third-party recruiters not permitted. Standard 30-Day Job Posting — from $199 Job Flash Email Campaign — additional cost (targets cybersecurity professionals directly, marketed as increasing response by up to 500%) Featured/Spotlight Listings — available as upgrades Ultimate Recruitment Bundle — up to approximately $599 (includes premium placements and resume access) Contact CyberSecJobs for current full pricing on bundles and add-ons.",
   "pricingModel": "paid",
   "pricingDetails": {
-    "employerCost": "Free — create a profile, upload a resume, search listings, apply, and set up job alerts at no cost. || Direct employers only — staffing agencies and third-party recruiters not permitted. Standard 30-Day Job Posting — from $199 Job Flash Email Campaign — additional cost (targets cybersecurity professionals directly, marketed as increasing response by up to 500%) Featured/Spotlight Listings — available as upgrades Ultimate Recruitment Bundle — up to approximately $599 (includes premium placements and resume access) Contact CyberSecJobs for current full pricing on bundles and add-ons.",
+    "employerCost": "Direct employers only — staffing agencies and third-party recruiters not permitted. Standard 30-Day Job Posting — from $199 Job Flash Email Campaign — additional cost (targets cybersecurity professionals directly, marketed as increasing response by up to 500%) Featured/Spotlight Listings — available as upgrades Ultimate Recruitment Bundle — up to approximately $599 (includes premium placements and resume access) Contact CyberSecJobs for current full pricing on bundles and add-ons.",
     "includes": []
   },
   "website": "https://www.cybersecjobs.com",
@@ -34,7 +34,10 @@ const cybersecjobs = {
     "Financial Institutions",
     "Security Vendors"
   ],
-  "productType": "job_board"
+  "productType": "job_board",
+  "pricingSummary": "$199/post",
+  "seekerPricing": "Free — create a profile, upload a resume, search listings, apply, and set up job alerts at no cost.",
+  "_originalPricing": "Free — create a profile, upload a resume, search listings, apply, and set up job alerts at no cost. || Direct employers only — staffing agencies and third-party recruiters not permitted. Standard 30-Day Job Posting — from $199 Job Flash Email Campaign — additional cost (targets cybersecurity professionals directly, marketed as increasing response by up to 500%) Featured/Spotlight Listings — available as upgrades Ultimate Recruitment Bundle — up to approximately $599 (includes premium placements and resume access) Contact CyberSecJobs for current full pricing on bundles and add-ons."
 };
 
 export default cybersecjobs;
