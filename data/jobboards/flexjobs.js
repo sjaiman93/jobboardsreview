@@ -2,14 +2,14 @@ const flexjobs = {
   "id": 10,
   "slug": "flexjobs",
   "name": "FlexJobs",
-  "logo": "/logos/flexjobs.svg",
-  "bestFor": "Flexible Work",
-  "shortDescription": "Hand-screened remote, hybrid, and flexible job listings. Every posting is verified to eliminate scams.",
-  "fullDescription": "FlexJobs hand-screens every job listing to ensure legitimacy, eliminating scams and misleading postings. Focused on remote, hybrid, freelance, and flexible work arrangements across all industries.",
+  "logo": "/logos/flexjobs.jpg",
+  "bestFor": "No free or pay-per-post option Not suitable for in-office roles Lower applicant volume vs free platforms Not ideal for highly niche hiring Limited public scale data",
+  "shortDescription": "FlexJobs is a premium, hand‑screened job board for remote, hybrid, and flexible jobs, offering scam‑free listings across 50+ career fields and paid access for job seekers.",
+  "fullDescription": "FlexJobs is one of the most established platforms focused on remote, hybrid, and flexible jobs across industries. Its main differentiator is the manual screening of every job listing, ensuring that only legitimate and high-quality opportunities appear on the platform. This curated approach removes spam and misleading listings commonly found on general job boards. As a result, both employers and candidates operate in a cleaner, more trustworthy environment. The platform supports roles across industries including technology, healthcare, education, marketing, and customer service. This makes it broader than many niche remote job boards. FlexJobs operates on a subscription model for both employers and job seekers, which acts as a filter for serious participants. Employers benefit from higher-quality applications, while candidates gain access to verified opportunities. FlexJobs is best suited for companies hiring remote roles consistently and prioritizing candidate quality over volume.",
   "category": "Remote & Flexible",
   "categorySlug": "remote-flexible",
   "subcategory": "",
-  "pricing": "Subscription",
+  "pricing": "Subscription required: Weekly ~$9.95 Monthly ~$24.95 Annual ~$59.95 || Unlimited postings — ~$299/month or ~$2699/year",
   "pricingModel": "paid",
   "pricingDetails": {
     "employerCost": "$299/post",
@@ -20,7 +20,7 @@ const flexjobs = {
       "Resume review"
     ]
   },
-  "website": "https://flexjobs.com",
+  "website": "https://www.flexjobs.com",
   "features": [
     "Hand-screened Listings",
     "Scam-free Guarantee",
@@ -35,11 +35,9 @@ const flexjobs = {
     "Career Resources"
   ],
   "idealFor": [
-    "Remote job seekers",
-    "Freelancers",
-    "Parents seeking flexibility",
-    "Career changers"
-  ]
+    "No free or pay-per-post option Not suitable for in-office roles Lower applicant volume vs free platforms Not ideal for highly niche hiring Limited public scale data"
+  ],
+  "productType": "job_board"
 };
 
 export default flexjobs;

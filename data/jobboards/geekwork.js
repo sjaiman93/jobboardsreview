@@ -1,15 +1,15 @@
 const geekwork = {
   "id": 5,
   "slug": "geekwork",
-  "name": "GeeKwork",
-  "logo": "/logos/geekwork.svg",
+  "name": "GeekWork",
+  "logo": "https://logo.clearbit.com/geekwire.com",
   "bestFor": "Pacific NW Tech",
-  "shortDescription": "Tech jobs in the Pacific Northwest. Run by GeekWire, the leading tech news site for the region.",
-  "fullDescription": "GeeKwork is the job board powered by GeekWire, the premier technology news site for the Pacific Northwest. Focused on tech roles in Seattle, Portland, and the broader PNW ecosystem.",
+  "shortDescription": "Tech jobs in the Pacific Northwest. Run by GeekWire, the leading tech news site for Seattle/Portland region.",
+  "fullDescription": "",
   "category": "Technology",
   "categorySlug": "technology",
   "subcategory": "",
-  "pricing": "Pay-per-post",
+  "pricing": "Free for job seekers",
   "pricingModel": "paid",
   "pricingDetails": {
     "employerCost": "$250/post",
@@ -19,7 +19,7 @@ const geekwork = {
       "Newsletter feature"
     ]
   },
-  "website": "https://geekwork.com",
+  "website": "https://www.geekwire.com/jobs",
   "features": [
     "Regional Focus",
     "Tech News Integration",
@@ -32,11 +32,8 @@ const geekwork = {
     "GeekWire Network",
     "Tech Community"
   ],
-  "idealFor": [
-    "PNW tech companies",
-    "Engineers in Seattle/Portland",
-    "Startup founders"
-  ]
+  "idealFor": [],
+  "productType": "job_board"
 };
 
 export default geekwork;

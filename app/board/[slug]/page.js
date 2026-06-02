@@ -27,6 +27,66 @@ export async function generateMetadata({ params }) {
   };
 }
 
+function segmentOverviewText(text) {
+  if (!text || text.trim().length === 0) return [];
+  
+  // 1. Split by existing paragraph breaks (double newlines)
+  const blocks = text.split(/\r?\n\r?\n/);
+  const resultParagraphs = [];
+  
+  blocks.forEach(block => {
+    const trimmedBlock = block.trim();
+    if (!trimmedBlock) return;
+    
+    // 2. If block is under ~400 characters, keep it unchanged
+    if (trimmedBlock.length < 400) {
+      resultParagraphs.push(trimmedBlock);
+      return;
+    }
+    
+    // 3. Segment large block using sentence boundaries
+    // Split on space preceded by . ! or ? and followed by uppercase letter or digit
+    const sentences = trimmedBlock.split(/(?<=[.!?])\s+(?=[A-Z0-9"'])/).map(s => s.trim()).filter(Boolean);
+    
+    if (sentences.length <= 2) {
+      resultParagraphs.push(trimmedBlock);
+      return;
+    }
+    
+    // Extract Lead paragraph (1-2 sentences)
+    let lead = [];
+    lead.push(sentences[0]);
+    if (sentences.length > 1 && sentences[0].length < 120) {
+      lead.push(sentences[1]);
+    }
+    resultParagraphs.push(lead.join(" ").trim());
+    
+    // Extract remaining paragraphs (target size: 250-400 characters)
+    let currentPara = [];
+    let currentLength = 0;
+    const startIndex = lead.length;
+    
+    for (let i = startIndex; i < sentences.length; i++) {
+      const sentence = sentences[i];
+      currentPara.push(sentence);
+      currentLength += sentence.length;
+      
+      // If we have accumulated at least 300 characters, or if this is the last sentence
+      if (currentLength >= 300 || i === sentences.length - 1) {
+        resultParagraphs.push(currentPara.join(" ").trim());
+        currentPara = [];
+        currentLength = 0;
+      }
+    }
+    
+    if (currentPara.length > 0) {
+      resultParagraphs.push(currentPara.join(" ").trim());
+    }
+  });
+  
+  return resultParagraphs;
+}
+
 export default async function BoardDetailPage({ params }) {
   const { slug } = await params;
   const board = getBoardBySlug(slug);
@@ -228,10 +288,29 @@ export default async function BoardDetailPage({ params }) {
                 {board.fullDescription && board.fullDescription.trim() !== "" && (
                   <div>
                     <h3 className="text-xl font-black text-slate-900 mb-5">Full Overview</h3>
-                    <Collapsible label="Read full analysis" collapseLabel="Show less" maxHeight={100} fade={true}>
-                      <p className="text-sm text-slate-600 font-medium leading-relaxed">
-                        {board.fullDescription}
-                      </p>
+                    <Collapsible label="Read full analysis" collapseLabel="Show less" maxHeight={120} fade={true}>
+                      <div className="space-y-4">
+                        {(() => {
+                          const paragraphs = segmentOverviewText(board.fullDescription);
+                          const isSingleParagraph = paragraphs.length <= 1;
+                          
+                          return paragraphs.map((paragraph, pIdx) => {
+                            const isLead = pIdx === 0 && !isSingleParagraph;
+                            return (
+                              <p 
+                                key={pIdx} 
+                                className={
+                                  isLead 
+                                    ? "text-sm text-slate-800 font-bold leading-relaxed max-w-2xl" 
+                                    : "text-sm text-slate-600 font-medium leading-relaxed max-w-2xl"
+                                }
+                              >
+                                {paragraph}
+                              </p>
+                            );
+                          });
+                        })()}
+                      </div>
                     </Collapsible>
                   </div>
                 )}

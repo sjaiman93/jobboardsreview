@@ -2,14 +2,14 @@ const remote_co = {
   "id": 7,
   "slug": "remote-co",
   "name": "Remote.co",
-  "logo": "/logos/remote-co.svg",
+  "logo": "https://logo.clearbit.com/remote.co",
   "bestFor": "Remote Culture",
-  "shortDescription": "Curated remote job listings with employer Q&A profiles and remote work resources.",
-  "fullDescription": "Remote.co offers curated remote job listings combined with in-depth employer Q&A profiles. Their resources section helps both job seekers and employers navigate remote work successfully.",
+  "shortDescription": "Curated remote job board with resources, company profiles, and Q&As about remote work culture.",
+  "fullDescription": "",
   "category": "Remote & Flexible",
   "categorySlug": "remote-flexible",
   "subcategory": "",
-  "pricing": "Pay-per-post",
+  "pricing": "Free for job seekers",
   "pricingModel": "paid",
   "pricingDetails": {
     "employerCost": "$299/post",
@@ -33,11 +33,8 @@ const remote_co = {
     "Employer Q&A",
     "Culture Resources"
   ],
-  "idealFor": [
-    "Fully remote companies",
-    "Remote job seekers",
-    "Companies transitioning to remote"
-  ]
+  "idealFor": [],
+  "productType": "job_board"
 };
 
 export default remote_co;

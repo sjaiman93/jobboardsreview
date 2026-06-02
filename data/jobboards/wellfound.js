@@ -1,16 +1,16 @@
 const wellfound = {
   "id": 8,
   "slug": "wellfound",
-  "name": "Wellfound",
-  "logo": "/logos/wellfound.svg",
+  "name": "Wellfound (AngelList)",
+  "logo": "https://logo.clearbit.com/wellfound.com",
   "bestFor": "Startup Jobs",
-  "shortDescription": "Formerly AngelList Talent. The #1 platform for startup jobs with equity and salary transparency.",
-  "fullDescription": "Wellfound (formerly AngelList Talent) connects job seekers with startup opportunities. Known for salary and equity transparency, it's the go-to platform for anyone looking to join an early or growth-stage company.",
-  "category": "Startups",
-  "categorySlug": "startups",
+  "shortDescription": "Startup-focused job board where candidates can apply directly to founders. Strong in tech and VC-backed companies.",
+  "fullDescription": "",
+  "category": "Technology",
+  "categorySlug": "technology",
   "subcategory": "",
-  "pricing": "Freemium",
-  "pricingModel": "freemium",
+  "pricing": "Free for job seekers; Employer plans vary",
+  "pricingModel": "paid",
   "pricingDetails": {
     "employerCost": "Free · Premium from $149/mo",
     "includes": [
@@ -20,7 +20,7 @@ const wellfound = {
       "Equity display"
     ]
   },
-  "website": "https://wellfound.com",
+  "website": "https://www.wellfound.com",
   "features": [
     "Equity Transparency",
     "Startup Profiles",
@@ -34,12 +34,8 @@ const wellfound = {
     "Startup Focus",
     "1-click Apply"
   ],
-  "idealFor": [
-    "Startup enthusiasts",
-    "Engineers seeking equity",
-    "Early-stage companies",
-    "Founders building teams"
-  ]
+  "idealFor": [],
+  "productType": "job_board"
 };
 
 export default wellfound;

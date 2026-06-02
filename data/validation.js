@@ -3,7 +3,7 @@ export function validateBoardData(board, existingSlugs = new Set(), existingName
   if (!board.name) throw new Error("Validation Error: 'name' is required.");
   if (!board.categorySlug) throw new Error("Validation Error: 'categorySlug' is required.");
   if (!board.website) throw new Error("Validation Error: 'website' is required.");
-  if (!board.logo) throw new Error("Validation Error: 'logo' is required.");
+  if (board.logo === undefined) throw new Error("Validation Error: 'logo' is required.");
   if (!board.pricingModel) throw new Error("Validation Error: 'pricingModel' is required.");
 
   const slug = board.slug.trim();

@@ -2,15 +2,15 @@ const getwork = {
   "id": 2,
   "slug": "getwork",
   "name": "Getwork",
-  "logo": "/logos/getwork.svg",
+  "logo": "https://logo.clearbit.com/getwork.com",
   "bestFor": "Verified Listings",
-  "shortDescription": "Formerly LinkUp. Pulls real-time listings directly from verified company career pages for maximum accuracy.",
-  "fullDescription": "Getwork (formerly LinkUp) aggregates job listings by pulling them directly from verified company career pages. This means every listing is real, current, and legitimate — eliminating duplicates and scams common on other boards.",
+  "shortDescription": "Formerly LinkUp. Pulls real-time listings directly from verified company career pages — no third-party posts.",
+  "fullDescription": "",
   "category": "Generalist",
   "categorySlug": "generalist",
   "subcategory": "",
-  "pricing": "Free",
-  "pricingModel": "free",
+  "pricing": "Free for job seekers",
+  "pricingModel": "paid",
   "pricingDetails": {
     "employerCost": "Free (aggregator)",
     "includes": [
@@ -19,7 +19,7 @@ const getwork = {
       "Direct company links"
     ]
   },
-  "website": "https://getwork.com",
+  "website": "https://www.getwork.com",
   "features": [
     "Real-time Listings",
     "Verified Companies",
@@ -33,11 +33,8 @@ const getwork = {
     "Verified Companies",
     "Career Page Sync"
   ],
-  "idealFor": [
-    "Job seekers wanting verified listings",
-    "Recruiters needing real-time data",
-    "Companies with career pages"
-  ]
+  "idealFor": [],
+  "productType": "job_board"
 };
 
 export default getwork;

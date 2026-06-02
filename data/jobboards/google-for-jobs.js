@@ -2,10 +2,10 @@ const google_for_jobs = {
   "id": 3,
   "slug": "google-for-jobs",
   "name": "Google for Jobs",
-  "logo": "/logos/google-jobs.svg",
+  "logo": "https://logo.clearbit.com/google.com",
   "bestFor": "Maximum Reach",
-  "shortDescription": "Google's job search aggregator surfaces listings from across the web directly in search results.",
-  "fullDescription": "Google for Jobs aggregates listings from job boards, career sites, and staffing agencies, displaying them directly within Google Search. It provides unmatched reach and visibility for employers.",
+  "shortDescription": "Search layer that aggregates job postings from across the internet directly in Google search results.",
+  "fullDescription": "",
   "category": "Generalist",
   "categorySlug": "generalist",
   "subcategory": "",
@@ -32,11 +32,8 @@ const google_for_jobs = {
     "Massive Reach",
     "Free for All"
   ],
-  "idealFor": [
-    "Employers wanting maximum visibility",
-    "Job seekers using Google",
-    "Companies with structured data"
-  ]
+  "idealFor": [],
+  "productType": "job_board"
 };
 
 export default google_for_jobs;

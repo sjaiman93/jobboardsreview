@@ -2,15 +2,15 @@ const himalayas = {
   "id": 4,
   "slug": "himalayas",
   "name": "Himalayas",
-  "logo": "/logos/himalayas.svg",
+  "logo": "https://logo.clearbit.com/himalayas.app",
   "bestFor": "Remote Work",
-  "shortDescription": "Modern remote job board with detailed company profiles and timezone-based filtering. Top rated by 4.9 stars.",
-  "fullDescription": "Himalayas is a beautifully designed remote job board that focuses on company culture transparency. Detailed company profiles, timezone-based filtering, and salary data make it easy to find the right remote fit.",
+  "shortDescription": "Modern remote job board with detailed company profiles and timezone-based filtering.",
+  "fullDescription": "",
   "category": "Remote & Flexible",
   "categorySlug": "remote-flexible",
   "subcategory": "",
-  "pricing": "Freemium",
-  "pricingModel": "freemium",
+  "pricing": "Free for job seekers",
+  "pricingModel": "paid",
   "pricingDetails": {
     "employerCost": "$99/post",
     "includes": [
@@ -34,11 +34,8 @@ const himalayas = {
     "Company Culture Data",
     "Modern UX"
   ],
-  "idealFor": [
-    "Remote job seekers",
-    "Companies hiring distributed teams",
-    "Digital nomads"
-  ]
+  "idealFor": [],
+  "productType": "job_board"
 };
 
 export default himalayas;
