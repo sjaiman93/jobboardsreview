@@ -1262,15 +1262,5 @@ export const boardHighlightGroups = {
     "Candidate Quality": [
       "Verified Pool"
     ]
-  },
-  "hospital-recruiter": {
-    "Hiring Type": [],
-    "Industry Focus": [
-      "Healthcare"
-    ],
-    "Pricing Model": [
-      "Subscription"
-    ],
-    "Candidate Quality": []
   }
 };

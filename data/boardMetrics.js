@@ -19,10 +19,6 @@ export const boardMetrics = {
     "candidateReach": "50K+",
     "reachLabel": "PNW Tech Pros"
   },
-  "hospital-recruiter": {
-    "candidateReach": "150K+",
-    "reachLabel": "Healthcare Pros"
-  },
   "remote-co": {
     "candidateReach": "300K+",
     "reachLabel": "Remote Workers"

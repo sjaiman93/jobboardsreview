@@ -21,12 +21,6 @@ export const boardDecisionTags = {
   "google-for-jobs": [],
   "himalayas": [],
   "geekwork": [],
-  "hospital-recruiter": [
-    "Healthcare Only",
-    "Niche Talent",
-    "Subscription",
-    "Specialized"
-  ],
   "remote-co": [],
   "wellfound": [],
   "dice": [

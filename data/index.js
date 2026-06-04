@@ -41,7 +41,6 @@ import healthjobsnationwide from "./jobboards/healthjobsnationwide";
 import higheredjobs from "./jobboards/higheredjobs";
 import himalayas from "./jobboards/himalayas";
 import hired from "./jobboards/hired";
-import hospital_recruiter from "./jobboards/hospital-recruiter";
 import hospitalrecruiting from "./jobboards/hospitalrecruiting";
 import idealist from "./jobboards/idealist";
 import ihire from "./jobboards/ihire";
@@ -130,7 +129,6 @@ const rawBoards = [
   higheredjobs,
   himalayas,
   hired,
-  hospital_recruiter,
   hospitalrecruiting,
   idealist,
   ihire,
