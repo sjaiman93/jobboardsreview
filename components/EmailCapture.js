@@ -62,35 +62,40 @@ export default function EmailCapture() {
             Join recruiters, staffing agencies, and hiring teams using JobBoardsReview to discover better job boards, recruiting tools, and sourcing platforms.
           </p>
 
-          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-5 justify-center items-start max-w-lg mx-auto">
-            <div className="flex-1 w-full text-left">
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  if (error) setError("");
-                }}
-                placeholder="Your business email"
-                className="bg-white/10 border border-white/20 text-white rounded-2xl px-8 py-5 text-lg outline-none focus:border-[#FF5630] transition-all w-full placeholder:text-slate-500"
-              />
-              {error && (
-                <span className="text-red-400 text-xs font-bold mt-2 ml-2 block animate-in fade-in duration-200">
-                  {error}
-                </span>
-              )}
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-lg mx-auto">
+            <div className="flex flex-col sm:flex-row gap-5 justify-center items-start w-full">
+              <div className="flex-1 w-full text-left">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (error) setError("");
+                  }}
+                  placeholder="Your business email"
+                  className="bg-white/10 border border-white/20 text-white rounded-2xl px-8 py-5 text-lg outline-none focus:border-[#FF5630] transition-all w-full placeholder:text-slate-500"
+                />
+                {error && (
+                  <span className="text-red-400 text-xs font-bold mt-2 ml-2 block animate-in fade-in duration-200">
+                    {error}
+                  </span>
+                )}
+              </div>
+              <button 
+                type="submit" 
+                disabled={isSubmitting || !turnstileToken}
+                className="bg-[#FF5630] text-white font-black px-12 py-5 rounded-2xl hover:scale-105 active:scale-[0.98] transition-all duration-300 shadow-xl shadow-[#FF5630]/20 whitespace-nowrap w-full sm:w-auto h-[68px] flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? "Submitting..." : "Get Updates"}
+              </button>
             </div>
-            <button 
-              type="submit" 
-              disabled={isSubmitting || !turnstileToken}
-              className="bg-[#FF5630] text-white font-black px-12 py-5 rounded-2xl hover:scale-105 active:scale-[0.98] transition-all duration-300 shadow-xl shadow-[#FF5630]/20 whitespace-nowrap w-full sm:w-auto h-[68px] flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isSubmitting ? "Submitting..." : "Get Updates"}
-            </button>
-            <Turnstile 
-              siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY} 
-              onSuccess={(token) => setTurnstileToken(token)}
-            />
+            <div className="flex justify-center mt-2">
+              <Turnstile 
+                siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY} 
+                onSuccess={(token) => setTurnstileToken(token)}
+                options={{ theme: 'dark' }}
+              />
+            </div>
           </form>
 
           <p className="text-sm text-slate-500 mt-6 max-w-md mx-auto leading-relaxed">
