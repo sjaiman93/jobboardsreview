@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { subscribeToNewsletter } from "@/app/actions/newsletter";
 
 export default function EmailCapture() {
   const [email, setEmail] = useState("");
@@ -29,17 +29,13 @@ export default function EmailCapture() {
     setIsSubmitting(true);
 
     try {
-      const { error: dbError } = await supabase
-        .from('email_subscribers')
-        .insert([{ email: trimmedEmail }]);
-        
-      if (dbError && dbError.code !== '23505') { // Ignore duplicate email errors silently
-        console.error("Supabase insert error:", dbError);
-        throw new Error("Failed to save email.");
+      const res = await subscribeToNewsletter(trimmedEmail);
+      if (res.success) {
+        setIsSubmitted(true);
+        setEmail("");
+      } else {
+        setError(res.error || "Failed to subscribe. Please try again.");
       }
-
-      setIsSubmitted(true);
-      setEmail("");
     } catch (err) {
       setError("An unexpected error occurred. Please try again.");
     } finally {
