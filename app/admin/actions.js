@@ -3,9 +3,35 @@
 import fs from "fs";
 import path from "path";
 import { revalidatePath } from "next/cache";
+import { cookies, headers } from "next/headers";
 import { validateBoardData } from "@/data/validation";
 import { getAllBoards } from "@/data/jobBoards";
-import { headers } from "next/headers";
+import { ADMIN_COOKIE_NAME, hashPassword, getAdminPassword } from "@/lib/adminAuth";
+
+export async function adminLoginAction(password) {
+  const adminPass = getAdminPassword();
+  if (!password || password !== adminPass) {
+    return { success: false, error: "Incorrect password. Please try again." };
+  }
+
+  const sessionToken = await hashPassword(adminPass);
+  const cookieStore = cookies();
+  cookieStore.set(ADMIN_COOKIE_NAME, sessionToken, {
+    path: "/",
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    maxAge: 60 * 60 * 24 * 7, // 7 days
+  });
+
+  return { success: true };
+}
+
+export async function adminLogoutAction() {
+  const cookieStore = cookies();
+  cookieStore.delete(ADMIN_COOKIE_NAME);
+  return { success: true };
+}
 
 // Helper to read metadata file
 function readMetadataFile(filePath, exportName) {
