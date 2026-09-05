@@ -1,10 +1,16 @@
-﻿"use server";
+"use server";
 
 import { supabaseAdmin } from "@/lib/supabase";
+import { verifyTurnstileToken } from "@/app/actions/turnstile";
 
-export async function subscribeToNewsletter(email) {
+export async function subscribeToNewsletter(email, turnstileToken) {
   if (!email) {
     return { success: false, error: "Email is required." };
+  }
+
+  const isValidToken = await verifyTurnstileToken(turnstileToken);
+  if (!isValidToken) {
+    return { success: false, error: "Bot detected. Please try again." };
   }
 
   try {

@@ -5,6 +5,8 @@ import Link from "next/link";
 import { getAllCategories } from "@/data/jobBoards";
 import { submitBoardProposal } from "@/app/admin/actions";
 import CustomSelect from "@/components/CustomSelect";
+import { Turnstile } from '@marsidev/react-turnstile';
+import { validateClientTurnstile } from "@/app/actions/turnstile";
 
 export default function ClaimListingPage() {
   const categories = getAllCategories();
@@ -56,6 +58,7 @@ export default function ClaimListingPage() {
   const [claimListing, setClaimListing] = useState(false);
   const [linkedinPage, setLinkedinPage] = useState("");
   const [honeypot, setHoneypot] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
   const [formLoadTime] = useState(() => Date.now());
 
   // Validation State
@@ -149,6 +152,12 @@ export default function ClaimListingPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!turnstileToken) {
+      setErrors({ submit: "Security check failed. Please refresh and try again." });
+      return;
+    }
+
     if (!validateForm()) {
       // Scroll to the first error
       const firstErrorEl = document.querySelector(".text-red-500");
@@ -159,6 +168,19 @@ export default function ClaimListingPage() {
     }
 
     setIsSubmitting(true);
+
+    try {
+      const turnstileValid = await validateClientTurnstile(turnstileToken);
+      if (!turnstileValid.success) {
+        setErrors({ submit: "Bot detected. Please try again." });
+        setIsSubmitting(false);
+        return;
+      }
+    } catch (err) {
+      setErrors({ submit: "Validation error." });
+      setIsSubmitting(false);
+      return;
+    }
 
     // Normalize URLs before sending
     const normalizeUrl = (url) => {
@@ -567,29 +589,40 @@ export default function ClaimListingPage() {
                 </div>
 
                 {/* Submit Button */}
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full py-5 bg-slate-900 text-white font-black text-lg rounded-[24px] transition-all duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] hover:bg-[#FF5630] hover:shadow-2xl hover:shadow-[#FF5630]/30 flex items-center justify-center gap-3 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed mt-4"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                      Submitting...
-                    </>
-                  ) : (
-                    <>
-                      Submit Listing
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                      </svg>
-                    </>
-                  )}
-                </button>
-              </form>
+                  <div className="flex justify-start">
+                    <Turnstile 
+                      siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY} 
+                      onSuccess={(token) => setTurnstileToken(token)}
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={isSubmitting || !turnstileToken}
+                    className={`w-full py-6 flex items-center justify-center gap-3 text-white font-black text-xl rounded-[24px] transition-all duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] shadow-xl ${
+                      isSubmitting || !turnstileToken
+                        ? "bg-slate-300 cursor-not-allowed shadow-none"
+                        : "bg-[#FF5630] hover:bg-[#ff4318] hover:-translate-y-1 hover:shadow-2xl hover:shadow-[#FF5630]/30 active:translate-y-0 active:scale-[0.98]"
+                    }`}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <svg className="animate-spin -ml-1 mr-3 h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Submitting...
+                      </>
+                    ) : (
+                      <>
+                        Submit Listing
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                      </>
+                    )}
+                  </button>
+                </form>
             </div>
           ) : (
             /* Success State */

@@ -4,6 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { getAllBoards } from "@/data/jobBoards";
 import { supabase } from "@/lib/supabase";
+import { Turnstile } from '@marsidev/react-turnstile';
+import { validateClientTurnstile } from "@/app/actions/turnstile";
 
 export default function JoinPage() {
   const [submitted, setSubmitted] = useState(false);
@@ -11,6 +13,7 @@ export default function JoinPage() {
   const [companyName, setCompanyName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
   
   const boards = getAllBoards();
   const roundedCount = Math.floor(boards.length / 10) * 10;
@@ -20,7 +23,20 @@ export default function JoinPage() {
     setLoading(true);
     setError("");
 
+    if (!turnstileToken) {
+      setError("Security check failed. Please refresh and try again.");
+      setLoading(false);
+      return;
+    }
+
     try {
+      const turnstileValid = await validateClientTurnstile(turnstileToken);
+      if (!turnstileValid.success) {
+        setError("Bot detected. Please try again.");
+        setLoading(false);
+        return;
+      }
+
       const { error: authError } = await supabase.auth.signInWithOtp({
         email: email,
         options: {
@@ -181,7 +197,7 @@ export default function JoinPage() {
                   </div>
                 </div>
 
-                <button type="submit" disabled={loading} className="w-full py-6 bg-slate-900 text-white font-black text-xl rounded-[24px] transition-all duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] hover:bg-[#FF5630] disabled:bg-slate-400 hover:shadow-2xl hover:shadow-[#FF5630]/30 flex items-center justify-center gap-3 active:scale-[0.98]">
+                <button type="submit" disabled={loading || !turnstileToken} className="w-full py-6 bg-slate-900 text-white font-black text-xl rounded-[24px] transition-all duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] hover:bg-[#FF5630] disabled:bg-slate-400 hover:shadow-2xl hover:shadow-[#FF5630]/30 flex items-center justify-center gap-3 active:scale-[0.98]">
                   {loading ? "Loading..." : "Get Free Access"}
                   {!loading && (
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -189,6 +205,12 @@ export default function JoinPage() {
                     </svg>
                   )}
                 </button>
+                <div className="flex justify-center">
+                  <Turnstile 
+                    siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY} 
+                    onSuccess={(token) => setTurnstileToken(token)}
+                  />
+                </div>
               </form>
 
               <div className="mt-10 pt-8 border-t border-slate-100 flex flex-col items-center gap-5">

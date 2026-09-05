@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import { subscribeToNewsletter } from "@/app/actions/newsletter";
+import { Turnstile } from '@marsidev/react-turnstile';
 
 export default function EmailCapture() {
   const [email, setEmail] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,10 +28,15 @@ export default function EmailCapture() {
       return;
     }
 
+    if (!turnstileToken) {
+      setError("Security check failed. Please refresh and try again.");
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
-      const res = await subscribeToNewsletter(trimmedEmail);
+      const res = await subscribeToNewsletter(trimmedEmail, turnstileToken);
       if (res.success) {
         setIsSubmitted(true);
         setEmail("");
@@ -75,11 +82,15 @@ export default function EmailCapture() {
             </div>
             <button 
               type="submit" 
-              disabled={isSubmitting}
+              disabled={isSubmitting || !turnstileToken}
               className="bg-[#FF5630] text-white font-black px-12 py-5 rounded-2xl hover:scale-105 active:scale-[0.98] transition-all duration-300 shadow-xl shadow-[#FF5630]/20 whitespace-nowrap w-full sm:w-auto h-[68px] flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? "Submitting..." : "Get Updates"}
             </button>
+            <Turnstile 
+              siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY} 
+              onSuccess={(token) => setTurnstileToken(token)}
+            />
           </form>
 
           <p className="text-sm text-slate-500 mt-6 max-w-md mx-auto leading-relaxed">
