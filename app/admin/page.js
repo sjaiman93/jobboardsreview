@@ -32,15 +32,41 @@ export default function AdminPage({ searchParams }) {
     editTags = getBoardDecisionTags(editSlug);
   }
 
-  // Read Submissions
-  const submissionsPath = path.join(process.cwd(), "storage", "submissions.json");
   let submissions = [];
-  if (fs.existsSync(submissionsPath)) {
-    try {
-      submissions = JSON.parse(fs.readFileSync(submissionsPath, "utf-8"));
-    } catch (e) {
-      console.error("Error reading submissions in admin page.js:", e);
+  try {
+    const { supabaseAdmin } = await import('@/lib/supabase');
+    const { data, error } = await supabaseAdmin
+      .from('board_submissions')
+      .select('*')
+      .order('created_at', { ascending: false });
+      
+    if (error) {
+      console.error("Supabase fetch error in admin:", error);
+    } else {
+      // Map back to the expected camelCase format for the dashboard
+      submissions = data.map(sub => ({
+        id: sub.id,
+        submittedAt: sub.created_at,
+        submitterType: sub.submitter_type,
+        contactName: sub.contact_name,
+        contactEmail: sub.contact_email,
+        boardName: sub.board_name,
+        toolType: sub.tool_type,
+        websiteUrl: sub.website_url,
+        categorySlug: sub.category_slug,
+        bestFor: sub.best_for,
+        shortDescription: sub.short_description,
+        targetAudience: sub.target_audience,
+        pricingModel: sub.pricing_model,
+        pricingInfo: sub.pricing_info,
+        freeTrial: sub.free_trial,
+        claimListing: sub.claim_listing,
+        linkedinPage: sub.linkedin_page,
+        status: sub.status
+      }));
     }
+  } catch (e) {
+    console.error("Error reading submissions from Supabase:", e);
   }
 
   return (

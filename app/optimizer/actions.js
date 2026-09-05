@@ -80,48 +80,34 @@ export async function saveOptimizerSubmissionAction(payload) {
       }
     }
 
-    // Ensure storage folder exists
-    const storageDir = path.join(process.cwd(), "storage");
-    if (!fs.existsSync(storageDir)) {
-      fs.mkdirSync(storageDir, { recursive: true });
-    }
-
-    const submissionsPath = path.join(storageDir, "channel_analysis_submissions.json");
-    let submissions = [];
-
-    if (fs.existsSync(submissionsPath)) {
-      try {
-        const fileContent = fs.readFileSync(submissionsPath, "utf-8");
-        submissions = JSON.parse(fileContent);
-      } catch (err) {
-        console.error("Error reading channel_analysis_submissions.json:", err);
-      }
-    }
-
-    // Prepare clean anonymous entry
-    const newSubmission = {
-      id: Date.now(),
-      timestamp: new Date().toISOString(),
-      boardSlug: boardSlug || "",
-      boardName: boardName.trim(),
-      sourceLocation: sourceLocation || "direct",
-      userType,
-      inputs: {
-        spend: numSpend,
-        applications: numApps,
-        interviews: numInterviews,
-        placements: numPlacements,
-        placementFee: numFee,
-        margin: numMargin,
-        costPerHour: numCostPerHour
-      },
-      results: generatedMetrics || {},
+    const dbPayload = {
+      board_slug: boardSlug || "",
+      board_name: boardName.trim(),
+      source_location: sourceLocation || "direct",
+      user_type: userType,
+      spend: numSpend,
+      applications: numApps,
+      interviews: numInterviews,
+      placements: numPlacements,
+      placement_fee: numFee,
+      margin: numMargin,
+      cost_per_hour: numCostPerHour,
+      generated_metrics: generatedMetrics || {}
     };
 
-    submissions.push(newSubmission);
-    fs.writeFileSync(submissionsPath, JSON.stringify(submissions, null, 2), "utf-8");
+    try {
+      const { supabaseAdmin } = await import('@/lib/supabase');
+      const { error } = await supabaseAdmin.from('optimizer_submissions').insert([dbPayload]);
+      if (error) {
+        console.error("Supabase insert error in optimizer:", error);
+        return { success: false, error: "Database error." };
+      }
+    } catch (e) {
+      console.error("Error connecting to Supabase in optimizer:", e);
+      return { success: false, error: "Database connection failed." };
+    }
 
-    console.log("Hiring budget analysis submission saved anonymously:", newSubmission.id);
+    console.log("Hiring budget analysis submission saved anonymously to Supabase for:", boardName);
     return { success: true };
   } catch (err) {
     console.error("Failed to save optimizer submission:", err);

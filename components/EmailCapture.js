@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { supabase } from "@/lib/supabase";
 
 export default function EmailCapture() {
   const [email, setEmail] = useState("");
@@ -19,7 +20,6 @@ export default function EmailCapture() {
       return;
     }
 
-    // Basic email regex validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(trimmedEmail)) {
       setError("Please enter a valid email address.");
@@ -29,24 +29,14 @@ export default function EmailCapture() {
     setIsSubmitting(true);
 
     try {
-      // Mocking submission behavior by storing in local storage
-      let storedEmails = [];
-      try {
-        const stored = localStorage.getItem("jbr_subscribed_emails");
-        if (stored) {
-          storedEmails = JSON.parse(stored);
-        }
-      } catch (err) {
-        console.error("Local storage access error:", err);
+      const { error: dbError } = await supabase
+        .from('email_subscribers')
+        .insert([{ email: trimmedEmail }]);
+        
+      if (dbError && dbError.code !== '23505') { // Ignore duplicate email errors silently
+        console.error("Supabase insert error:", dbError);
+        throw new Error("Failed to save email.");
       }
-
-      if (!storedEmails.includes(trimmedEmail)) {
-        storedEmails.push(trimmedEmail);
-        localStorage.setItem("jbr_subscribed_emails", JSON.stringify(storedEmails));
-      }
-
-      // 800ms delay for premium loading experience
-      await new Promise((resolve) => setTimeout(resolve, 800));
 
       setIsSubmitted(true);
       setEmail("");

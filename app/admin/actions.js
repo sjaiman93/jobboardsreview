@@ -495,47 +495,40 @@ export async function submitBoardProposal(submission) {
     return { success: false, error: "Too many requests. Please try again in an hour." };
   }
 
-  const storageDir = path.join(process.cwd(), "storage");
-  const submissionsPath = path.join(storageDir, "submissions.json");
-
-  // Ensure storage folder exists
-  try {
-    if (!fs.existsSync(storageDir)) {
-      fs.mkdirSync(storageDir, { recursive: true });
-    }
-  } catch (err) {
-    console.error("Error creating storage directory:", err);
-    return { success: false, error: "Server storage error." };
-  }
-
-  let submissions = [];
-  try {
-    if (fs.existsSync(submissionsPath)) {
-      const fileData = fs.readFileSync(submissionsPath, "utf-8");
-      submissions = JSON.parse(fileData);
-    }
-  } catch (e) {
-    console.error("Error reading submissions.json:", e);
-  }
-
-  // Remove honeypot and formLoadTime from saved object to keep it clean
   const { website_hp, formLoadTime, ...cleanSubmission } = submission;
 
-  const newSubmission = {
-    id: Date.now(),
-    submittedAt: new Date().toISOString(),
-    ...cleanSubmission
+  const dbPayload = {
+    submitter_type: cleanSubmission.submitterType,
+    contact_name: cleanSubmission.contactName,
+    contact_email: cleanSubmission.contactEmail,
+    board_name: cleanSubmission.boardName,
+    tool_type: cleanSubmission.toolType,
+    website_url: cleanSubmission.websiteUrl,
+    category_slug: cleanSubmission.categorySlug,
+    best_for: cleanSubmission.bestFor,
+    short_description: cleanSubmission.shortDescription,
+    target_audience: cleanSubmission.targetAudience || [],
+    pricing_model: cleanSubmission.pricingModel,
+    pricing_info: cleanSubmission.pricingInfo,
+    free_trial: cleanSubmission.freeTrial,
+    claim_listing: cleanSubmission.claimListing,
+    linkedin_page: cleanSubmission.linkedinPage,
+    status: 'pending'
   };
-  submissions.push(newSubmission);
 
   try {
-    fs.writeFileSync(submissionsPath, JSON.stringify(submissions, null, 2), "utf-8");
-    console.log("Structured submission payload logged successfully:\n", JSON.stringify(newSubmission, null, 2));
-    return { success: true };
+    const { supabaseAdmin } = await import('@/lib/supabase');
+    const { error } = await supabaseAdmin.from('board_submissions').insert([dbPayload]);
+    if (error) {
+      console.error("Supabase insert error:", error);
+      return { success: false, error: "Database error." };
+    }
   } catch (e) {
-    console.error("Error writing submission:", e);
-    return { success: false, error: "Failed to save submission locally." };
+    console.error("Error connecting to Supabase:", e);
+    return { success: false, error: "Database connection failed." };
   }
+
+  return { success: true };
 }
 
 export async function approveSubmissionAction(submissionId) {
