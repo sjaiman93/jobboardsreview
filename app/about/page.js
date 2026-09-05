@@ -5,20 +5,20 @@ import Link from "next/link";
 
 const faqs = [
   {
-    q: "How do you verify reviews?",
-    a: "Every reviewer must connect their LinkedIn profile. We cross-reference their company, title, and tenure with known users of the job boards they review. We also require proof of ad spend before allowing detailed performance reviews. Anonymous reviews are heavily vetted and require corroborating documentation.",
+    q: "How are reviews verified?",
+    a: "Reviewers connect their LinkedIn profile for identity verification. Company, title, and tenure are cross-referenced with known users of the job boards they review. Detailed performance reviews require proof of ad spend. Anonymous submissions are vetted and require corroborating documentation.",
   },
   {
-    q: "Can job boards influence rankings?",
-    a: "Absolutely not. We offer clearly labeled sponsorship slots, but organic rankings and community ratings are 100% data-driven and cannot be purchased, influenced, or manipulated. Our ranking algorithm is strictly based on verified recruiter performance metrics.",
+    q: "How are rankings determined?",
+    a: "Rankings are based on verified recruiter performance data — including cost per hire, applicant quality, and conversion rates. Sponsored and featured listings are always clearly labeled and separated from organic rankings.",
   },
   {
     q: "Who is this platform for?",
-    a: "JobBoardsReview is built for staffing companies, in-house recruiters, and talent acquisition leaders who spend real budgets on job boards and need transparent, peer-verified data to make smarter sourcing decisions. If you spend money on job boards, this is for you.",
+    a: "JobBoardsReview is for staffing companies, in-house recruiters, and talent acquisition leaders who spend real budgets on job boards and need transparent, peer-verified data to make smarter sourcing decisions.",
   },
   {
     q: "How is this different from G2 or Capterra?",
-    a: "G2 and Capterra review software products broadly. JobBoardsReview is hyper-focused on the US job board ecosystem — we track recruiter-specific metrics like cost per hire, applicant quality, and conversion rates that generalist review platforms simply don't capture. We're built by recruiters, for recruiters.",
+    a: "G2 and Capterra review software products broadly. JobBoardsReview is hyper-focused on the US job board ecosystem — tracking recruiter-specific metrics like cost per hire, applicant quality, and conversion rates that generalist review platforms don't capture.",
   },
 ];
 
@@ -35,38 +35,38 @@ export default function AboutPage() {
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
               </svg>
-              Our Mission
+              About
             </div>
             <h1 className="text-5xl lg:text-7xl font-black text-slate-900 leading-[0.95] mb-10">
-              <span className="text-[#FF5630]">Democratizing</span> <br />
-              access <br />
-              to transparent job board intelligence.
+              Transparent <br />
+              <span className="text-[#FF5630]">job board</span> <br />
+              intelligence.
             </h1>
             <p className="text-xl lg:text-2xl text-slate-500 leading-relaxed max-w-2xl font-medium">
-              We exist to give staffing companies and recruiters the verified, unbiased data they need to make smarter sourcing decisions across <span className="scribble-underline">US job boards</span> — without the noise.
+              JobBoardsReview helps staffing companies and recruiters make smarter sourcing decisions with verified data across <span className="scribble-underline">US job boards</span>.
             </p>
           </div>
         </div>
       </section>
 
-      {/* ─── TRUTH CARD + NO PAID PLACEMENT ─── */}
+      {/* ─── WHAT WE DO ─── */}
       <section className="pb-40">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
           <div className="lg:col-span-6 relative order-2 lg:order-1">
             <div className="bg-white p-12 rounded-[40px_15px_40px_15px] shadow-2xl border border-slate-100 relative z-10 transition-all duration-300 hover:-translate-y-1 hover:shadow-3xl">
-              <h2 className="text-3xl font-black mb-6">The Truth, Verified.</h2>
+              <h2 className="text-3xl font-black mb-6">Verified Reviews. Real Data.</h2>
               <p className="text-slate-600 leading-relaxed mb-8 text-lg font-medium">
-                Every review on JobBoardsReview is verified against LinkedIn profiles and proof of ad spend. We don&apos;t allow anonymous sniping or fake praise. We track actual hire conversions shared by Talent Acquisition leaders to validate the claims job boards make.
+                Every review on JobBoardsReview is verified against LinkedIn profiles and proof of ad spend. We track actual hire conversions shared by Talent Acquisition leaders to validate the claims job boards make.
               </p>
               <div className="flex items-center gap-6">
                 <div className="flex flex-col">
-                  <span className="text-[#FF5630] font-black text-4xl">100%</span>
-                  <span className="text-slate-400 font-bold uppercase tracking-widest text-xs">Independence</span>
+                  <span className="text-[#FF5630] font-black text-4xl">85+</span>
+                  <span className="text-slate-400 font-bold uppercase tracking-widest text-xs">Job Boards</span>
                 </div>
                 <div className="w-px h-12 bg-slate-200"></div>
                 <div className="flex flex-col">
-                  <span className="text-teal-600 font-black text-4xl">No</span>
-                  <span className="text-slate-400 font-bold uppercase tracking-widest text-xs">Paid Placement</span>
+                  <span className="text-teal-600 font-black text-4xl">11</span>
+                  <span className="text-slate-400 font-bold uppercase tracking-widest text-xs">Categories</span>
                 </div>
               </div>
             </div>
@@ -77,164 +77,92 @@ export default function AboutPage() {
           </div>
           <div className="lg:col-span-6 order-1 lg:order-2">
             <h3 className="text-4xl font-black mb-8 leading-tight">
-              No Paid Placement. <br />
-              <span className="italic font-light text-slate-400">Just hard data.</span>
+              Compare. Review. <br />
+              <span className="italic font-light text-slate-400">Decide with confidence.</span>
             </h3>
             <p className="text-lg text-slate-500 font-medium leading-relaxed mb-10">
-              Unlike traditional directory sites, JobBoardsReview does not accept fees to boost rankings. Our proprietary algorithm is strictly based on community-verified performance metrics. When we say a board works, it&apos;s because the data says so.
+              Stop guessing which job boards deliver results. Browse detailed profiles, compare pricing side-by-side, and read verified reviews from recruiters who have actually used these platforms.
             </p>
             <div className="flex flex-wrap gap-4">
               <div className="flex items-center gap-3 py-3 px-5 bg-white border border-slate-200 rounded-2xl shadow-sm">
                 <svg className="w-5 h-5 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
-                <span className="font-bold text-slate-700">100% Unbiased Methodology</span>
+                <span className="font-bold text-slate-700">Verified Reviews</span>
               </div>
               <div className="flex items-center gap-3 py-3 px-5 bg-white border border-slate-200 rounded-2xl shadow-sm">
                 <svg className="w-5 h-5 text-[#FF5630]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
-                <span className="font-bold text-slate-700">Community-Verified Data</span>
+                <span className="font-bold text-slate-700">Side-by-Side Comparison</span>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ─── VIGILANTE BUILDER SECTION ─── */}
-      <section className="py-32 bg-slate-900 text-white rounded-[80px] mx-4 sm:mx-6 relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6 sm:px-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
-            {/* Left — Copy */}
-            <div className="lg:col-span-7">
-              <div className="inline-flex items-center gap-2 py-2 px-4 bg-white/10 text-[#FF5630] text-xs font-bold tracking-wider uppercase rounded-xl mb-8 border border-white/10">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-                The Builders
-              </div>
-              <h2 className="text-4xl sm:text-5xl font-black mb-8 leading-tight">
-                Built by recruiters. <br />
-                <span className="italic font-light text-slate-400">Not corporations.</span>
-              </h2>
-              <p className="text-lg text-slate-400 font-medium leading-relaxed mb-10 max-w-xl">
-                JobBoardsReview was created by a team of talent acquisition professionals who were frustrated with the opacity of the job board market. After years of wasting budget on underperforming platforms, they decided to build the intelligence layer the industry needed.
-              </p>
-              <div className="space-y-5 mb-12">
-                {[
-                  "No venture capital. No board of directors. No bias.",
-                  "Every insight comes from real recruiter spend data.",
-                  "Rankings cannot be bought, only earned.",
-                ].map((point, i) => (
-                  <div key={i} className="flex items-start gap-3">
-                    <svg className="w-5 h-5 text-[#FF5630] shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span className="text-slate-300 font-medium">{point}</span>
-                  </div>
-                ))}
-              </div>
-              <div className="flex flex-wrap gap-6">
-                {["Anonymous", "Independent", "Data-first"].map((tag) => (
-                  <span key={tag} className="px-5 py-2.5 border border-white/15 rounded-full text-sm font-bold text-white/70 uppercase tracking-widest">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            {/* Right — Illustration */}
-            <div className="lg:col-span-5 flex justify-center">
-              <div className="relative">
-                <div className="w-72 h-72 sm:w-80 sm:h-80 rounded-[40px_15px_40px_15px] overflow-hidden border-4 border-white/10 bg-slate-800">
-                  <img
-                    src="/images/vigilante-builder.png"
-                    alt="Anonymous builder — independent and data-first"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                {/* Glow accent */}
-                <div className="absolute -inset-8 bg-[#FF5630]/10 rounded-full blur-[60px] -z-10"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Abstract decorations */}
-        <div className="absolute -top-20 -left-20 w-80 h-80 bg-[#FF5630]/5 rounded-full blur-[100px]"></div>
-        <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-teal-500/5 rounded-full blur-[100px]"></div>
-      </section>
-
-      {/* ─── MISSION SECTION (replaces pricing) ─── */}
+      {/* ─── WHAT YOU GET ─── */}
       <section className="py-40">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-3xl mx-auto mb-20">
             <h2 className="text-5xl sm:text-6xl font-black text-slate-900 mb-6">
-              Why <span className="text-[#FF5630]">JobBoardsReview</span> exists.
+              What you get.
             </h2>
             <p className="text-xl text-slate-500 font-medium leading-relaxed">
-              We&apos;re not a SaaS product. We&apos;re not monetized through rankings. We&apos;re a community-driven intelligence layer built for the people who actually spend money on job boards.
+              Everything you need to evaluate job boards before spending your recruitment budget.
             </p>
           </div>
 
-          {/* Mission Card */}
+          {/* Features */}
           <div className="max-w-4xl mx-auto mb-20">
-            <div className="bg-white p-10 sm:p-14 rounded-[40px_15px_40px_15px] border border-slate-100 card-shadow">
-              <h3 className="text-3xl font-black text-slate-900 mb-6">
-                No pay-to-play. No bias. Just data.
-              </h3>
-              <p className="text-lg text-slate-500 font-medium leading-relaxed mb-10">
-                We don&apos;t charge job boards for visibility. We don&apos;t sell rankings. Everything on this platform is driven by verified recruiter insights — real performance data from real campaigns, shared by the talent professionals who ran them.
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                {[
-                  {
-                    icon: (
-                      <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                      </svg>
-                    ),
-                    title: "100% Independent",
-                    desc: "No outside investment. No conflicted incentives. Pure transparency.",
-                  },
-                  {
-                    icon: (
-                      <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-                      </svg>
-                    ),
-                    title: "Verified Reviews",
-                    desc: "Every review backed by LinkedIn verification and proof of spend.",
-                  },
-                  {
-                    icon: (
-                      <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                      </svg>
-                    ),
-                    title: "Built for Staffing",
-                    desc: "Designed by TA teams who spend real budgets on real boards.",
-                  },
-                ].map((item) => (
-                  <div key={item.title} className="text-center p-6 bg-slate-50 rounded-[28px]">
-                    <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-[#FF5630] mx-auto mb-4 shadow-sm border border-slate-100">
-                      {item.icon}
-                    </div>
-                    <h4 className="text-lg font-black text-slate-900 mb-2">{item.title}</h4>
-                    <p className="text-sm text-slate-500 font-medium">{item.desc}</p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              {[
+                {
+                  icon: (
+                    <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                  ),
+                  title: "Detailed Profiles",
+                  desc: "Pricing, features, audience reach, and recruiter ratings for every job board.",
+                },
+                {
+                  icon: (
+                    <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                  ),
+                  title: "Compare Tool",
+                  desc: "Put up to 4 job boards side-by-side to compare pricing, reach, and quality.",
+                },
+                {
+                  icon: (
+                    <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  ),
+                  title: "Budget Optimizer",
+                  desc: "Calculate expected applicants and optimal budget distribution across boards.",
+                },
+              ].map((item) => (
+                <div key={item.title} className="text-center p-6 bg-white rounded-[28px] border border-slate-100 shadow-sm">
+                  <div className="w-14 h-14 bg-slate-50 rounded-2xl flex items-center justify-center text-[#FF5630] mx-auto mb-4 border border-slate-100">
+                    {item.icon}
                   </div>
-                ))}
-              </div>
+                  <h4 className="text-lg font-black text-slate-900 mb-2">{item.title}</h4>
+                  <p className="text-sm text-slate-500 font-medium">{item.desc}</p>
+                </div>
+              ))}
             </div>
           </div>
 
           {/* CTA */}
           <div className="text-center">
             <Link
-              href="/join"
+              href="/directory"
               className="inline-flex items-center gap-3 bg-slate-900 text-white text-lg font-black px-12 py-5 rounded-3xl transition-all duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] hover:bg-[#FF5630] hover:shadow-2xl hover:shadow-[#FF5630]/40"
             >
-              Join the Community
+              Explore the Directory
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
