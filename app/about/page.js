@@ -101,6 +101,73 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* ─── FOUNDER'S NOTE ─── */}
+      <section className="py-32 bg-slate-900 text-white rounded-[80px] mx-4 sm:mx-6 relative overflow-hidden">
+        <div className="max-w-4xl mx-auto px-6 sm:px-10">
+          <div className="inline-flex items-center gap-2 py-2 px-4 bg-white/10 text-[#FF5630] text-xs font-bold tracking-wider uppercase rounded-xl mb-10 border border-white/10">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+            Founder&apos;s Note
+          </div>
+          <h2 className="text-3xl sm:text-4xl font-black mb-10 leading-tight">
+            Why I built this.
+          </h2>
+          <div className="space-y-6 text-lg text-slate-400 font-medium leading-relaxed max-w-3xl">
+            <p>
+              After more than eight years working in staffing and recruitment across industries, I noticed a problem that nobody was talking about openly.
+            </p>
+            <p>
+              Every recruiter knows the feeling. You&apos;ve just committed thousands of dollars to a job board. The invoices are paid. The postings are live. And then you wait — hoping the platform delivers what the sales rep promised. Sometimes it does. Often it doesn&apos;t. And either way, there&apos;s nowhere to go to find out what other recruiters actually think before you spend the money.
+            </p>
+            <p>
+              There was no transparent review platform for job boards. No honest, community-driven space where recruiters could say &ldquo;this worked for us in healthcare&rdquo; or &ldquo;we wasted six months on this platform for tech roles.&rdquo; No place to compare, contrast, and make informed decisions based on real experience rather than marketing claims.
+            </p>
+            <p className="text-slate-300">
+              That gap is exactly why JobBoardsReview exists.
+            </p>
+          </div>
+
+          <div className="mt-16 pt-10 border-t border-white/10">
+            <svg className="w-10 h-10 text-[#FF5630]/30 mb-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10H14.017zM0 21v-7.391C0 7.905 3.748 4.039 9 3l.996 2.151C7.563 6.068 6 8.789 6 11h4v10H0z" />
+            </svg>
+            <p className="text-xl sm:text-2xl text-slate-300 italic leading-relaxed mb-6 max-w-3xl">
+              &ldquo;I spent years recommending job boards to clients and hiring teams based on gut feeling and sales pitches. I kept thinking — there has to be a better way. A place where the people actually using these platforms every day can share what&apos;s really working and what isn&apos;t. That&apos;s the site I wished existed. So I built it.&rdquo;
+            </p>
+            <span className="text-slate-500 font-bold uppercase tracking-widest text-xs">— Founder, JobBoardsReview</span>
+          </div>
+        </div>
+
+        {/* Abstract decorations */}
+        <div className="absolute -top-20 -left-20 w-80 h-80 bg-[#FF5630]/5 rounded-full blur-[100px]"></div>
+        <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-teal-500/5 rounded-full blur-[100px]"></div>
+      </section>
+
+      {/* ─── WHO IS THIS FOR ─── */}
+      <section className="py-40">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl sm:text-5xl font-black text-slate-900 mb-6">
+                For recruiters who spend <span className="text-[#FF5630]">real money</span> on job boards.
+              </h2>
+              <p className="text-xl text-slate-500 font-medium leading-relaxed max-w-2xl mx-auto">
+                Whether you&apos;re an independent recruiter, a growing staffing agency, or an in-house talent team — this platform is built for you.
+              </p>
+            </div>
+            <div className="bg-white p-10 sm:p-14 rounded-[40px_15px_40px_15px] border border-slate-100 shadow-lg">
+              <p className="text-lg text-slate-600 font-medium leading-relaxed mb-8">
+                Job board performance varies enormously depending on industry, role type, location, and hiring volume. A platform that delivers exceptional results for healthcare staffing might be completely wrong for technology recruiting. What works for high-volume hourly hiring might be useless for executive search.
+              </p>
+              <p className="text-lg text-slate-600 font-medium leading-relaxed">
+                JobBoardsReview gives you access to honest reviews from recruiters and staffing professionals who have actually used these platforms with their own budgets. Filter by industry and role type to find insights relevant to your specific situation. Then make your next job board investment with confidence instead of guesswork.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ─── WHAT YOU GET ─── */}
       <section className="py-40">
         <div className="max-w-7xl mx-auto px-6">
