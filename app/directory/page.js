@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import Link from "next/link";
 import { getAllBoards, getAllCategories } from "@/data/jobBoards";
 import JobBoardCard from "@/components/JobBoardCard";
 import CategoryFilter from "@/components/CategoryFilter";
@@ -50,14 +51,14 @@ export default function DirectoryPage() {
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 sm:gap-8">
             <div className="max-w-2xl">
               <nav className="flex items-center gap-2 text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">
-                <a href="/" className="hover:text-[#FF5630] transition-colors">Home</a>
+                <Link href="/" className="hover:text-[#FF5630] transition-colors">Home</Link>
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
                 <span className="text-slate-900">Directory</span>
               </nav>
               <h1 className="text-4xl sm:text-5xl lg:text-7xl font-black text-slate-900 mb-4 sm:mb-6">
-                Explore <span className="scribble-underline">50+ Job Boards</span>
+                Explore <span className="scribble-underline">{boards.length}+ Job Boards</span>
               </h1>
               <p className="text-lg sm:text-xl text-slate-500 font-medium leading-relaxed">
                 Filter by industry, pricing, and community rating to find the perfect platform for your next hire on JobBoardsReview.

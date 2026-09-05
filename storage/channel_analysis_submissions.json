@@ -128,5 +128,31 @@
       "roi": 44,
       "savings": null
     }
+  },
+  {
+    "id": 1783152113666,
+    "timestamp": "2026-07-04T08:01:53.666Z",
+    "boardSlug": "accounting-jobs-today",
+    "boardName": "Accounting Jobs Today",
+    "sourceLocation": "header",
+    "userType": "agency",
+    "inputs": {
+      "spend": 5000,
+      "applications": 250,
+      "interviews": 30,
+      "placements": 6,
+      "placementFee": 12000,
+      "margin": 25,
+      "costPerHour": null
+    },
+    "results": {
+      "costPerApplication": 20,
+      "costPerInterview": 166.66666666666666,
+      "costPerPlacement": 833.3333333333334,
+      "revenue": 72000,
+      "profit": 13000,
+      "roi": 260,
+      "savings": null
+    }
   }
 ]

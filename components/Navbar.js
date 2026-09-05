@@ -48,6 +48,12 @@ export default function Navbar() {
     { href: "/about", label: "About" },
   ];
 
+  const isActive = (href) => {
+    const cleanHref = href.split("?")[0];
+    if (cleanHref === "/") return pathname === "/";
+    return pathname === cleanHref || pathname.startsWith(cleanHref + "/");
+  };
+
   return (
     <header className="sticky top-0 z-50 bg-[#FCFBF8] border-b border-slate-100">
       <nav className="max-w-7xl mx-auto px-6 h-24 flex items-center justify-between">
@@ -64,16 +70,23 @@ export default function Navbar() {
 
           {/* Desktop Links */}
           {!isJoinPage && (
-            <div className="hidden md:flex items-center gap-6 xl:gap-8">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="text-[15px] font-medium text-slate-500 hover:text-[#FF5630] transition-colors"
-                >
-                  {link.label}
-                </Link>
-              ))}
+            <div className="hidden md:flex items-center gap-5 xl:gap-7">
+              {navLinks.map((link) => {
+                const active = isActive(link.href);
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`text-[15px] transition-colors ${
+                      active
+                        ? "font-bold text-[#FF5630]"
+                        : "font-medium text-slate-500 hover:text-[#FF5630]"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                );
+              })}
             </div>
           )}
         </div>
@@ -82,7 +95,7 @@ export default function Navbar() {
           <div className="flex items-center gap-6">
             {/* Search Bar */}
             <div ref={searchRef} className="relative hidden lg:block">
-              <div className="flex items-center bg-white border border-slate-200 rounded-2xl px-5 py-2.5 w-72 focus-within:ring-4 focus-within:ring-[#FF5630]/10 transition-all">
+              <div className="flex items-center bg-white border border-slate-200 rounded-2xl px-5 py-2.5 w-64 xl:w-72 focus-within:ring-4 focus-within:ring-[#FF5630]/10 transition-all">
                 <svg className="w-5 h-5 text-slate-400 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
@@ -153,22 +166,70 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {mobileOpen && !isJoinPage && (
-        <div className="md:hidden pb-4 animate-fade-in border-t border-slate-100">
-          <div className="flex flex-col gap-1 pt-2 px-6">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setMobileOpen(false)}
-                className="text-slate-700 font-medium hover:text-[#FF5630] transition-colors py-3 px-3 rounded-xl hover:bg-slate-50"
-              >
-                {link.label}
-              </Link>
-            ))}
+        <div className="md:hidden pb-6 animate-fade-in border-t border-slate-100 bg-[#FCFBF8]">
+          <div className="flex flex-col gap-1 pt-4 px-6">
+            {/* Mobile Search Bar */}
+            <div className="mb-3">
+              <div className="flex items-center bg-white border border-slate-200 rounded-2xl px-4 py-2.5 focus-within:ring-4 focus-within:ring-[#FF5630]/10 transition-all">
+                <svg className="w-5 h-5 text-slate-400 mr-2.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <input
+                  type="text"
+                  placeholder="Search job boards..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="bg-transparent text-sm w-full outline-none placeholder:text-slate-400 text-slate-900"
+                />
+              </div>
+
+              {/* Mobile Search Results */}
+              {searchQuery && searchResults.length > 0 && (
+                <div className="mt-2 bg-white border border-slate-100 shadow-lg rounded-2xl overflow-hidden max-h-60 overflow-y-auto">
+                  {searchResults.map((board) => (
+                    <Link
+                      key={board.slug}
+                      href={`/board/${board.slug}`}
+                      onClick={() => {
+                        setMobileOpen(false);
+                        setSearchQuery("");
+                      }}
+                      className="block px-4 py-2.5 hover:bg-slate-50 transition-colors border-b border-slate-50 last:border-0"
+                    >
+                      <div className="text-sm font-bold text-slate-900">{board.name}</div>
+                      <div className="text-xs text-slate-500 truncate">{board.shortDescription}</div>
+                    </Link>
+                  ))}
+                </div>
+              )}
+              {searchQuery && searchResults.length === 0 && (
+                <div className="mt-2 bg-white border border-slate-100 shadow-sm rounded-2xl p-3 text-center text-xs text-slate-500">
+                  No matching job boards found
+                </div>
+              )}
+            </div>
+
+            {navLinks.map((link) => {
+              const active = isActive(link.href);
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMobileOpen(false)}
+                  className={`transition-colors py-3 px-4 rounded-xl ${
+                    active
+                      ? "bg-[#FF5630]/10 text-[#FF5630] font-bold"
+                      : "text-slate-700 font-medium hover:text-[#FF5630] hover:bg-slate-50"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
             <Link
               href="/join"
               onClick={() => setMobileOpen(false)}
-              className="bg-slate-900 text-white font-bold text-sm text-center py-3 rounded-2xl mt-2 hover:bg-[#FF5630] transition-all"
+              className="bg-slate-900 text-white font-bold text-sm text-center py-3.5 rounded-2xl mt-3 hover:bg-[#FF5630] transition-all"
             >
               Join the Community
             </Link>

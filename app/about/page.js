@@ -88,13 +88,13 @@ export default function AboutPage() {
                 <svg className="w-5 h-5 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
-                <span className="font-bold text-slate-700">SOC 2 Type II Certified</span>
+                <span className="font-bold text-slate-700">100% Unbiased Methodology</span>
               </div>
               <div className="flex items-center gap-3 py-3 px-5 bg-white border border-slate-200 rounded-2xl shadow-sm">
                 <svg className="w-5 h-5 text-[#FF5630]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
-                <span className="font-bold text-slate-700">Enterprise-Grade Security</span>
+                <span className="font-bold text-slate-700">Community-Verified Data</span>
               </div>
             </div>
           </div>
@@ -278,40 +278,6 @@ export default function AboutPage() {
                 </div>
               );
             })}
-          </div>
-        </div>
-      </section>
-
-      {/* ─── TESTIMONIAL & TRUST ─── */}
-      <section className="py-40">
-        <div className="max-w-7xl mx-auto px-6 flex flex-col items-center text-center">
-          <svg className="w-16 h-16 text-[#FF5630]/20 mb-10" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10H14.017zM0 21v-7.391C0 7.905 3.748 4.039 9 3l.996 2.151C7.563 6.068 6 8.789 6 11h4v10H0z" />
-          </svg>
-          <p className="text-3xl sm:text-4xl font-medium text-slate-700 leading-tight mb-12 italic max-w-4xl">
-            &ldquo;JobBoardsReview is the only platform that treats job boards with the rigor they deserve. It&apos;s the G2 of the US job board ecosystem, built by TA pros for TA pros.&rdquo;
-          </p>
-          <div className="flex items-center gap-4 mb-20">
-            <div className="w-16 h-16 bg-slate-200 rounded-full overflow-hidden">
-              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Marcus" alt="Marcus Thorne" />
-            </div>
-            <div className="text-left">
-              <div className="text-xl font-black">Marcus Thorne</div>
-              <div className="text-slate-400 font-bold uppercase tracking-widest text-xs">VP Talent @ Hubspot</div>
-            </div>
-          </div>
-
-          <div className="flex flex-wrap justify-center gap-8 sm:gap-12">
-            {[
-              { label: "GDPR Compliant", icon: (<svg className="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>) },
-              { label: "SOC 2 Type II", icon: (<svg className="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>) },
-              { label: "AES-256 Encrypted", icon: (<svg className="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" /></svg>) },
-            ].map((badge) => (
-              <div key={badge.label} className="flex items-center gap-3 opacity-50">
-                {badge.icon}
-                <span className="font-black uppercase tracking-widest text-[10px] text-slate-600">{badge.label}</span>
-              </div>
-            ))}
           </div>
         </div>
       </section>

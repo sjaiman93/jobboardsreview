@@ -194,7 +194,9 @@ export default function ComparePage() {
                 <tr>
                   <td className="p-6 border-b border-slate-100 font-black text-slate-900">Pricing Structure</td>
                   {selected.map((b) => (
-                    <td key={b.slug} className="p-6 border-b border-slate-100 font-medium text-slate-600">{b.pricing}</td>
+                    <td key={b.slug} className="p-6 border-b border-slate-100 font-medium text-slate-600">
+                      {b.pricingSummary || (b.pricingDetails?.employerCost ? b.pricingDetails.employerCost : (b.pricingModel ? b.pricingModel.charAt(0).toUpperCase() + b.pricingModel.slice(1) : "See Profile"))}
+                    </td>
                   ))}
                 </tr>
 
@@ -330,6 +332,8 @@ export default function ComparePage() {
                             </div>
                           ) : row.key === "reviewCount" ? (
                             board.reviewCount == null ? "-" : board.reviewCount
+                          ) : row.key === "pricing" ? (
+                            board.pricingSummary || (board.pricingDetails?.employerCost ? board.pricingDetails.employerCost : (board.pricingModel ? board.pricingModel.charAt(0).toUpperCase() + board.pricingModel.slice(1) : "See Profile"))
                           ) : (
                             board[row.key]
                           )}
@@ -377,15 +381,21 @@ export default function ComparePage() {
                 Still not sure which <br className="hidden sm:block" /> platform is right for you?
               </h2>
               <p className="text-lg sm:text-xl text-slate-400 mb-12 font-medium max-w-2xl mx-auto">
-                Download our recruitment marketing playbook or talk to an advisor.
+                Optimize your hiring budget or connect with the community of recruiting leaders.
               </p>
               <div className="flex flex-col sm:flex-row gap-5 justify-center">
-                <button className="bg-[#FF5630] text-white font-black px-12 py-5 rounded-3xl hover:scale-105 transition-all duration-300 shadow-xl shadow-[#FF5630]/20">
-                  Get Expert Advice
-                </button>
-                <button className="bg-white/10 border border-white/20 text-white font-black px-12 py-5 rounded-3xl hover:bg-white/20 transition-all duration-300">
-                  Download Playbook
-                </button>
+                <Link
+                  href="/optimizer?source=compare_cta"
+                  className="bg-[#FF5630] text-white font-black px-12 py-5 rounded-3xl hover:scale-105 transition-all duration-300 shadow-xl shadow-[#FF5630]/20 inline-block text-center"
+                >
+                  Launch Budget Optimizer
+                </Link>
+                <Link
+                  href="/join"
+                  className="bg-white/10 border border-white/20 text-white font-black px-12 py-5 rounded-3xl hover:bg-white/20 transition-all duration-300 inline-block text-center"
+                >
+                  Join the Community
+                </Link>
               </div>
             </div>
             <div className="absolute -top-20 -left-20 w-80 h-80 bg-[#FF5630]/10 rounded-full blur-[100px]"></div>

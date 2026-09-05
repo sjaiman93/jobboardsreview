@@ -1,19 +1,39 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import StarRating from "./StarRating";
 
 export default function JobBoardCard({ board }) {
+  const [imgError, setImgError] = useState(false);
+  const hasLogo = board.logo && board.logo !== "/logos/default.svg" && !imgError;
+
   return (
     <div className="bg-white p-5 sm:p-8 rounded-[48px] border border-slate-100 card-shadow hover:-translate-y-2 transition-all duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] group flex flex-col h-full overflow-hidden">
       {/* Logo */}
-      <div className="w-20 h-20 bg-slate-100 rounded-[28px] mb-8 flex items-center justify-center">
-        <span className="text-3xl font-black text-slate-600">
-          {board.name.charAt(0)}
-        </span>
-      </div>
+      <Link
+        href={`/board/${board.slug}`}
+        className="w-20 h-20 bg-slate-100 rounded-[28px] mb-8 flex items-center justify-center overflow-hidden shrink-0 hover:opacity-90 transition-opacity"
+      >
+        {hasLogo ? (
+          <img
+            src={board.logo}
+            alt={board.name}
+            onError={() => setImgError(true)}
+            className="w-full h-full object-contain p-3.5"
+          />
+        ) : (
+          <span className="text-3xl font-black text-slate-600">
+            {board.name.charAt(0)}
+          </span>
+        )}
+      </Link>
 
       {/* Name */}
       <h3 className="text-2xl sm:text-3xl font-black text-slate-900 mb-4 break-words">
-        {board.name}
+        <Link href={`/board/${board.slug}`} className="hover:text-[#FF5630] transition-colors">
+          {board.name}
+        </Link>
       </h3>
 
       {/* Description */}

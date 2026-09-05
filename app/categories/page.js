@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getAllCategories, getBoardsByCategory } from "@/data/jobBoards";
+import { getAllCategories, getBoardsByCategory, getAllBoards } from "@/data/jobBoards";
 import JobBoardCard from "@/components/JobBoardCard";
 
 export const metadata = {
@@ -47,6 +47,7 @@ function CategoryIcon({ slug, className }) {
 
 export default function CategoriesPage() {
   const categories = getAllCategories();
+  const allBoards = getAllBoards();
   // Get first category's boards for the "trending" section
   const techBoards = getBoardsByCategory("technology").slice(0, 3);
 
@@ -59,7 +60,7 @@ export default function CategoriesPage() {
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
             </svg>
-            50+ Specialized Categories
+            {categories.length} Specialized Categories
           </div>
           <h1 className="text-5xl lg:text-7xl font-black text-slate-900 mb-8 leading-tight">
             Discover your <span className="scribble-underline text-[#FF5630]">perfect niche.</span>
@@ -104,7 +105,7 @@ export default function CategoriesPage() {
                 </svg>
               </div>
               <h3 className="text-2xl font-black text-slate-900 mb-1.5">View All</h3>
-              <p className="text-gray-500 font-medium uppercase tracking-widest text-[13px]"><span className="font-bold text-gray-600">500+</span> Listings</p>
+              <p className="text-gray-500 font-medium uppercase tracking-widest text-[13px]"><span className="font-bold text-gray-600">{allBoards.length}+</span> Listings</p>
             </Link>
           </div>
         </div>
@@ -151,7 +152,7 @@ export default function CategoriesPage() {
             We&apos;re constantly adding new specialized categories based on recruiter feedback. Let us know what you&apos;re looking for.
           </p>
           <Link
-            href="#"
+            href="/claim-listing"
             className="inline-flex items-center gap-4 bg-slate-900 text-white text-lg font-black px-12 py-5 rounded-3xl transition-all duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] hover:bg-[#FF5630] hover:shadow-2xl hover:shadow-[#FF5630]/40"
           >
             Suggest a Category
