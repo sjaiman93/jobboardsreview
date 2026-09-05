@@ -9,7 +9,7 @@ export const metadata = {
   title: "Admin Panel | JobBoardsReview",
 };
 
-export default function AdminPage({ searchParams }) {
+export default async function AdminPage({ searchParams }) {
   const rawBoards = getAllBoards();
   const siteContent = getSiteContent();
   const blogs = getBlogs();
