@@ -166,7 +166,7 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {mobileOpen && !isJoinPage && (
-        <div className="md:hidden pb-6 animate-fade-in border-t border-slate-100 bg-[#FCFBF8]">
+        <div className="md:hidden pb-6 animate-fade-in border-t border-slate-100 bg-[#FCFBF8] max-h-[80vh] overflow-y-auto">
           <div className="flex flex-col gap-1 pt-4 px-6">
             {/* Mobile Search Bar */}
             <div className="mb-3">
