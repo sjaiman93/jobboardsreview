@@ -1,0 +1,12 @@
+[
+  {
+    "url": "https://www.staffingindustry.com/",
+    "success": false,
+    "error": "net::ERR_ABORTED at https://www.staffingindustry.com/"
+  },
+  {
+    "url": "https://recruitingdaily.com/",
+    "content": "recruitingdaily.com\nPerforming security verification\n\nThis website uses a security service to protect against malicious bots. This page is displayed while the website verifies you are not a bot.\n\nRay ID: a3760bdedadc6061\nPerformance and Security by Cloudflare\nPrivacy",
+    "success": true
+  }
+]

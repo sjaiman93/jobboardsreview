@@ -13,6 +13,7 @@ import BoardStickyNav from "@/components/BoardStickyNav";
 import BoardInteractionPrompt from "@/components/BoardInteractionPrompt";
 import Collapsible from "@/components/Collapsible";
 import StarRating from "@/components/StarRating";
+import WriteReviewButton from "@/components/WriteReviewButton";
 
 export async function generateStaticParams() {
   return getAllBoards().map((b) => ({ slug: b.slug }));
@@ -187,12 +188,10 @@ export default async function BoardDetailPage({ params }) {
                 {board.shortDescription}
               </p>
               <div className="flex flex-wrap gap-3">
-                <a
-                  href="#reviews"
+                <WriteReviewButton 
+                  boardName={board.name} 
                   className="bg-[#FF5630] text-white font-black px-7 py-3.5 rounded-2xl shadow-xl shadow-[#FF5630]/20 hover:scale-105 transition-all text-sm"
-                >
-                  ✍ Write a Review
-                </a>
+                />
                 <a
                   href={board.website}
                   target="_blank"
@@ -573,12 +572,10 @@ export default async function BoardDetailPage({ params }) {
                     <p className="text-sm text-slate-500 font-medium mb-6">
                       Be the first recruiter to share feedback on {board.name}.
                     </p>
-                    <a
-                      href="#reviews"
+                    <WriteReviewButton 
+                      boardName={board.name} 
                       className="inline-block bg-[#FF5630] text-white font-black px-8 py-3 rounded-2xl shadow-lg shadow-[#FF5630]/20 hover:scale-105 transition-all text-sm"
-                    >
-                      ✍ Write a Review
-                    </a>
+                    />
                   </div>
                 )}
               </div>
