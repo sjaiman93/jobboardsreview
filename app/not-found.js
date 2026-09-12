@@ -13,7 +13,7 @@ export default function NotFound() {
       <h3 className="text-3xl font-bold text-slate-800 mb-4">This page ghosted you.</h3>
       
       <p className="text-lg text-slate-500 mb-10 max-w-md mx-auto leading-relaxed">
-        Just like that perfect candidate, the page you're looking for is nowhere to be found. Let's get you back to your pipeline.
+        Just like that perfect candidate, the page you&apos;re looking for is nowhere to be found. Let&apos;s get you back to your pipeline.
       </p>
       
       <Link 

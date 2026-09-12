@@ -70,7 +70,7 @@ export default function BoardInteractionPrompt({ boardName }) {
               onClick={() => handleOpenReview("used")}
               className="interaction-prompt__btn interaction-prompt__btn--primary"
             >
-              ✍ Yes, I've used it
+              ✍ Yes, I&apos;ve used it
             </button>
             <button
               onClick={() => handleOpenReview("currently_using")}

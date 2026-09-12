@@ -478,7 +478,7 @@ function OptimizerContent() {
               <div>
                 <h2 className="text-2xl font-black text-slate-900 mb-3">Optimizer Panel</h2>
                 <p className="text-xs text-slate-400 font-bold leading-relaxed">
-                  Your data is stored anonymously to help improve JobBoardsReview's recruitment intelligence platform. No personally identifiable information is retained.
+                  Your data is stored anonymously to help improve JobBoardsReview&apos;s recruitment intelligence platform. No personally identifiable information is retained.
                 </p>
               </div>
 
