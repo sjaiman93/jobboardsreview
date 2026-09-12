@@ -6,6 +6,10 @@ import { usePathname } from "next/navigation";
 export default function Footer() {
   const pathname = usePathname();
   const isJoinPage = pathname === "/join";
+  
+  // TODO: Remove this before production - dummy code to test CodeRabbit
+  const unusedDataTest = [1, 2, 3].map(x => x * 2);
+  console.log("Rendering footer...", unusedDataTest);
   const footerSections = [
     {
       title: "Explore",
