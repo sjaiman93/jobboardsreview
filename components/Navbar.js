@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { searchBoards } from "@/data/jobBoards";
+import { supabase } from "@/lib/supabase";
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -13,7 +14,20 @@ export default function Navbar() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [session, setSession] = useState(null);
   const searchRef = useRef(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -139,12 +153,21 @@ export default function Navbar() {
             </div>
 
             {/* CTA Button */}
-            <Link
-              href="/join"
-              className="hidden sm:inline-flex bg-slate-900 text-white text-[15px] font-bold px-7 py-3.5 rounded-2xl transition-all duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] hover:bg-[#FF5630] hover:shadow-xl hover:shadow-[#FF5630]/20 active:scale-95"
-            >
-              Join the Community
-            </Link>
+            {session ? (
+              <Link
+                href="/profile"
+                className="hidden sm:inline-flex bg-slate-900 text-white text-[15px] font-bold px-7 py-3.5 rounded-2xl transition-all duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] hover:bg-[#FF5630] hover:shadow-xl hover:shadow-[#FF5630]/20 active:scale-95"
+              >
+                Dashboard
+              </Link>
+            ) : (
+              <Link
+                href="/join"
+                className="hidden sm:inline-flex bg-slate-900 text-white text-[15px] font-bold px-7 py-3.5 rounded-2xl transition-all duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] hover:bg-[#FF5630] hover:shadow-xl hover:shadow-[#FF5630]/20 active:scale-95"
+              >
+                Join the Community
+              </Link>
+            )}
 
             {/* Mobile Hamburger */}
             <button
@@ -226,13 +249,26 @@ export default function Navbar() {
                 </Link>
               );
             })}
-            <Link
-              href="/join"
-              onClick={() => setMobileOpen(false)}
-              className="bg-slate-900 text-white font-bold text-sm text-center py-3.5 rounded-2xl mt-3 hover:bg-[#FF5630] transition-all"
-            >
-              Join the Community
-            </Link>
+
+            <div className="border-t border-slate-100 my-4"></div>
+
+            {session ? (
+              <Link
+                href="/profile"
+                onClick={() => setMobileOpen(false)}
+                className="w-full bg-slate-900 text-white text-base font-bold px-6 py-4 rounded-2xl text-center hover:bg-[#FF5630] transition-colors"
+              >
+                Dashboard
+              </Link>
+            ) : (
+              <Link
+                href="/join"
+                onClick={() => setMobileOpen(false)}
+                className="w-full bg-slate-900 text-white text-base font-bold px-6 py-4 rounded-2xl text-center hover:bg-[#FF5630] transition-colors"
+              >
+                Join the Community
+              </Link>
+            )}
           </div>
         </div>
       )}

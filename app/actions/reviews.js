@@ -45,6 +45,21 @@ export async function submitReviewAction(payload) {
     return { success: false, error: "Your review is too short. Please add more details." };
   }
 
+  const { supabaseAdmin } = await import("@/lib/supabase");
+  
+  // Verify User Auth Token
+  let userId = null;
+  if (payload.token && supabaseAdmin) {
+    const { data: { user }, error: authErr } = await supabaseAdmin.auth.getUser(payload.token);
+    if (user) {
+      userId = user.id;
+    }
+  }
+
+  if (!userId) {
+    return { success: false, error: "You must be logged in to submit a review." };
+  }
+
   let ip = "127.0.0.1";
   try {
     const headersList = headers();
@@ -58,6 +73,7 @@ export async function submitReviewAction(payload) {
   }
 
   const dbPayload = {
+    user_id: userId,
     board_name: payload.boardName,
     rating: payload.rating,
     title: payload.title?.trim() || "",
@@ -67,7 +83,6 @@ export async function submitReviewAction(payload) {
   };
 
   try {
-    const { supabaseAdmin } = await import("@/lib/supabase");
     if (supabaseAdmin) {
       const { error } = await supabaseAdmin.from('reviews').insert([dbPayload]);
       if (error) {
