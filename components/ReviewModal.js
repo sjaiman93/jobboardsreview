@@ -1,7 +1,10 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 
 export default function ReviewModal({ isOpen, onClose, boardName }) {
+  const [rating, setRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
+
   if (!isOpen) return null;
 
   return (
@@ -24,9 +27,21 @@ export default function ReviewModal({ isOpen, onClose, boardName }) {
             <label className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2 block">
               Your Rating
             </label>
-            <div className="flex gap-1 text-2xl text-slate-300">
+            <div 
+              className="flex gap-1 text-2xl"
+              onMouseLeave={() => setHoverRating(0)}
+            >
               {[1, 2, 3, 4, 5].map((i) => (
-                <span key={i} className="cursor-pointer hover:text-amber-400 transition-colors">★</span>
+                <span 
+                  key={i} 
+                  className={`cursor-pointer transition-colors ${
+                    i <= (hoverRating || rating) ? "text-amber-400" : "text-slate-300"
+                  }`}
+                  onMouseEnter={() => setHoverRating(i)}
+                  onClick={() => setRating(i)}
+                >
+                  ★
+                </span>
               ))}
             </div>
           </div>
