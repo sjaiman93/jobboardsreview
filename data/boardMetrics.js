@@ -267,10 +267,6 @@ export const boardMetrics = {
     "candidateReach": "Growing",
     "reachLabel": "Candidates"
   },
-  "stack-overflow-jobs": {
-    "candidateReach": "Growing",
-    "reachLabel": "Candidates"
-  },
   "startup-jobs": {
     "candidateReach": "Growing",
     "reachLabel": "Candidates"

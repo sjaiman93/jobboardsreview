@@ -71,7 +71,6 @@ import science_careers from "./jobboards/science-careers";
 import simplyhired from "./jobboards/simplyhired";
 import smashing_magazine_jobs from "./jobboards/smashing-magazine-jobs";
 import snagajob from "./jobboards/snagajob";
-import stack_overflow_jobs from "./jobboards/stack-overflow-jobs";
 import startup_jobs from "./jobboards/startup-jobs";
 import supply_chain_jobs from "./jobboards/supply-chain-jobs";
 import talent_com from "./jobboards/talent-com";
@@ -159,7 +158,6 @@ const rawBoards = [
   simplyhired,
   smashing_magazine_jobs,
   snagajob,
-  stack_overflow_jobs,
   startup_jobs,
   supply_chain_jobs,
   talent_com,

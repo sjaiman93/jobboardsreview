@@ -798,10 +798,6 @@ export const boardProsCons = {
     "pros": [],
     "cons": []
   },
-  "stack-overflow-jobs": {
-    "pros": [],
-    "cons": []
-  },
   "startup-jobs": {
     "pros": [],
     "cons": []

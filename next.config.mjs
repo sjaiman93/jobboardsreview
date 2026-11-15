@@ -25,6 +25,11 @@ const nextConfig = {
         source: '/privacy-policy',
         destination: '/privacy',
         permanent: true,
+      },
+      {
+        source: '/board/stack-overflow-jobs',
+        destination: '/category/technology',
+        permanent: true,
       }
     ];
   },

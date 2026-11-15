@@ -5,7 +5,7 @@ import path from "path";
 import { revalidatePath } from "next/cache";
 import { cookies, headers } from "next/headers";
 import { validateBoardData } from "@/data/validation";
-import { getAllBoards } from "@/data/jobBoards";
+import { getAllBoards, getAllCategories } from "@/data/jobBoards";
 import { ADMIN_COOKIE_NAME, hashPassword, getAdminPassword } from "@/lib/adminAuth";
 
 export async function adminLoginAction(password) {
@@ -15,7 +15,7 @@ export async function adminLoginAction(password) {
   }
 
   const sessionToken = await hashPassword(adminPass);
-  const cookieStore = cookies();
+const cookieStore = await cookies();
   cookieStore.set(ADMIN_COOKIE_NAME, sessionToken, {
     path: "/",
     httpOnly: true,
@@ -28,7 +28,7 @@ export async function adminLoginAction(password) {
 }
 
 export async function adminLogoutAction() {
-  const cookieStore = cookies();
+const cookieStore = await cookies();
   cookieStore.delete(ADMIN_COOKIE_NAME);
   return { success: true };
 }
@@ -484,7 +484,7 @@ export async function submitBoardProposal(submission) {
   // IP rate limiting
   let ip = "127.0.0.1";
   try {
-    const headersList = headers();
+    const headersList = await headers();
     ip = headersList.get("x-forwarded-for")?.split(",")[0] || headersList.get("x-real-ip") || "127.0.0.1";
   } catch (err) {
     console.error("Error reading headers for IP rate limit:", err);
@@ -532,31 +532,35 @@ export async function submitBoardProposal(submission) {
 }
 
 export async function approveSubmissionAction(submissionId) {
-  const submissionsPath = path.join(process.cwd(), "storage", "submissions.json");
-  if (!fs.existsSync(submissionsPath)) {
-    return { success: false, error: "Submissions file not found." };
-  }
-  
-  let submissions = [];
+  let sub;
+  let supabaseAdmin;
   try {
-    submissions = JSON.parse(fs.readFileSync(submissionsPath, "utf-8"));
-  } catch (e) {
-    console.error("Error reading submissions:", e);
-    return { success: false, error: "Failed to read submissions." };
+    const supabaseModule = await import('@/lib/supabase');
+    supabaseAdmin = supabaseModule.supabaseAdmin;
+    if (!supabaseAdmin) {
+      return { success: false, error: "Database client not configured." };
+    }
+
+    const { data, error } = await supabaseAdmin
+      .from('board_submissions')
+      .select('*')
+      .eq('id', submissionId)
+      .single();
+
+    if (error || !data) {
+      console.error("Error reading submission from Supabase:", error);
+      return { success: false, error: "Submission not found." };
+    }
+    sub = data;
+  } catch (err) {
+    console.error("Database error fetching submission:", err);
+    return { success: false, error: "Failed to read submission from database." };
   }
-  
-  const subIndex = submissions.findIndex(s => s.id === submissionId);
-  if (subIndex === -1) {
-    return { success: false, error: "Submission not found." };
-  }
-  
-  const sub = submissions[subIndex];
   
   // 1. Sanitize incoming text & normalize formatting
-  const boardName = sub.boardName.trim();
-  const websiteUrl = sub.websiteUrl.trim();
-  const shortDescription = sub.shortDescription.trim();
-  const category = sub.category || "Generalist";
+  const boardName = (sub.board_name || sub.boardName || "").trim();
+  const websiteUrl = (sub.website_url || sub.websiteUrl || "").trim();
+  const shortDescription = (sub.short_description || sub.shortDescription || "").trim();
   
   // 2. Safely generate slug
   const slugify = (text) => {
@@ -576,23 +580,31 @@ export async function approveSubmissionAction(submissionId) {
     counter++;
   }
   
-  const categorySlug = sub.categorySlug || slugify(category);
-  
+  const allCategories = getAllCategories();
+  const categorySlug = sub.category_slug || sub.categorySlug || slugify(sub.category || "Generalist");
+  const matchedCategory = allCategories.find(c => c.slug === categorySlug);
+  const category = sub.category || matchedCategory?.name || "Generalist";
+  const toolType = sub.tool_type || sub.toolType || "Job Board";
+  const bestFor = (sub.best_for || sub.bestFor || "General").trim();
+  const pricingInfo = (sub.pricing_info || sub.pricingInfo || "").trim();
+  const pricingModel = sub.pricing_model || sub.pricingModel || "paid";
+  const targetAudience = sub.target_audience || sub.targetAudience || [];
+
   // 3. Build new board structure, keeping factual/verifiable metrics only
   const newBoard = {
     id: Date.now(),
     slug,
     name: boardName,
     logo: "/logos/default.svg",
-    bestFor: sub.bestFor?.trim() || "General",
+    bestFor: bestFor,
     shortDescription,
     fullDescription: shortDescription,
     category,
     categorySlug,
-    toolType: sub.toolType || "Job Board",
+    toolType: toolType,
     subcategory: "",
-    pricing: sub.pricingInfo?.trim() || sub.pricingModel || "Custom Pricing",
-    pricingModel: sub.pricingModel ? sub.pricingModel.toLowerCase() : "paid",
+    pricing: pricingInfo || pricingModel || "Custom Pricing",
+    pricingModel: pricingModel ? pricingModel.toLowerCase() : "paid",
     rating: null,
     reviewCount: null,
     yearFounded: new Date().getFullYear(),
@@ -600,13 +612,13 @@ export async function approveSubmissionAction(submissionId) {
     ownership: "Private",
     website: websiteUrl,
     features: [],
-    idealFor: sub.targetAudience || [],
+    idealFor: targetAudience,
     pricingDetails: { 
-      employerCost: sub.pricingInfo?.trim() || sub.pricingModel || "Custom Pricing",
+      employerCost: pricingInfo || pricingModel || "Custom Pricing",
       includes: []
     },
     reviews: [],
-    highlights: sub.targetAudience?.slice(0, 3) || []
+    highlights: targetAudience.slice(0, 3) || []
   };
   
   // 4. Validate using project helper
@@ -636,7 +648,7 @@ export async function approveSubmissionAction(submissionId) {
     
     const tagsPath = path.join(process.cwd(), "data", "boardDecisionTags.js");
     const tagsData = readMetadataFile(tagsPath, "boardDecisionTags");
-    tagsData[slug] = sub.targetAudience || [];
+    tagsData[slug] = targetAudience;
     writeMetadataFile(tagsPath, "boardDecisionTags", tagsData);
     
     const highlightPath = path.join(process.cwd(), "data", "boardHighlightGroups.js");
@@ -644,7 +656,7 @@ export async function approveSubmissionAction(submissionId) {
     highlightData[slug] = {
       "Hiring Type": ["Full-time"],
       "Industry Focus": [category],
-      "Pricing Model": [sub.pricingModel || "Custom Pricing"],
+      "Pricing Model": [pricingModel || "Custom Pricing"],
       "Candidate Quality": ["Verified Pool"]
     };
     writeMetadataFile(highlightPath, "boardHighlightGroups", highlightData);
@@ -746,39 +758,49 @@ export function getBoardDecisionTags(slug) {
 }
 `;
     fs.writeFileSync(path.join(process.cwd(), "data", "index.js"), indexContent, "utf-8");
-    
-    // 8. Move submission status: pending -> approved
-    submissions[subIndex].status = "approved";
-    submissions[subIndex].updatedAt = new Date().toISOString();
-    submissions[subIndex].publishedSlug = slug;
-    fs.writeFileSync(submissionsPath, JSON.stringify(submissions, null, 2), "utf-8");
-    
-    revalidatePath("/admin");
-    return { success: true };
   } catch (e) {
-    console.error("Error writing board:", e);
+    console.error("Error writing board files:", e);
     return { success: false, error: "Failed to publish listing and update imports." };
   }
+    
+  // 8. LAST operation: Move submission status in Supabase (pending -> approved)
+  // Only executed after the board file and data/index.js writes have both succeeded.
+  try {
+    const { error: updateErr } = await supabaseAdmin
+      .from('board_submissions')
+      .update({ status: 'approved' })
+      .eq('id', submissionId);
+
+    if (updateErr) {
+      console.error("Supabase update error on approve:", updateErr);
+      return { success: false, error: "Board published, but failed to update submission status in database." };
+    }
+  } catch (err) {
+    console.error("Supabase update error on approve:", err);
+    return { success: false, error: "Board published, but failed to update submission status in database." };
+  }
+  
+  revalidatePath("/admin");
+  return { success: true };
 }
 
 export async function updateSubmissionStatusAction(submissionId, status) {
-  const submissionsPath = path.join(process.cwd(), "storage", "submissions.json");
-  if (!fs.existsSync(submissionsPath)) {
-    return { success: false, error: "Submissions file not found." };
-  }
-  
   try {
-    const fileData = fs.readFileSync(submissionsPath, "utf-8");
-    const submissions = JSON.parse(fileData);
-    const subIndex = submissions.findIndex(s => s.id === submissionId);
-    if (subIndex === -1) {
-      return { success: false, error: "Submission not found." };
+    const { supabaseAdmin } = await import('@/lib/supabase');
+    if (!supabaseAdmin) {
+      return { success: false, error: "Database client not configured." };
     }
-    
-    submissions[subIndex].status = status;
-    submissions[subIndex].updatedAt = new Date().toISOString();
-    
-    fs.writeFileSync(submissionsPath, JSON.stringify(submissions, null, 2), "utf-8");
+
+    const { error } = await supabaseAdmin
+      .from('board_submissions')
+      .update({ status: status })
+      .eq('id', submissionId);
+
+    if (error) {
+      console.error("Supabase status update error:", error);
+      return { success: false, error: "Failed to update submission status." };
+    }
+
     revalidatePath("/admin");
     return { success: true };
   } catch (e) {
@@ -788,16 +810,22 @@ export async function updateSubmissionStatusAction(submissionId, status) {
 }
 
 export async function hardDeleteSubmissionAction(submissionId) {
-  const submissionsPath = path.join(process.cwd(), "storage", "submissions.json");
-  if (!fs.existsSync(submissionsPath)) {
-    return { success: false, error: "Submissions file not found." };
-  }
-  
   try {
-    const fileData = fs.readFileSync(submissionsPath, "utf-8");
-    let submissions = JSON.parse(fileData);
-    submissions = submissions.filter(s => s.id !== submissionId);
-    fs.writeFileSync(submissionsPath, JSON.stringify(submissions, null, 2), "utf-8");
+    const { supabaseAdmin } = await import('@/lib/supabase');
+    if (!supabaseAdmin) {
+      return { success: false, error: "Database client not configured." };
+    }
+
+    const { error } = await supabaseAdmin
+      .from('board_submissions')
+      .delete()
+      .eq('id', submissionId);
+
+    if (error) {
+      console.error("Supabase delete error:", error);
+      return { success: false, error: "Failed to delete submission." };
+    }
+
     revalidatePath("/admin");
     return { success: true };
   } catch (e) {

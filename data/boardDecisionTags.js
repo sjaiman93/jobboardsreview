@@ -502,7 +502,6 @@ export const boardDecisionTags = {
   "simplyhired": [],
   "smashing-magazine-jobs": [],
   "snagajob": [],
-  "stack-overflow-jobs": [],
   "startup-jobs": [],
   "supply-chain-jobs": [],
   "talent-com": [],

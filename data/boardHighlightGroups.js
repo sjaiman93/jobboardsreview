@@ -996,20 +996,6 @@ export const boardHighlightGroups = {
       "Verified Pool"
     ]
   },
-  "stack-overflow-jobs": {
-    "Hiring Type": [
-      "Full-time"
-    ],
-    "Industry Focus": [
-      "Technology"
-    ],
-    "Pricing Model": [
-      "Free Option"
-    ],
-    "Candidate Quality": [
-      "Verified Pool"
-    ]
-  },
   "startup-jobs": {
     "Hiring Type": [
       "Full-time"

@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { notFound } from "next/navigation";
 import { getAllBoards, getBoardBySlug, getBoardProsCons, getBoardDecisionTags } from "@/data/jobBoards";
 import { getSiteContent } from "@/data/siteContent";
 import { getBlogs } from "@/data/blogs";
@@ -10,6 +11,9 @@ export const metadata = {
 };
 
 export default async function AdminPage({ searchParams }) {
+  if (process.env.NODE_ENV !== "development") {
+    notFound();
+  }
   const rawBoards = getAllBoards();
   const siteContent = getSiteContent();
   const blogs = getBlogs();

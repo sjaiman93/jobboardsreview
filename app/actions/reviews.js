@@ -62,7 +62,7 @@ export async function submitReviewAction(payload) {
 
   let ip = "127.0.0.1";
   try {
-    const headersList = headers();
+    const headersList = await headers();
     ip = headersList.get("x-forwarded-for")?.split(",")[0] || headersList.get("x-real-ip") || "127.0.0.1";
   } catch (err) {
     // Ignore header read errors
