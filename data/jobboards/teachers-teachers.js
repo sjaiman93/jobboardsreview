@@ -1,8 +1,8 @@
 const teachers_teachers = {
   "id": 170,
   "slug": "teachers-teachers",
-  "name": "Teachers-Teachers.com",
-  "logo": "https://logo.clearbit.com/teachers-teachers.com",
+  "name": "K12JobSpot",
+  "logo": "https://logo.clearbit.com/k12jobspot.com",
   "bestFor": "",
   "shortDescription": "Specialized job board for K-12 teachers, substitute teachers, and school administrators.",
   "fullDescription": "",
@@ -15,7 +15,7 @@ const teachers_teachers = {
     "employerCost": "Free for job seekers",
     "includes": []
   },
-  "website": "https://www.teachers-teachers.com",
+  "website": "https://www.k12jobspot.com",
   "features": [],
   "reviews": [],
   "highlights": [],

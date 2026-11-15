@@ -1,8 +1,8 @@
 const workinlogistics = {
   "id": 182,
   "slug": "workinlogistics",
-  "name": "WorkInLogistics.com",
-  "logo": "https://logo.clearbit.com/workinlogistics.com",
+  "name": "JobsInLogistics.com",
+  "logo": "https://logo.clearbit.com/jobsinlogistics.com",
   "bestFor": "",
   "shortDescription": "US-focused logistics and transportation job board covering drivers, dispatchers, and operations roles.",
   "fullDescription": "",
@@ -15,7 +15,7 @@ const workinlogistics = {
     "employerCost": "Free for job seekers",
     "includes": []
   },
-  "website": "https://www.workinlogistics.com",
+  "website": "https://www.jobsinlogistics.com",
   "features": [],
   "reviews": [],
   "highlights": [],

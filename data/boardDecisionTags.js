@@ -16,7 +16,6 @@ export const boardDecisionTags = {
     "US Accounting Jobs",
     "Finance And Accounting Hiring"
   ],
-  "hired": [],
   "getwork": [],
   "google-for-jobs": [],
   "himalayas": [],
@@ -179,18 +178,6 @@ export const boardDecisionTags = {
     "Job Search Platform",
     "Recruiting Platform"
   ],
-  "careervitals": [
-    "Healthcare Job Board",
-    "Nursing Jobs",
-    "Allied Health Jobs",
-    "Physician Jobs",
-    "Medical Assistant Jobs",
-    "Healthcare Administration Jobs",
-    "Hospital Jobs",
-    "Clinic Jobs",
-    "Healthcare Staffing",
-    "Healthcare Recruiting Platform"
-  ],
   "cfa-institute-jobs": [
     "CFA Institute",
     "CFA job board",
@@ -213,28 +200,6 @@ export const boardDecisionTags = {
     "candidate filtering",
     "financial services recruitment"
   ],
-  "chronicle-vitae": [
-    "Chronicle Vitae",
-    "Chronicle of Higher Education",
-    "academic job board",
-    "higher education jobs",
-    "faculty positions",
-    "university careers",
-    "college administrator jobs",
-    "research positions",
-    "academic recruitment",
-    "higher ed careers",
-    "CV builder",
-    "academic dossier",
-    "salary database",
-    "nonprofit education jobs",
-    "print job advertising",
-    "diversity hiring higher ed",
-    "unlimited job posting",
-    "managing academic hiring",
-    "faculty recruitment",
-    "HigherEdJobs competitor"
-  ],
   "clearancejobs": [
     "Defense Contractors",
     "Federal Agencies",
@@ -253,15 +218,6 @@ export const boardDecisionTags = {
     "Tech Hardware Companies",
     "Creative Staffing",
     "Senior Design Roles"
-  ],
-  "crunchboard": [
-    "Tech Startups",
-    "High-Growth Companies",
-    "Engineering Hiring",
-    "Product Management Roles",
-    "Software Development Recruitment",
-    "Startup Talent Acquisition",
-    "DevOps Hiring"
   ],
   "culinary-agents": [
     "Restaurants",
@@ -327,9 +283,6 @@ export const boardDecisionTags = {
     "Creative Agency Recruiting",
     "Freelance Design Projects",
     "Remote Design Roles"
-  ],
-  "edsurge-jobs": [
-    "Not suitable for non-education roles Expensive for occasional hiring Limited public traffic data Not ideal for staffing firms"
   ],
   "efinancialcareers": [],
   "financial-job-bank": [
@@ -445,7 +398,6 @@ export const boardDecisionTags = {
     "Global Job Board",
     "Social Recruiting"
   ],
-  "logistics-management-jobs": [],
   "mediabistro": [
     "Media Job Board",
     "Marketing Jobs",
@@ -483,8 +435,6 @@ export const boardDecisionTags = {
   ],
   "nalp-job-board": [],
   "nature-jobs": [],
-  "new-scientist-jobs": [],
-  "nursingjobs": [],
   "practicelink": [],
   "practicematch": [
     "Physician Job Board",

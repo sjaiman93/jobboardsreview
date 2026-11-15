@@ -1,27 +1,4 @@
 export const boardHighlightGroups = {
-  "hired": {
-    "Hiring Type": [
-      "Full-time",
-      "Senior Roles",
-      "Engineering",
-      "Product"
-    ],
-    "Industry Focus": [
-      "Tech",
-      "SaaS",
-      "Startups",
-      "Enterprise"
-    ],
-    "Pricing Model": [
-      "Pay-Per-Post"
-    ],
-    "Candidate Quality": [
-      "Pre-vetted",
-      "High Intent",
-      "Curated Pool",
-      "Salary-matched"
-    ]
-  },
   "getwork": {
     "Hiring Type": [
       "Full-time",
@@ -222,42 +199,12 @@ export const boardHighlightGroups = {
       "Verified Pool"
     ]
   },
-  "careervitals": {
-    "Hiring Type": [
-      "Full-time"
-    ],
-    "Industry Focus": [
-      "Healthcare"
-    ],
-    "Pricing Model": [
-      "Subscription",
-      "Pay-Per-Post"
-    ],
-    "Candidate Quality": [
-      "Verified Pool"
-    ]
-  },
   "cfa-institute-jobs": {
     "Hiring Type": [
       "Full-time"
     ],
     "Industry Focus": [
       "Finance"
-    ],
-    "Pricing Model": [
-      "Subscription",
-      "Pay-Per-Post"
-    ],
-    "Candidate Quality": [
-      "Verified Pool"
-    ]
-  },
-  "chronicle-vitae": {
-    "Hiring Type": [
-      "Full-time"
-    ],
-    "Industry Focus": [
-      "Education"
     ],
     "Pricing Model": [
       "Subscription",
@@ -290,20 +237,6 @@ export const boardHighlightGroups = {
     ],
     "Pricing Model": [
       "Subscription",
-      "Pay-Per-Post"
-    ],
-    "Candidate Quality": [
-      "Verified Pool"
-    ]
-  },
-  "crunchboard": {
-    "Hiring Type": [
-      "Full-time"
-    ],
-    "Industry Focus": [
-      "Startups"
-    ],
-    "Pricing Model": [
       "Pay-Per-Post"
     ],
     "Candidate Quality": [
@@ -406,20 +339,6 @@ export const boardHighlightGroups = {
     ],
     "Pricing Model": [
       "Subscription",
-      "Pay-Per-Post"
-    ],
-    "Candidate Quality": [
-      "Verified Pool"
-    ]
-  },
-  "edsurge-jobs": {
-    "Hiring Type": [
-      "Full-time"
-    ],
-    "Industry Focus": [
-      "Education"
-    ],
-    "Pricing Model": [
       "Pay-Per-Post"
     ],
     "Candidate Quality": [
@@ -741,20 +660,6 @@ export const boardHighlightGroups = {
       "Verified Pool"
     ]
   },
-  "logistics-management-jobs": {
-    "Hiring Type": [
-      "Full-time"
-    ],
-    "Industry Focus": [
-      "Logistics & Supply"
-    ],
-    "Pricing Model": [
-      "Free Option"
-    ],
-    "Candidate Quality": [
-      "Verified Pool"
-    ]
-  },
   "mediabistro": {
     "Hiring Type": [
       "Full-time"
@@ -809,34 +714,6 @@ export const boardHighlightGroups = {
     ],
     "Pricing Model": [
       "Quote-Based"
-    ],
-    "Candidate Quality": [
-      "Verified Pool"
-    ]
-  },
-  "new-scientist-jobs": {
-    "Hiring Type": [
-      "Full-time"
-    ],
-    "Industry Focus": [
-      "Healthcare"
-    ],
-    "Pricing Model": [
-      "Free Option"
-    ],
-    "Candidate Quality": [
-      "Verified Pool"
-    ]
-  },
-  "nursingjobs": {
-    "Hiring Type": [
-      "Full-time"
-    ],
-    "Industry Focus": [
-      "Healthcare"
-    ],
-    "Pricing Model": [
-      "Free Option"
     ],
     "Candidate Quality": [
       "Verified Pool"

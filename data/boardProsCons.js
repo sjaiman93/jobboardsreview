@@ -14,10 +14,6 @@ export const boardProsCons = {
       "Fewer advanced tools – No built‑in ATS or AI matching features; it's primarily a job listing and discovery platform."
     ]
   },
-  "hired": {
-    "pros": [],
-    "cons": []
-  },
   "getwork": {
     "pros": [],
     "cons": []
@@ -195,22 +191,6 @@ export const boardProsCons = {
       "No free employer plan – unlike some competitors, there isn’t a true free tier for employers."
     ]
   },
-  "careervitals": {
-    "pros": [
-      "Focused entirely on healthcare, ensuring job postings reach a relevant audience instead of a broad, general candidate pool",
-      "Flexible pricing options, ranging from single job posts to high-volume subscription plans, allowing employers to scale based on hiring needs",
-      "Employer branding features help organizations stand out through logos and company information",
-      "Built-in screening questions can reduce recruiter workload by filtering applicants before resume review",
-      "Job distribution to external channels like Google for Jobs and Adzuna helps extend reach without additional cost per post",
-      "Social media sharing options make it easier to promote roles across multiple platforms"
-    ],
-    "cons": [
-      "Does not offer a built-in resume database or advanced candidate search functionality, which limits proactive sourcing",
-      "Lacks integrated applicant tracking or recruiter workflow tools, requiring external systems for managing hiring processes",
-      "Limited availability of independent user reviews, making it harder to compare performance with other platforms",
-      "Entry-level pricing for single job postings may be high for smaller employers or low-volume hiring needs"
-    ]
-  },
   "cfa-institute-jobs": {
     "pros": [
       "Highly credentialed candidate pool — 190K+ CFA charterholders with verified expertise",
@@ -232,35 +212,6 @@ export const boardProsCons = {
       "Credential bias — may overlook talented non-CFA finance professionals",
       "No ATS integration",
       "Limited candidate volume for high-volume hiring"
-    ]
-  },
-  "chronicle-vitae": {
-    "pros": [
-      "Industry-leading authority — backed by The Chronicle of Higher Education, the most trusted publication in academia",
-      "Free for job seekers — all core features including CV builder, salary database, and job search are free",
-      "Comprehensive career tools — free CV/dossier hosting (Interfolio alternative), salary data, career advice",
-      "Massive candidate reach — 201,000+ print subscribers + extensive online readership",
-      "High-quality candidate pool — attracts credentialed academics and higher ed professionals",
-      "26,900+ active job listings — one of the largest academic job boards",
-      "Advanced search filters — position type, institution type, employment type, location, publication date",
-      "Bulk discounts available — up to 15% savings on high-volume posting packages",
-      "Unlimited Posting Package — 12 months of unlimited postings for organizations with ongoing hiring needs",
-      "Print advertising option — reach 201K+ readers through The Chronicle's weekly print edition",
-      "Print + digital bundling — 20% discount on print ads for Unlimited package subscribers",
-      "Manage My Ads dashboard — 24/7 access to edit and manage postings",
-      "CV database — recruiters can search candidate profiles directly"
-    ],
-    "cons": [
-      "No free job posting option — every posting starts at $435, making it expensive for small institutions",
-      "Upfront payment required — first-time advertisers must pay in advance",
-      "USD-only payments — international institutions must pay in U.S. dollars",
-      "Premium pricing — at $435+, it's more expensive than competitors like Inside Higher Ed ($349)",
-      "No resume search for standard employers — CV database access requires additional subscription",
-      "No customizable email alerts for job seekers — candidates cannot set personalized job alert filters",
-      "Primarily North America-focused — limited reach outside the U.S. and Canada",
-      "No ATS integration — cannot directly sync with applicant tracking systems",
-      "Unlimited plan pricing not transparent — employers must contact for a quote",
-      "Print ads are additional cost — not included in online posting packages"
     ]
   },
   "clearancejobs": {
@@ -301,28 +252,6 @@ export const boardProsCons = {
       "Less brand recognition among younger designers compared to Behance or Dribbble",
       "Limited recent third-party reviews making reputation harder to assess",
       "Single gallery layout style may feel restrictive for portfolio presentation"
-    ]
-  },
-  "crunchboard": {
-    "pros": [
-      "Official TechCrunch job board — direct access to tech and startup audience",
-      "Jobs promoted across TechCrunch website, newsletters, and social channels",
-      "Non-expiring job packs — buy in bulk and use credits anytime",
-      "Transparent, publicly listed pricing — easy to budget",
-      "Free for job seekers — no paywall to browse or apply",
-      "Clean, simple interface — easy for both employers and candidates",
-      "Email job alerts keep candidates engaged with new listings",
-      "Featured and Urgent upgrade options for time-sensitive roles"
-    ],
-    "cons": [
-      "No free job posting tier — starts at $349 per listing",
-      "No resume search or candidate database",
-      "No ATS integration or candidate matching tools",
-      "Listings not syndicated to other job boards outside TechCrunch network",
-      "Credit card only — no alternative payment methods",
-      "Relatively modest active listing volume compared to large tech boards",
-      "Occasional outdated postings and limited advanced filtering options",
-      "Few public third-party reviews making reputation harder to assess"
     ]
   },
   "culinary-agents": {
@@ -449,21 +378,6 @@ export const boardProsCons = {
       "Some features locked behind higher plans — full candidate management and enhanced visibility require the Hiring Suite subscription rather than single posts",
       "Staffing agencies have limited utility here — the platform is primarily built for direct employer-to-designer connections. Recruiting firms filling design roles for clients may find better ROI on broader platforms",
       "Skews toward visual/digital design — strongest for UI/UX, graphic, and product design. Less depth for highly specialized disciplines like motion graphics or industrial design"
-    ]
-  },
-  "edsurge-jobs": {
-    "pros": [
-      "Best for hiring in edtech or education — highly relevant audience",
-      "Newsletter distribution gives strong visibility beyond listings",
-      "Works well for edtech companies hiring product and CS roles",
-      "Multiple pricing tiers based on hiring urgency",
-      "Trusted brand in education ecosystem"
-    ],
-    "cons": [
-      "Not suitable for non-education roles",
-      "Expensive for occasional hiring",
-      "Limited public traffic data",
-      "Not ideal for staffing firms"
     ]
   },
   "efinancialcareers": {
@@ -697,10 +611,6 @@ export const boardProsCons = {
       "Learning curve – To get real value, recruiters must know how to build effective searches, write targeted InMails, and measure campaign performance."
     ]
   },
-  "logistics-management-jobs": {
-    "pros": [],
-    "cons": []
-  },
   "mediabistro": {
     "pros": [
       "Highly targeted creative audience – Built specifically for media, marketing, and creative professionals; less irrelevant traffic than general job boards.",
@@ -734,14 +644,6 @@ export const boardProsCons = {
     "cons": []
   },
   "nature-jobs": {
-    "pros": [],
-    "cons": []
-  },
-  "new-scientist-jobs": {
-    "pros": [],
-    "cons": []
-  },
-  "nursingjobs": {
     "pros": [],
     "cons": []
   },

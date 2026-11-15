@@ -1,8 +1,4 @@
 export const boardMetrics = {
-  "hired": {
-    "candidateReach": "500K+",
-    "reachLabel": "Active Tech Talent"
-  },
   "getwork": {
     "candidateReach": "2M+",
     "reachLabel": "Verified Listings"
@@ -75,15 +71,7 @@ export const boardMetrics = {
     "candidateReach": "Growing",
     "reachLabel": "Candidates"
   },
-  "careervitals": {
-    "candidateReach": "Growing",
-    "reachLabel": "Candidates"
-  },
   "cfa-institute-jobs": {
-    "candidateReach": "Growing",
-    "reachLabel": "Candidates"
-  },
-  "chronicle-vitae": {
     "candidateReach": "Growing",
     "reachLabel": "Candidates"
   },
@@ -92,10 +80,6 @@ export const boardMetrics = {
     "reachLabel": "Candidates"
   },
   "coroflot": {
-    "candidateReach": "Growing",
-    "reachLabel": "Candidates"
-  },
-  "crunchboard": {
     "candidateReach": "Growing",
     "reachLabel": "Candidates"
   },
@@ -120,10 +104,6 @@ export const boardMetrics = {
     "reachLabel": "Candidates"
   },
   "dribbble-jobs": {
-    "candidateReach": "Growing",
-    "reachLabel": "Candidates"
-  },
-  "edsurge-jobs": {
     "candidateReach": "Growing",
     "reachLabel": "Candidates"
   },
@@ -199,10 +179,6 @@ export const boardMetrics = {
     "candidateReach": "Growing",
     "reachLabel": "Candidates"
   },
-  "logistics-management-jobs": {
-    "candidateReach": "Growing",
-    "reachLabel": "Candidates"
-  },
   "mediabistro": {
     "candidateReach": "Growing",
     "reachLabel": "Candidates"
@@ -216,14 +192,6 @@ export const boardMetrics = {
     "reachLabel": "Candidates"
   },
   "nature-jobs": {
-    "candidateReach": "Growing",
-    "reachLabel": "Candidates"
-  },
-  "new-scientist-jobs": {
-    "candidateReach": "Growing",
-    "reachLabel": "Candidates"
-  },
-  "nursingjobs": {
     "candidateReach": "Growing",
     "reachLabel": "Candidates"
   },

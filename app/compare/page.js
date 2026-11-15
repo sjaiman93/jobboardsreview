@@ -31,7 +31,7 @@ export default function ComparePage() {
   const allBoards = getAllBoards();
 
   const [selectedSlugs, setSelectedSlugs] = useState([
-    "hired",
+    "dice",
     "getwork",
     "remote-co",
   ]);

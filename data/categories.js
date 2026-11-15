@@ -1,6 +1,7 @@
 export const categories = [
   { name: "Technology", slug: "technology", icon: "💻", boardCount: 4, description: "Software engineering, data science, cybersecurity, and IT roles." },
   { name: "Healthcare", slug: "healthcare", icon: "🏥", boardCount: 1, description: "Physician, nursing, allied health, and healthcare executive positions." },
+  { name: "Science & Research", slug: "science-research", icon: "🔬", boardCount: 2, description: "Academic, industry, and government research and scientific roles." },
   { name: "Remote & Flexible", slug: "remote-flexible", icon: "🌍", boardCount: 3, description: "Fully remote, hybrid, and flexible work opportunities." },
   { name: "Legal", slug: "legal", icon: "⚖️", boardCount: 2, description: "Attorney, paralegal, and legal support positions." },
   { name: "Education", slug: "education", icon: "📚", boardCount: 2, description: "Teaching, administration, and academic research roles." },
