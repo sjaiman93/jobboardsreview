@@ -79,20 +79,44 @@ leftover reference in one of them.
 
 The full task list is in `.agy/skills/jbr-launch/SKILL.md`.
 
-Done: build fixed, admin wired to Supabase, prod admin gated, async
-cookies/headers, Stack Overflow Jobs removed.
+Done and committed (`ebe41d3`):
+
+- [x] T6 decided: admin stays local-only (option A)
+- [x] T17 / T17b build green: `react-quill` `^0.0.2` → `^2.0.0`; `puppeteer`
+      and `cheerio` moved to devDependencies
+- [x] T18 / T18a admin approval reads submissions from Supabase
+      (`board_submissions`); status update stays last
+- [x] T19 `/admin` returns 404 outside development (middleware + page)
+- [x] T20 `cookies()` / `headers()` awaited
+- [x] T3 Stack Overflow Jobs removed, 301 to `/category/technology`
+
+Done, **not yet committed** (working tree):
+
+- [x] T3b / T3c board liveness sweep (results in `scratch/`, gitignored)
+- [x] T3d board cleanup: 8 boards removed with 301s (incl. chronicle-vitae),
+      3 repointed, new `science-research` category, compare default → dice
+- [x] T1 All 3 published posts ported from the Lovable Supabase project, text
+      verified identical; covers in `public/blog/`, served via `next/image`
+- [x] T5 Open Graph / Twitter metadata via `lib/shareImage.js`; default image
+      `public/og-image.png` (1200×630, from Canva); posts use their cover
 
 Still blocking launch:
 
-- [ ] Port the April 2026 blog post into `data/blogs.js` — Sagar supplies the body
-- [ ] JSON-LD structured data (none exists anywhere)
-- [ ] Open Graph / Twitter card metadata (none exists anywhere)
-- [ ] Self-referencing canonicals (none exists anywhere)
-- [ ] Finish the board liveness sweep and fix dead/moved URLs
-- [ ] Verify the redirect map in `next.config.mjs` against real Lovable URLs
-- [ ] Blog posts missing from `app/sitemap.js`
-- [ ] `lastModified: now` on every sitemap entry — use real dates
-- [ ] Complete `.env.example`
+- [ ] T2 JSON-LD structured data (none exists anywhere)
+- [ ] T9 Self-referencing canonicals and a title template (neither exists)
+- [ ] T4 Verify the redirect map in `next.config.mjs` against real Lovable URLs
+      (14 redirects now, 8 added by T3d)
+- [ ] T7 Blog posts missing from `app/sitemap.js`
+- [ ] T8 `lastModified: now` on every sitemap entry — use real dates
+- [ ] T11 Complete `.env.example` — code reads 8 env vars, file documents 1
+
+Should do before cutover:
+
+- [ ] T12 Zero-review rating display; `/directory` title claims "85+ Verified"
+      (77 boards now, none verified)
+- [ ] Manual browser check of the 20 boards that only ever returned a bot wall
+      (403) in T3c — a challenge page proves a server, not a live board.
+      Crunchboard returned the same 403 and turned out to be dead.
 
 Launch gate:
 

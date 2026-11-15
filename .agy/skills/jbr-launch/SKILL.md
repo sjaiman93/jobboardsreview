@@ -5,7 +5,8 @@ description: Pre-launch fixes for the JobBoardsReview Next.js site before cutove
 
 # JBR Launch Fixes
 
-Sixteen tasks. Six block launch, six are quick, four are post-launch.
+Sixteen planned tasks (T1–T16), plus nine added while working (T3b–T3d,
+T17–T20). Status as of 15 Nov 2026 is in the task index below.
 Run **one task per session**. Stop after each. Do not chain them.
 
 ## Rules that apply to every task
@@ -37,24 +38,32 @@ git add -A && git commit -m "JBR-T<n>: <short description>"
 
 ## Task index
 
-| # | Task | Blocks launch |
-| --- | --- | --- |
-| T1 | Port the blog post | Yes |
-| T2 | Add JSON-LD structured data | Yes |
-| T3 | Remove dead job boards | Yes |
-| T4 | Verify the redirect map | Yes |
-| T5 | Add Open Graph and Twitter cards | Yes |
-| T6 | Decide the admin write strategy | Yes |
-| T7 | Add blog posts to sitemap | No |
-| T8 | Real lastModified dates | No |
-| T9 | Add canonical URLs and title template | No |
-| T10 | Add lastVerified to boards | No |
-| T11 | Complete .env.example | No |
-| T12 | Fix zero-review rating display | No |
-| T13 | Repo hygiene | Post-launch |
-| T14 | Install analytics | Post-launch |
-| T15 | Add agent output validation | Post-launch |
-| T16 | Author page for Palak | Post-launch |
+| # | Task | Blocks launch | Status |
+| --- | --- | --- | --- |
+| T1 | Port the blog post | Yes | **Done** — 3 posts, not 1; text verified identical |
+| T2 | Add JSON-LD structured data | Yes | Open |
+| T3 | Remove dead job boards | Yes | **Done** (`ebe41d3`) |
+| T3b | Board liveness sweep | Yes | **Done** — not committed (`scratch/` is gitignored) |
+| T3c | Re-probe boards that returned 403 | Yes | **Done** — not committed; 20 boards still unconfirmed, see T3c |
+| T3d | 11-board cleanup | Yes | **Done** — uncommitted in working tree |
+| T4 | Verify the redirect map | Yes | Open |
+| T5 | Add Open Graph and Twitter cards | Yes | **Done** — 1200×630 banner from Canva |
+| T6 | Decide the admin write strategy | Yes | **Done** — option A, local-only admin |
+| T7 | Add blog posts to sitemap | No | Open |
+| T8 | Real lastModified dates | No | Open |
+| T9 | Add canonical URLs and title template | No | Open |
+| T10 | Add lastVerified to boards | No | Open |
+| T11 | Complete .env.example | No | Open |
+| T12 | Fix zero-review rating display | No | Open |
+| T13 | Repo hygiene | Post-launch | Open |
+| T14 | Install analytics | Post-launch | Open |
+| T15 | Add agent output validation | Post-launch | Open |
+| T16 | Author page for Palak | Post-launch | Open |
+| T17 | Fix hallucinated `react-quill` version | Yes | **Done** (`ebe41d3`) |
+| T17b | Get `npm run build` green | Yes | **Done** (`ebe41d3`) |
+| T18 / T18a | Wire admin approval to Supabase | Yes | **Done** (`ebe41d3`) |
+| T19 | Gate `/admin` in production | Yes | **Done** (`ebe41d3`) |
+| T20 | Await async `cookies()` / `headers()` | Yes | **Done** (`ebe41d3`) |
 
 ---
 
@@ -122,13 +131,93 @@ Run npm run build. Do not commit.
 
 **Acceptance:** build passes with no broken references; `/board/stack-overflow-jobs` redirects; Chronicle Vitae reported on, not silently changed.
 
+**Status: Done** (`ebe41d3`). The prompt's `/category/technology-engineering`
+does not exist; the redirect points at `/category/technology`, the real slug.
+Chronicle Vitae was reported on, then removed in T3d.
+
+---
+
+## T3b — Board liveness sweep
+
+**Status: Done, not committed.** Run outside this file; the original prompt was
+not recorded.
+
+`scratch/sweep.mjs` checked DNS and HTTP for all 85 boards and wrote
+`scratch/sweep_results.json`; `scratch/table_output.md` holds the verdict
+table. Every board it marked DEAD, MOVED or URL_WRONG was handled in T3d.
+
+`scratch/` is gitignored, so none of this is in git.
+
+---
+
+## T3c — Re-probe the 403 boards
+
+**Status: Done, not committed.** Run outside this file; the original prompt was
+not recorded.
+
+`scratch/check_403.cjs`, `reverify_403.cjs` and `detailed_probe_403.cjs`
+re-probed the 21 boards that returned 403 → `reverify_403_results.json`,
+`detailed_probe_results.json`.
+
+**Open follow-up:** 20 of those boards (all but Crunchboard, now removed) only
+ever returned a Cloudflare / GoDaddy challenge page. That proves a server
+answers, not that the job board is live. Crunchboard returned the same 403 and
+turned out to be dead. Check the 20 by hand in a real browser before launch:
+
+accounting-jobs-today, alliedtravelcareers, cfa-institute-jobs, clearancejobs,
+coroflot, culinary-agents, foundation-list, geekwork, ihire, incredible-health,
+ladders, lawyer-com-jobs, nalp-job-board, practicematch, remote-co,
+startup-jobs, teamwork-online, wall-street-oasis-jobs, we-work-remotely,
+workinsports.
+
+---
+
+## T3d — 11-board cleanup
+
+**Status: Done, uncommitted in the working tree.**
+
+Removed, each with a 301 in `next.config.mjs` to its category page (board file
+plus `data/index.js` and the four metadata files):
+
+| Slug | Reason | Redirects to |
+| --- | --- | --- |
+| new-scientist-jobs | shutdown notice on /jobs-closed/ | `/category/science-research` |
+| edsurge-jobs | "Job Board Is Unavailable" | `/category/education` |
+| careervitals | original domain now a pizzeria | `/category/healthcare` |
+| crunchboard | Cloudflare 1014, apex is dead Yahoo host | `/category/startups` |
+| logistics-management-jobs | /jobs 404, no replacement | `/category/logistics-supply` |
+| hired | absorbed into LHH | `/category/technology` |
+| nursingjobs | redirects to AMN Healthcare listings | `/category/healthcare` |
+| chronicle-vitae | retired product; text described it throughout | `/category/education` |
+
+Renamed / repointed (name, website and logo only; descriptions untouched):
+
+- teachers-teachers → "K12JobSpot", https://www.k12jobspot.com
+- science-careers → name kept, https://www.science.org/careers
+- workinlogistics → "JobsInLogistics.com", https://www.jobsinlogistics.com
+
+Also:
+
+- New category `science-research` ("Science & Research") in `data/categories.js`;
+  nature-jobs and science-careers moved into it from healthcare.
+- `app/compare/page.js` default slot `hired` → `dice`.
+
+Known leftovers, not fixed:
+
+- `logo.clearbit.com` does not resolve (checked 15 Nov 2026). 38 boards use it.
+- `boardCount` in `data/categories.js` is hand-written and wrong for most categories.
+- Unused logos in `public/logos/`: careervitals.jpg, crunchboard.jpg, edsurge-jobs.jpg.
+- About 13 boards have a `categorySlug` that does not match what they are
+  (e.g. cybersecjobs under generalist, usajobs under nonprofit-impact).
+
 ---
 
 ## T4 — Verify the redirect map
 
 ```
-next.config.mjs defines five redirects that assume the Lovable site's URL
-structure. I need these verified, not assumed.
+next.config.mjs defines fourteen redirects: five that assume the Lovable
+site's URL structure, plus nine /board/<slug> redirects for removed boards
+(T3, T3d). I need these verified, not assumed.
 
 List every path pattern the redirects currently cover. Then tell me exactly
 which live Lovable URLs I need to check to confirm each one is correct.
@@ -191,6 +280,10 @@ Do not implement either. Report and wait.
 ```
 
 **Acceptance:** a list of every filesystem write in the admin layer, and a clear recommendation. This is a decision Sagar makes, not AG.
+
+**Status: Done — option A.** Admin stays local-only. T19 enforces it (404 in
+production). T18 moved submissions out of `storage/submissions.json` into
+Supabase; board and blog data still live in files.
 
 ---
 
@@ -289,6 +382,12 @@ Use placeholders only. Never put a real key in this file.
 
 **Acceptance:** every `process.env.*` referenced in the codebase appears in `.env.example`.
 
+**Note (15 Nov 2026):** the code reads 8 variables besides `NODE_ENV`; only
+`ADMIN_PASSWORD` is documented. Missing: `NEXT_PUBLIC_SUPABASE_URL`,
+`NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`,
+`NEXT_PUBLIC_TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY`, `MAILCHIMP_API_KEY`,
+`MAILCHIMP_AUDIENCE_ID`.
+
 ---
 
 ## T12 — Fix zero-review rating display
@@ -309,6 +408,9 @@ Run npm run build. Do not commit.
 ```
 
 **Acceptance:** a board with zero reviews shows no stars and no numeric rating anywhere on the card or the detail page.
+
+**Note (15 Nov 2026):** after T3/T3d there are 77 boards, so "85+" in the
+`/directory` title is now false as well as unverified.
 
 ---
 
@@ -331,6 +433,12 @@ Run npm run build. Do not commit.
 ```
 
 **Acceptance:** `git ls-files storage scratch` returns nothing; build still passes.
+
+**Note (15 Nov 2026):** `ebe41d3` added `scratch/` to `.gitignore`, but that
+does not untrack files already committed. `git ls-files` still lists
+`storage/submissions.json`, `storage/channel_analysis_submissions.json`,
+`scratch/test_logic.js`, `scratch/test_submit.js`, `public/get-logo-png.html`
+and `legacy-jobboards.csv`. Nothing in the code reads `legacy-jobboards.csv`.
 
 ---
 
@@ -398,11 +506,75 @@ Run npm run build. Do not commit.
 
 ---
 
+## Tasks run but not planned here (T17–T20)
+
+These were run outside this file and their prompts were not recorded. All
+landed in a single commit, `ebe41d3` ("Fix build, wire admin to Supabase, gate
+prod admin, async cookies/headers, drop Stack Overflow Jobs"). The commit does
+not say where T17 ends and T17b begins, or T18 and T18a, so each pair is
+recorded together.
+
+### T17 / T17b — Build green
+
+**Status: Done.**
+
+- `react-quill` was pinned to `^0.0.2`, which does not exist → `^2.0.0`.
+- `puppeteer` and `cheerio` moved from `dependencies` to `devDependencies`,
+  so Vercel does not download Chromium on every build.
+- `eslint` `^8.57.0` → `^9.0.0`.
+- `app/globals.css`: the Google Fonts `@import` moved above the `@tailwind`
+  directives (CSS requires `@import` first).
+
+### T18 / T18a — Admin approval reads from Supabase
+
+**Status: Done.**
+
+- `approveSubmissionAction` in `app/admin/actions.js` reads the submission
+  from the Supabase `board_submissions` table instead of
+  `storage/submissions.json`, accepting both snake_case and camelCase fields.
+- The category name is resolved from `data/categories.js`.
+- The `status: 'approved'` update runs after every file write, so a failed
+  write cannot leave a submission marked approved with no board page.
+
+### T19 — Production admin gate
+
+**Status: Done.**
+
+- `middleware.js` rewrites every `/admin` path to the 404 page when
+  `NODE_ENV !== "development"`.
+- `app/admin/page.js` also calls `notFound()` outside development.
+
+### T20 — Async `cookies()` / `headers()`
+
+**Status: Done.**
+
+- `await cookies()` in `adminLoginAction` and `adminLogoutAction`.
+- `await headers()` in `submitBoardProposal` (`app/admin/actions.js`) and
+  `submitReviewAction` (`app/actions/reviews.js`). Without it, rate limiting
+  saw every visitor as `127.0.0.1`.
+
+---
+
 ## Order
 
-**Before launch:** T6 (decide first — it may change T1) → T3 → T2 → T5 → T1 → T7 → T8 → T9 → T12 → T11 → T4 → cutover
+Original plan, kept for reference:
+T6 → T3 → T2 → T5 → T1 → T7 → T8 → T9 → T12 → T11 → T4 → cutover;
+after launch T13 → T14 → T10 → T15 → T16.
 
-**After launch:** T13 → T14 → T10 → T15 → T16
+**Remaining, as of 15 Nov 2026:**
+
+1. T3c follow-up — browser check of the 20 bot-walled boards. Any removals
+   add redirects, so this goes before T4.
+2. T11 — `.env.example`. Needed to set up Vercel env vars.
+3. T2 → T9 — both edit `app/layout.js` and the same `generateMetadata`
+   functions; do them back to back. (T5 done.)
+4. T7 → T8 — sitemap blog entries and real dates. (T1 done.)
+5. T12 — rating display and the "85+ Verified" title.
+6. T4 — last, once the redirect list has stopped changing.
+7. Cutover.
+
+**After launch:** T13 → T14 → T10 → T15 → T16. T14 is small enough to do
+before cutover if launch-day traffic should be measured.
 
 ## What this skill does not cover
 
