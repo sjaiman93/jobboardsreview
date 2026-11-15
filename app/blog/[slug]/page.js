@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { getBlogs, getBlogBySlug } from "@/data/blogs";
+import { shareMetadata } from "@/lib/shareImage";
 import ShareButtons from "@/components/ShareButtons";
 
 export async function generateStaticParams() {
@@ -11,18 +13,30 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }) {
-  const blog = getBlogBySlug(params.slug);
+  const { slug } = await params;
+  const blog = getBlogBySlug(slug);
   if (!blog || blog.status !== "published") {
     return { title: "Post Not Found | JobBoardsReview" };
   }
+  const title = `${blog.metaTitle || blog.title} | JobBoardsReview`;
+  const description = blog.metaDescription || blog.description;
   return {
-    title: `${blog.metaTitle || blog.title} | JobBoardsReview`,
-    description: blog.metaDescription || blog.description,
+    title,
+    description,
+    ...shareMetadata({
+      title,
+      description,
+      url: `/blog/${blog.slug}`,
+      type: "article",
+      images: blog.image ? [{ url: blog.image, alt: blog.title }] : undefined,
+      extra: { publishedTime: blog.createdAt },
+    }),
   };
 }
 
-export default function BlogPostPage({ params }) {
-  const blog = getBlogBySlug(params.slug);
+export default async function BlogPostPage({ params }) {
+  const { slug } = await params;
+  const blog = getBlogBySlug(slug);
 
   if (!blog || blog.status !== "published") {
     notFound();
@@ -56,8 +70,8 @@ export default function BlogPostPage({ params }) {
       </header>
 
       {blog.image && (
-        <div className="w-full h-[400px] md:h-[500px] rounded-[40px] overflow-hidden mb-16 bg-slate-100 shadow-2xl">
-          <img src={blog.image} alt={blog.title} className="w-full h-full object-cover" />
+        <div className="relative w-full h-[400px] md:h-[500px] rounded-[40px] overflow-hidden mb-16 bg-slate-100 shadow-2xl">
+          <Image src={blog.image} alt={blog.title} fill priority sizes="(min-width: 1024px) 896px, 100vw" className="object-cover" />
         </div>
       )}
 

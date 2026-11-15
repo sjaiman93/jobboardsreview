@@ -14,6 +14,7 @@ import BoardInteractionPrompt from "@/components/BoardInteractionPrompt";
 import Collapsible from "@/components/Collapsible";
 import StarRating from "@/components/StarRating";
 import WriteReviewButton from "@/components/WriteReviewButton";
+import { shareMetadata } from "@/lib/shareImage";
 
 export async function generateStaticParams() {
   return getAllBoards().map((b) => ({ slug: b.slug }));
@@ -23,9 +24,12 @@ export async function generateMetadata({ params }) {
   const { slug } = await params;
   const board = getBoardBySlug(slug);
   if (!board) return {};
+  const title = `${board.name} | JobBoardsReview Profile`;
+  const description = board.shortDescription;
   return {
-    title: `${board.name} | JobBoardsReview Profile`,
-    description: board.shortDescription,
+    title,
+    description,
+    ...shareMetadata({ title, description, url: `/board/${board.slug}` }),
   };
 }
 

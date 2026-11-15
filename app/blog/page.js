@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { getBlogs } from "@/data/blogs";
 
 export const metadata = {
@@ -26,8 +27,8 @@ export default function BlogIndexPage() {
           {publishedBlogs.map((blog) => (
             <Link key={blog.slug} href={`/blog/${blog.slug}`} className="group bg-white rounded-[32px] border border-slate-100 shadow-xl shadow-slate-200/20 overflow-hidden flex flex-col hover:-translate-y-2 hover:shadow-2xl hover:shadow-slate-200/40 transition-all duration-300">
               {blog.image && (
-                <div className="h-56 overflow-hidden bg-slate-100">
-                  <img src={blog.image} alt={blog.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                <div className="relative h-56 overflow-hidden bg-slate-100">
+                  <Image src={blog.image} alt={blog.title} fill sizes="(min-width: 1024px) 400px, (min-width: 768px) 50vw, 100vw" className="object-cover group-hover:scale-105 transition-transform duration-500" />
                 </div>
               )}
               <div className="p-8 flex flex-col flex-grow">

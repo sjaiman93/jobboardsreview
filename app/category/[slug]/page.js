@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getCategoryBySlug, getBoardsByCategory, getAllCategories } from "@/data/jobBoards";
 import JobBoardCard from "@/components/JobBoardCard";
+import { shareMetadata } from "@/lib/shareImage";
 
 export async function generateStaticParams() {
   return getAllCategories().map((c) => ({ slug: c.slug }));
@@ -11,9 +12,12 @@ export async function generateMetadata({ params }) {
   const { slug } = await params;
   const category = getCategoryBySlug(slug);
   if (!category) return {};
+  const title = `${category.name} Job Boards | JobBoardsReview`;
+  const description = category.description;
   return {
-    title: `${category.name} Job Boards | JobBoardsReview`,
-    description: category.description,
+    title,
+    description,
+    ...shareMetadata({ title, description, url: `/category/${category.slug}` }),
   };
 }
 

@@ -295,6 +295,23 @@
       box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
     }
   }
+
+  /* Rich-text body for blog posts and legal pages (HTML from data files).
+     Mirrors the article styling of the old Lovable site. */
+  .prose-custom {
+    @apply text-lg text-slate-700 leading-relaxed;
+  }
+  .prose-custom h2 { @apply text-2xl font-bold text-slate-900 mt-8 mb-4; }
+  .prose-custom h3 { @apply text-xl font-semibold text-slate-900 mt-6 mb-3; }
+  .prose-custom p { @apply mb-4 leading-relaxed; }
+  .prose-custom ul { @apply list-disc pl-6 mb-4; }
+  .prose-custom ol { @apply list-decimal pl-6 mb-4; }
+  .prose-custom li { @apply mb-2; }
+  .prose-custom a { @apply text-[#FF5630] underline; }
+  .prose-custom b,
+  .prose-custom strong { @apply font-semibold text-slate-900; }
+  .prose-custom hr { @apply my-8 border-slate-200; }
+  .prose-custom img { @apply max-w-full rounded-lg my-4; }
 }
 
 @layer utilities {
