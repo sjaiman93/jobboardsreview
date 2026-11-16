@@ -1,19 +1,22 @@
-import fs from "fs";
-import path from "path";
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 import { getAllBoards, getBoardBySlug, getBoardProsCons, getBoardDecisionTags } from "@/data/jobBoards";
 import { getSiteContent } from "@/data/siteContent";
 import { getBlogs } from "@/data/blogs";
+import { isAdmin, isLocalDev } from "@/lib/requireAdmin";
 import AdminDashboard from "./AdminDashboard";
 
 export const metadata = {
   title: "Admin Panel | JobBoardsReview",
+  robots: { index: false, follow: false },
 };
 
+// Always render fresh: queues change constantly and need the visitor's session.
+export const dynamic = "force-dynamic";
+
 export default async function AdminPage({ searchParams }) {
-  if (process.env.NODE_ENV !== "development") {
-    notFound();
-  }
+  // Middleware already checks; this is the second lock.
+  if (!(await isAdmin())) redirect("/admin/login");
+
   const rawBoards = getAllBoards();
   const siteContent = getSiteContent();
   const blogs = getBlogs();
@@ -83,18 +86,18 @@ export default async function AdminPage({ searchParams }) {
     if (supabaseAdmin) {
       const { data, error } = await supabaseAdmin
         .from("reviews")
-        .select("id, user_id, board_name, rating, title, review_text, status, created_at")
+        .select("*") // "*" so it works before and after the reviews migration
         .order("created_at", { ascending: false })
         .limit(300);
       if (error) {
         console.error("Supabase fetch error (reviews):", error);
       } else {
         const emails = {};
-        for (const id of [...new Set(data.map((r) => r.user_id).filter(Boolean))]) {
+        for (const id of [...new Set(data.filter((r) => !r.reviewer_email).map((r) => r.user_id).filter(Boolean))]) {
           const { data: u } = await supabaseAdmin.auth.admin.getUserById(id);
           emails[id] = u?.user?.email || null;
         }
-        reviews = data.map((r) => ({ ...r, reviewer_email: emails[r.user_id] || null }));
+        reviews = data.map((r) => ({ ...r, reviewer_email: r.reviewer_email || emails[r.user_id] || null }));
       }
     }
   } catch (e) {
@@ -104,6 +107,7 @@ export default async function AdminPage({ searchParams }) {
   return (
     <AdminDashboard
       reviews={reviews}
+      canEditFiles={isLocalDev()}
       boards={boards}
       siteContent={siteContent}
       blogs={blogs}

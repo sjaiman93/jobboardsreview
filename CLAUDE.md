@@ -55,10 +55,14 @@ leftover reference in one of them.
 - **`cookies()` and `headers()` are async in Next 15+.** Must be awaited. Missing
   `await` on `cookies()` throws; missing it on `headers()` fails silently inside
   a try/catch and makes rate limiting treat every visitor as `127.0.0.1`.
-- **Admin is local-only by design.** `app/admin/actions.js` writes data files with
-  `fs.writeFileSync`. Serverless filesystems are read-only, so `/admin` is
-  env-gated to return 404 in production. Approving a board = run `npm run dev`,
-  approve, commit, push, Vercel rebuilds. This is intentional, not a bug.
+- **Admin runs on the live site and locally** (since Nov 2026). Sign-in is the
+  normal site login; only `ADMIN_EMAILS` get an admin session (signed cookie,
+  `lib/adminAuth.js`). Reviews and submission status are Supabase writes and work
+  everywhere. **Board approval** writes files through `lib/repoFiles.js`: the files
+  on disk locally, a single GitHub commit on Vercel (needs `GITHUB_TOKEN`,
+  `GITHUB_REPO`), which triggers a rebuild. Board edit, CSV import, blog, homepage
+  and legal edits still write files directly and are **local-only**
+  (`isLocalDev()` guard → `LOCAL_ONLY`).
 - **Submissions live in Supabase, board data lives in files.** Both are involved
   in approval. In `approveSubmissionAction` the Supabase status update must stay
   the **last** operation, after the file writes succeed — otherwise a failed write
@@ -75,8 +79,14 @@ leftover reference in one of them.
   (`lib/requireAdmin.js`). Server actions are public endpoints; hiding /admin
   does not protect them.
 - **Reviews are keyed by board name** (`reviews.board_name`), not slug. Renaming a
-  board detaches its reviews unless the Supabase rows are updated too. Approved
-  reviews reach board pages within ~10 min (ISR 300s + fetch cache 300s).
+  board detaches its reviews unless the Supabase rows are updated too.
+- **Review publishing:** signed-in members' reviews publish instantly, including
+  from the board's own email domain (Sagar's decision; those get a labelled admin
+  alert). Guest reviews (email + Turnstile)
+  wait for approval. One per person per board. Review reads are tagged
+  `REVIEWS_TAG` (`lib/reviews.js`); every action that changes a review must call
+  `updateTag(REVIEWS_TAG)` + `revalidatePath(...)` or the change shows only after
+  the 5-minute refresh. Schema: `supabase/migrations/20261116_reviews_instant.sql`.
 - `puppeteer` and `cheerio` are devDependencies only. They are used by the agent
   scripts, never by the site. Keep them out of `dependencies` or Vercel downloads
   Chromium on every build.

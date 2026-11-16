@@ -1,10 +1,18 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Turnstile } from "@marsidev/react-turnstile";
 import { submitReviewAction } from "@/app/actions/reviews";
 import { supabase } from "@/lib/supabase";
 
+// Signed-in members' reviews publish instantly; guests give an email and
+// pass the spam check, and their review waits for approval.
 export default function ReviewModal({ isOpen, onClose, boardName }) {
+  const router = useRouter();
+  const [guestEmail, setGuestEmail] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const [result, setResult] = useState(null); // { status, ownerMatch }
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [title, setTitle] = useState("");
@@ -25,7 +33,9 @@ export default function ReviewModal({ isOpen, onClose, boardName }) {
       setRating(0);
       setTitle("");
       setReviewText("");
-      
+      setResult(null);
+      setTurnstileToken("");
+
       setLoadingAuth(true);
       supabase.auth.getSession().then(({ data: { session } }) => {
         setSession(session);
@@ -39,8 +49,14 @@ export default function ReviewModal({ isOpen, onClose, boardName }) {
   const handleSubmit = async () => {
     setError("");
     if (!session) {
-      setError("You must be logged in to submit a review.");
-      return;
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(guestEmail.trim())) {
+        setError("Please enter your email address.");
+        return;
+      }
+      if (!turnstileToken) {
+        setError("Please complete the security check.");
+        return;
+      }
     }
     if (rating === 0) {
       setError("Please select a star rating.");
@@ -59,13 +75,18 @@ export default function ReviewModal({ isOpen, onClose, boardName }) {
       reviewText,
       formLoadTime,
       website_hp: honeypot,
-      token: session.access_token
+      token: session?.access_token || null,
+      guestEmail: session ? null : guestEmail.trim(),
+      turnstileToken: session ? null : turnstileToken,
     };
 
     try {
       const res = await submitReviewAction(payload);
       if (res.success) {
+        setResult({ status: res.status, ownerMatch: res.ownerMatch });
         setIsSuccess(true);
+        // The server already refreshed the page's data; re-render it now.
+        if (res.status === "approved") router.refresh();
       } else {
         setError(res.error || "Failed to submit review.");
       }
@@ -91,16 +112,25 @@ export default function ReviewModal({ isOpen, onClose, boardName }) {
               ✓
             </div>
             <h3 className="text-2xl font-black text-slate-900 mb-4">
-              Review Submitted!
+              {result?.status === "approved" ? "Your review is live!" : "Review received"}
             </h3>
             <p className="text-slate-500 font-medium mb-8">
-              Thank you for sharing your experience. Your review has been sent to our team for approval and will be visible shortly.
+              {result?.status === "approved"
+                ? `Thanks for helping other recruiters. Your review is now on the ${boardName} page.`
+                : result?.ownerMatch
+                  ? `Your email matches ${boardName}'s own domain, so our team checks this review before it goes live. We'll email you when it does.`
+                  : "Thanks! Reviews from guests are checked by our team before they go live. We'll email you when yours is published. Sign in next time to publish instantly."}
             </p>
             <button
-              onClick={onClose}
+              onClick={() => {
+                onClose();
+                if (result?.status === "approved") {
+                  document.getElementById("reviews")?.scrollIntoView({ behavior: "smooth" });
+                }
+              }}
               className="px-8 py-3 bg-slate-900 text-white font-black rounded-2xl hover:bg-[#FF5630] transition-all text-sm w-full"
             >
-              Close
+              {result?.status === "approved" ? "See my review" : "Close"}
             </button>
           </div>
         ) : (
@@ -109,27 +139,18 @@ export default function ReviewModal({ isOpen, onClose, boardName }) {
               Write a Review for {boardName}
             </h3>
             
-            {!session && !loadingAuth ? (
-              <div className="py-8 text-center border-t border-slate-100 mt-6">
-                <div className="w-16 h-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-                </div>
-                <h4 className="text-lg font-bold text-slate-900 mb-2">Login Required</h4>
-                <p className="text-slate-500 font-medium mb-6 text-sm">You must be signed in to submit a review and help the community.</p>
-                <div className="flex gap-3">
-                  <Link href="/join" className="flex-1 py-3 bg-[#FF5630] text-white font-black rounded-2xl hover:scale-105 transition-all text-sm block">
-                    Join for Free
-                  </Link>
-                  <button onClick={onClose} className="px-6 py-3 bg-slate-100 text-slate-600 font-bold text-sm hover:bg-slate-200 rounded-2xl transition-colors">
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            ) : (
+            {(
               <>
-                <p className="text-sm text-slate-500 font-medium mb-8">
+                <p className="text-sm text-slate-500 font-medium mb-6">
                   Share your experience to help others make better hiring decisions.
                 </p>
+
+                {!session && !loadingAuth && (
+                  <div className="mb-6 p-4 rounded-2xl bg-amber-50 border border-amber-100 text-sm text-amber-900 font-medium">
+                    <Link href="/join" className="font-black underline">Sign in</Link> to see your review published
+                    instantly. Reviews from guests are checked by our team first.
+                  </div>
+                )}
 
                 <div className="space-y-4 mb-8">
                   {error && (
@@ -183,6 +204,22 @@ export default function ReviewModal({ isOpen, onClose, boardName }) {
                       className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm outline-none focus:ring-4 focus:ring-[#FF5630]/10"
                     />
                   </div>
+                  {!session && !loadingAuth && (
+                    <div>
+                      <label className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2 block">
+                        Your Email
+                      </label>
+                      <input
+                        type="email"
+                        value={guestEmail}
+                        onChange={(e) => setGuestEmail(e.target.value)}
+                        placeholder="you@company.com"
+                        autoComplete="email"
+                        className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm outline-none focus:ring-4 focus:ring-[#FF5630]/10"
+                      />
+                      <p className="mt-1.5 text-xs text-slate-400 font-medium">Never shown publicly. We email you when your review is published.</p>
+                    </div>
+                  )}
                   <div>
                     <label className="text-xs font-black text-slate-400 uppercase tracking-widest mb-2 block">
                       Your Review
@@ -195,6 +232,13 @@ export default function ReviewModal({ isOpen, onClose, boardName }) {
                       className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm outline-none focus:ring-4 focus:ring-[#FF5630]/10 resize-none"
                     />
                   </div>
+                  {!session && !loadingAuth && (
+                    <Turnstile
+                      siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+                      onSuccess={(token) => setTurnstileToken(token)}
+                      onExpire={() => setTurnstileToken("")}
+                    />
+                  )}
                 </div>
                 <div className="flex gap-3">
                   <button

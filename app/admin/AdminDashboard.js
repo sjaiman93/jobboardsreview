@@ -10,7 +10,7 @@ import "react-quill/dist/quill.snow.css";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
-export default function AdminDashboard({ boards, editingBoard, editProsCons, editTags, editSlug, siteContent, blogs = [], submissions = [], reviews = [] }) {
+export default function AdminDashboard({ boards, editingBoard, editProsCons, editTags, editSlug, siteContent, blogs = [], submissions = [], reviews = [], canEditFiles = true }) {
   const [activeTab, setActiveTab] = useState("jobBoards");
   const [isSaving, setIsSaving] = useState(false);
 
@@ -116,10 +116,21 @@ export default function AdminDashboard({ boards, editingBoard, editProsCons, edi
     ],
   };
 
+  // Actions return { success: false, error } on failure (e.g. local-only
+  // edits on the live site). Only claim success when nothing failed.
+  function failed(res) {
+    if (res && res.success === false) {
+      alert(`Error: ${res.error || "Save failed."}`);
+      return true;
+    }
+    return false;
+  }
+
   async function handleAdd(formData) {
     setIsSaving(true);
-    await saveBoard(formData);
+    const res = await saveBoard(formData);
     setIsSaving(false);
+    if (failed(res)) return;
     if (editSlug) {
       window.location.href = "/admin"; // redirect to clear searchParams
     }
@@ -127,16 +138,16 @@ export default function AdminDashboard({ boards, editingBoard, editProsCons, edi
 
   async function handleSaveLegal(formData) {
     setIsSaving(true);
-    await saveSiteContentAction(formData, "legal");
+    const res = await saveSiteContentAction(formData, "legal");
     setIsSaving(false);
-    alert("Legal pages saved!");
+    if (!failed(res)) alert("Legal pages saved!");
   }
 
   async function handleSaveHomepage(formData) {
     setIsSaving(true);
-    await saveSiteContentAction(formData, "homepage");
+    const res = await saveSiteContentAction(formData, "homepage");
     setIsSaving(false);
-    alert("Homepage content saved!");
+    if (!failed(res)) alert("Homepage content saved!");
   }
 
   async function handlePublishBlog(e) {
@@ -145,9 +156,10 @@ export default function AdminDashboard({ boards, editingBoard, editProsCons, edi
     const formData = new FormData();
     Object.entries(blogContent).forEach(([k, v]) => formData.append(k, v));
     formData.set("status", "published");
-    await saveBlogAction(formData);
-    setBlogContent(prev => ({ ...prev, status: "published" }));
+    const res = await saveBlogAction(formData);
     setIsSaving(false);
+    if (failed(res)) return;
+    setBlogContent(prev => ({ ...prev, status: "published" }));
     alert("Blog published!");
   }
 
@@ -157,9 +169,10 @@ export default function AdminDashboard({ boards, editingBoard, editProsCons, edi
     const formData = new FormData();
     Object.entries(blogContent).forEach(([k, v]) => formData.append(k, v));
     formData.set("status", "draft");
-    await saveBlogAction(formData);
-    setBlogContent(prev => ({ ...prev, status: "draft" }));
+    const res = await saveBlogAction(formData);
     setIsSaving(false);
+    if (failed(res)) return;
+    setBlogContent(prev => ({ ...prev, status: "draft" }));
     alert("Blog unpublished (Draft mode)!");
   }
 
@@ -183,7 +196,7 @@ export default function AdminDashboard({ boards, editingBoard, editProsCons, edi
         if (selectedSubmission?.id === id) {
           setSelectedSubmission(prev => ({ ...prev, status: actionType }));
         }
-        alert(`Submission status updated to '${actionType}' successfully.`);
+        alert(res.message || `Submission status updated to '${actionType}' successfully.`);
       } else {
         alert(`Error: ${res.error || "Failed to update submission status."}`);
       }
@@ -280,6 +293,14 @@ export default function AdminDashboard({ boards, editingBoard, editProsCons, edi
           </button>
         ))}
       </div>
+
+      {!canEditFiles && ["jobBoards", "blog", "homepage", "legalPages"].includes(activeTab) && (
+        <div className="mb-8 p-5 rounded-2xl bg-amber-50 border border-amber-200 text-amber-800 text-sm font-bold">
+          This tab edits the site's files, which only works on your computer for now: run
+          <code className="mx-1 px-1.5 py-0.5 bg-white rounded">npm run dev</code>
+          and open localhost:3000/admin. Submissions and Reviews work here.
+        </div>
+      )}
 
       {/* Tab Content */}
       {activeTab === "jobBoards" && (

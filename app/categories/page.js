@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getAllCategories, getBoardsByCategory, getAllBoards } from "@/data/jobBoards";
 import JobBoardCard from "@/components/JobBoardCard";
+import { getReviewStatsMap, withReviewStats } from "@/lib/reviews";
 
 export const metadata = {
   alternates: { canonical: "/categories" },
@@ -46,11 +47,15 @@ function CategoryIcon({ slug, className }) {
   );
 }
 
-export default function CategoriesPage() {
+// Board ratings come from approved reviews; refresh at least every 5 minutes.
+export const revalidate = 300;
+
+export default async function CategoriesPage() {
+  const reviewStatsMap = await getReviewStatsMap();
   const categories = getAllCategories();
   const allBoards = getAllBoards();
   // Get first category's boards for the "trending" section
-  const techBoards = getBoardsByCategory("technology").slice(0, 3);
+  const techBoards = withReviewStats(getBoardsByCategory("technology").slice(0, 3), reviewStatsMap);
 
   return (
     <>

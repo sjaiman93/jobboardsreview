@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getAllBoards } from "@/data/jobBoards";
 import JobBoardCard from "@/components/JobBoardCard";
+import { getReviewStatsMap, withReviewStats } from "@/lib/reviews";
 import EmailCapture from "@/components/EmailCapture";
 import RotatingInsightCard from "@/components/RotatingInsightCard";
 
@@ -11,8 +12,11 @@ export const metadata = {
     "Stop burning recruitment budget on blind intuition. Access the definitive database of job board performance, cost, and candidate quality.",
 };
 
-export default function HomePage() {
-  const boards = getAllBoards();
+// Board ratings come from approved reviews; refresh at least every 5 minutes.
+export const revalidate = 300;
+
+export default async function HomePage() {
+  const boards = withReviewStats(getAllBoards(), await getReviewStatsMap());
   const featured = boards.slice(0, 6);
 
   return (

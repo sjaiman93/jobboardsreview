@@ -18,6 +18,7 @@ import { shareMetadata } from "@/lib/shareImage";
 import { boardHasLogo, boardInitials } from "@/lib/boardLogo";
 import JsonLd, { breadcrumbs } from "@/components/JsonLd";
 import { getApprovedReviews, reviewStats } from "@/lib/reviews";
+import ReportReviewButton from "@/components/ReportReviewButton";
 
 // Re-render at most every 5 minutes so reviews approved in admin show up
 // without a deploy.
@@ -133,11 +134,13 @@ export default async function BoardDetailPage({ params }) {
   const dbReviews = await getApprovedReviews(board.name);
   const reviews = [
     ...dbReviews.map((r) => ({
+      id: r.id,
       rating: r.rating,
       title: r.title,
       text: r.review_text,
       author: "Recruiter review",
       role: new Date(r.created_at).toLocaleDateString("en-US", { month: "short", year: "numeric" }),
+      workEmail: r.is_work_email,
     })),
     ...(board.reviews || []),
   ];
@@ -573,7 +576,20 @@ export default async function BoardDetailPage({ params }) {
                           <h4 className="text-slate-900 font-black text-lg mb-3">&ldquo;{review.title}&rdquo;</h4>
                         )}
                         <p className="text-sm text-slate-500 font-medium leading-relaxed mb-5 whitespace-pre-line">{review.text}</p>
-                        <p className="text-xs text-slate-400 font-bold">{review.author} · {review.role}</p>
+                        <div className="flex flex-wrap items-center justify-between gap-3">
+                          <p className="text-xs text-slate-400 font-bold flex flex-wrap items-center gap-2">
+                            <span>{review.author} · {review.role}</span>
+                            {review.workEmail && (
+                              <span
+                                className="px-2 py-0.5 rounded-full bg-teal-50 text-teal-700 border border-teal-100 text-[10px] uppercase tracking-wider"
+                                title="Written by a signed-in user with a company email address"
+                              >
+                                Work email
+                              </span>
+                            )}
+                          </p>
+                          {review.id && <ReportReviewButton reviewId={review.id} />}
+                        </div>
                       </div>
                     ))}
                   </div>

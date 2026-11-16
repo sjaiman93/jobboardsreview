@@ -7,6 +7,14 @@ import { supabase } from "@/lib/supabase";
 import { Turnstile } from '@marsidev/react-turnstile';
 import { validateClientTurnstile } from "@/app/actions/turnstile";
 
+// Where to land after sign-in: ?next=/some/path (same-site paths only),
+// otherwise the home page. Used by admin login (?next=/admin/login).
+function afterSignInUrl() {
+  const next = new URLSearchParams(window.location.search).get("next");
+  const safe = next && next.startsWith("/") && !next.startsWith("//") ? next : "/";
+  return `${window.location.origin}${safe}`;
+}
+
 export default function JoinPage() {
   const [submitted, setSubmitted] = useState(false);
   const [email, setEmail] = useState("");
@@ -43,7 +51,7 @@ export default function JoinPage() {
           data: {
             company_name: companyName,
           },
-          emailRedirectTo: `${window.location.origin}/`,
+          emailRedirectTo: afterSignInUrl(),
         }
       });
 
@@ -69,7 +77,7 @@ export default function JoinPage() {
       const { error: authError } = await supabase.auth.signInWithOAuth({
         provider: provider,
         options: {
-          redirectTo: `${window.location.origin}/`,
+          redirectTo: afterSignInUrl(),
         }
       });
       if (authError) setError(authError.message);

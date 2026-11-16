@@ -2,8 +2,12 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getCategoryBySlug, getBoardsByCategory, getAllCategories } from "@/data/jobBoards";
 import JobBoardCard from "@/components/JobBoardCard";
+import { getReviewStatsMap, withReviewStats } from "@/lib/reviews";
 import { shareMetadata } from "@/lib/shareImage";
 import JsonLd, { breadcrumbs } from "@/components/JsonLd";
+
+// Board ratings come from approved reviews; refresh at least every 5 minutes.
+export const revalidate = 300;
 
 export async function generateStaticParams() {
   return getAllCategories().map((c) => ({ slug: c.slug }));
@@ -27,7 +31,7 @@ export default async function CategoryPage({ params }) {
   const category = getCategoryBySlug(slug);
   if (!category) notFound();
 
-  const boards = getBoardsByCategory(slug);
+  const boards = withReviewStats(getBoardsByCategory(slug), await getReviewStatsMap());
 
   return (
     <>

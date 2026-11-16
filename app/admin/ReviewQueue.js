@@ -84,8 +84,12 @@ export default function ReviewQueue({ reviews = [] }) {
                 <div className="font-black text-slate-900">
                   {r.board_name} <span className="ml-2 text-sm"><Stars rating={r.rating} /></span>
                 </div>
-                <div className="text-xs font-bold text-slate-400">
-                  {r.reviewer_email || "unknown reviewer"} · {new Date(r.created_at).toLocaleString()}
+                <div className="text-xs font-bold text-slate-400 flex flex-wrap items-center gap-2">
+                  <span className={`px-2 py-0.5 rounded-full ${r.source === "guest" ? "bg-amber-100 text-amber-800" : "bg-slate-200 text-slate-700"}`}>
+                    {r.source === "guest" ? "Guest" : "Member"}
+                  </span>
+                  {r.is_work_email && <span className="px-2 py-0.5 rounded-full bg-teal-100 text-teal-800">Work email</span>}
+                  <span>{r.reviewer_email || "unknown reviewer"} · {new Date(r.created_at).toLocaleString()}</span>
                 </div>
               </div>
               {r.title && <p className="font-bold text-slate-900 mb-1">&ldquo;{r.title}&rdquo;</p>}

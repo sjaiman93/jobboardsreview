@@ -2,37 +2,89 @@
 
 import fs from "fs";
 import path from "path";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
+import { REVIEWS_TAG } from "@/lib/reviews";
 import { cookies, headers } from "next/headers";
 import { validateBoardData } from "@/data/validation";
 import { getAllBoards, getAllCategories } from "@/data/jobBoards";
-import { ADMIN_COOKIE_NAME, hashPassword, getAdminPassword } from "@/lib/adminAuth";
+import { ADMIN_COOKIE_NAME, ADMIN_SESSION_DAYS, createAdminSession, isAllowedAdminEmail, getAdminEmails } from "@/lib/adminAuth";
 import { sendEmail, notifyAdmin, firstNameFrom, boardUrl } from "@/lib/email";
-import { isAdmin, NOT_AUTHORIZED } from "@/lib/requireAdmin";
+import { isAdmin, NOT_AUTHORIZED, isLocalDev, LOCAL_ONLY } from "@/lib/requireAdmin";
+import { readRepoFile, listRepoDir, commitRepoFiles, canWriteRepo } from "@/lib/repoFiles";
 
-export async function adminLoginAction(password) {
-  const adminPass = getAdminPassword();
-  if (!password || password !== adminPass) {
-    return { success: false, error: "Incorrect password. Please try again." };
+// Exchange a signed-in site user's Supabase access token for an admin
+// session, if their email is on the ADMIN_EMAILS allow-list.
+export async function adminSignInAction(accessToken) {
+  if (!getAdminEmails().length) {
+    return { success: false, error: "Admin is not set up: ADMIN_EMAILS is empty." };
+  }
+  if (!accessToken) return { success: false, error: "Please sign in first." };
+
+  const { supabaseAdmin } = await import("@/lib/supabase");
+  if (!supabaseAdmin) return { success: false, error: "Database client not configured." };
+
+  const { data, error } = await supabaseAdmin.auth.getUser(accessToken);
+  const email = data?.user?.email;
+  if (error || !email) return { success: false, error: "Your sign-in has expired. Sign in again." };
+  if (!isAllowedAdminEmail(email)) {
+    return { success: false, error: `${email} is not an admin account.` };
   }
 
-  const sessionToken = await hashPassword(adminPass);
-const cookieStore = await cookies();
-  cookieStore.set(ADMIN_COOKIE_NAME, sessionToken, {
+  const cookieStore = await cookies();
+  cookieStore.set(ADMIN_COOKIE_NAME, await createAdminSession(email), {
     path: "/",
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
-    maxAge: 60 * 60 * 24 * 7, // 7 days
+    maxAge: 60 * 60 * 24 * ADMIN_SESSION_DAYS,
   });
-
-  return { success: true };
+  return { success: true, email };
 }
 
 export async function adminLogoutAction() {
 const cookieStore = await cookies();
   cookieStore.delete(ADMIN_COOKIE_NAME);
   return { success: true };
+}
+
+// Parse "export const name = {...};" source text into an object.
+function parseMetadataSource(content, exportName) {
+  const prefix = `export const ${exportName} = `;
+  const startIndex = content.indexOf(prefix);
+  if (startIndex === -1) throw new Error(`${exportName}: export not found`);
+  let objStr = content.substring(startIndex + prefix.length).trim();
+  if (objStr.endsWith(";")) objStr = objStr.slice(0, -1);
+  return new Function(`return ${objStr}`)();
+}
+
+// Add one board to data/index.js in place: an import line and a rawBoards
+// entry, both kept alphabetical. Edits the existing file instead of
+// regenerating it from a template, so helper functions can't go missing.
+function addBoardToIndexSource(source, slug) {
+  const v = slug.replace(/[^a-zA-Z0-9_]/g, "_");
+  // Keep the file's own line endings: Windows checkouts use CRLF, GitHub LF.
+  const eol = source.includes("\r\n") ? "\r\n" : "\n";
+  const lines = source.split(/\r?\n/);
+  if (lines.some((l) => l.includes(`"./jobboards/${slug}"`))) return source;
+
+  const importIdx = lines.map((l, i) => [l, i]).filter(([l]) => l.startsWith("import ") && l.includes('"./jobboards/'));
+  if (!importIdx.length) throw new Error("index.js: no board imports found");
+  const before = importIdx.filter(([l]) => l.match(/"\.\/jobboards\/(.*)"/)[1] < slug).pop();
+  lines.splice(before ? before[1] + 1 : importIdx[0][1], 0, `import ${v} from "./jobboards/${slug}";`);
+
+  const start = lines.findIndex((l) => l.startsWith("const rawBoards = ["));
+  const end = lines.indexOf("];", start);
+  if (start < 0 || end < 0) throw new Error("index.js: rawBoards array not found");
+  let pos = start + 1;
+  for (let n = start + 1; n < end; n++) if (lines[n].trim().replace(",", "") < v) pos = n + 1;
+  if (pos === end) {
+    // Appending after the last entry, which has no trailing comma.
+    if (!lines[end - 1].trim().endsWith(",")) lines[end - 1] += ",";
+    lines.splice(end, 0, `  ${v}`);
+  } else {
+    lines.splice(pos, 0, `  ${v},`);
+  }
+  return lines.join(eol);
 }
 
 // Helper to read metadata file
@@ -61,6 +113,7 @@ function writeMetadataFile(filePath, exportName, data) {
 
 export async function saveBoard(formData) {
   if (!(await isAdmin())) return NOT_AUTHORIZED;
+  if (!isLocalDev()) return LOCAL_ONLY;
 
   const name = formData.get("name");
   const slug = formData.get("slug");
@@ -280,6 +333,7 @@ export function getBoardHighlightGroups(slug) {
 
 export async function importCsvAction(csvText) {
   if (!(await isAdmin())) return NOT_AUTHORIZED;
+  if (!isLocalDev()) return LOCAL_ONLY;
 
   const rows = [];
   let row = [];
@@ -369,6 +423,7 @@ export async function importCsvAction(csvText) {
 
 export async function saveSiteContentAction(formData, section) {
   if (!(await isAdmin())) return NOT_AUTHORIZED;
+  if (!isLocalDev()) return LOCAL_ONLY;
 
   // Read current content dynamically to avoid caching issues with imports
   const filePath = path.join(process.cwd(), "data", "siteContent.js");
@@ -411,6 +466,7 @@ export async function saveSiteContentAction(formData, section) {
 
 export async function saveBlogAction(formData) {
   if (!(await isAdmin())) return NOT_AUTHORIZED;
+  if (!isLocalDev()) return LOCAL_ONLY;
 
   const filePath = path.join(process.cwd(), "data", "blogs.js");
   let content = fs.readFileSync(filePath, "utf-8");
@@ -577,6 +633,13 @@ export async function approveSubmissionAction(submissionId) {
     return { success: false, error: "Failed to read submission from database." };
   }
   
+  if (sub.status === "approved") {
+    return { success: false, error: "This submission is already approved." };
+  }
+  if (!canWriteRepo()) {
+    return { success: false, error: "Approving on the live site needs GITHUB_TOKEN and GITHUB_REPO set in Vercel." };
+  }
+
   // 1. Sanitize incoming text & normalize formatting
   const boardName = (sub.board_name || sub.boardName || "").trim();
   const websiteUrl = (sub.website_url || sub.websiteUrl || "").trim();
@@ -595,7 +658,14 @@ export async function approveSubmissionAction(submissionId) {
   let slug = baseSlug;
   let counter = 1;
   const allBoards = getAllBoards();
-  while (allBoards.some(b => b.slug === slug)) {
+  let repoSlugs;
+  try {
+    repoSlugs = new Set((await listRepoDir("data/jobboards")).filter((n) => n.endsWith(".js")).map((n) => n.slice(0, -3)));
+  } catch (e) {
+    console.error("Could not list board files:", e);
+    return { success: false, error: "Could not read the current board list. Try again in a minute." };
+  }
+  while (allBoards.some(b => b.slug === slug) || repoSlugs.has(slug)) {
     slug = `${baseSlug}-${counter}`;
     counter++;
   }
@@ -653,141 +723,38 @@ export async function approveSubmissionAction(submissionId) {
     return { success: false, error: err.message || "Failed to validate board data." };
   }
   
+  // 5-7. Every file change is built in memory, then written in one go: one
+  // GitHub commit on the live site (Vercel rebuilds, live in ~2 min), or the
+  // files on disk locally. A failure leaves nothing half-written.
+  let writeResult;
   try {
-    // 5. Create /data/jobboards/[slug].js
     const boardVarName = slug.replace(/[^a-zA-Z0-9_]/g, "_");
-    const boardFileContent = `const ${boardVarName} = ${JSON.stringify(newBoard, null, 2)};\n\nexport default ${boardVarName};\n`;
-    fs.writeFileSync(path.join(process.cwd(), "data", "jobboards", `${slug}.js`), boardFileContent, "utf-8");
-    
-    // 6. Update helpers / mappings
-    const prosConsPath = path.join(process.cwd(), "data", "boardProsCons.js");
-    const prosConsData = readMetadataFile(prosConsPath, "boardProsCons");
-    prosConsData[slug] = {
-      pros: [],
-      cons: []
+    const files = {
+      [`data/jobboards/${slug}.js`]: `const ${boardVarName} = ${JSON.stringify(newBoard, null, 2)};\n\nexport default ${boardVarName};\n`,
     };
-    writeMetadataFile(prosConsPath, "boardProsCons", prosConsData);
-    
-    const tagsPath = path.join(process.cwd(), "data", "boardDecisionTags.js");
-    const tagsData = readMetadataFile(tagsPath, "boardDecisionTags");
-    tagsData[slug] = targetAudience;
-    writeMetadataFile(tagsPath, "boardDecisionTags", tagsData);
-    
-    const highlightPath = path.join(process.cwd(), "data", "boardHighlightGroups.js");
-    const highlightData = readMetadataFile(highlightPath, "boardHighlightGroups");
-    // Only facts we hold. Hiring type and candidate quality need evidence.
-    highlightData[slug] = {
-      "Industry Focus": [category],
-      "Pricing Model": [pricingModel || "Custom Pricing"],
-    };
-    writeMetadataFile(highlightPath, "boardHighlightGroups", highlightData);
-    
-    const metricsPath = path.join(process.cwd(), "data", "boardMetrics.js");
-    const metricsData = readMetadataFile(metricsPath, "boardMetrics");
-    metricsData[slug] = {
-      candidateReach: "Growing",
-      reachLabel: "Candidates"
-    };
-    writeMetadataFile(metricsPath, "boardMetrics", metricsData);
-    
-    // 7. Update exports / indexes (data/index.js)
-    const jobboardsDir = path.join(process.cwd(), "data", "jobboards");
-    const files = fs.readdirSync(jobboardsDir).filter(f => f.endsWith(".js"));
-    
-    const imports = files.map(f => {
-      const boardSlug = f.slice(0, -3);
-      const varName = boardSlug.replace(/[^a-zA-Z0-9_]/g, "_");
-      return `import ${varName} from "./jobboards/${boardSlug}";`;
-    }).join("\n");
-    
-    const rawBoardsList = files.map(f => {
-      const boardSlug = f.slice(0, -3);
-      return `  ${boardSlug.replace(/[^a-zA-Z0-9_]/g, "_")}`;
-    }).join(",\n");
-    
-    const indexContent = `import { validateBoardData } from "./validation";
-import { categories } from "./categories";
-import { boardProsCons } from "./boardProsCons";
-import { boardDecisionTags } from "./boardDecisionTags";
-import { boardHighlightGroups } from "./boardHighlightGroups";
-import { boardMetrics } from "./boardMetrics";
 
-${imports}
+    const metadata = [
+      ["boardProsCons", { pros: [], cons: [] }],
+      ["boardDecisionTags", targetAudience],
+      // Only facts we hold. Hiring type and candidate quality need evidence.
+      ["boardHighlightGroups", { "Industry Focus": [category], "Pricing Model": [pricingModel || "Custom Pricing"] }],
+      ["boardMetrics", { candidateReach: "Growing", reachLabel: "Candidates" }],
+    ];
+    for (const [exportName, value] of metadata) {
+      const relPath = `data/${exportName}.js`;
+      const data = parseMetadataSource(await readRepoFile(relPath), exportName);
+      data[slug] = value;
+      files[relPath] = `export const ${exportName} = ${JSON.stringify(data, null, 2)};\n`;
+    }
 
-const rawBoards = [
-${rawBoardsList}
-];
+    files["data/index.js"] = addBoardToIndexSource(await readRepoFile("data/index.js"), slug);
 
-// Perform compile-time validation
-const seenSlugs = new Set();
-const seenNames = new Set();
-rawBoards.forEach(board => {
-  validateBoardData(board, seenSlugs, seenNames);
-});
-
-export const jobBoards = rawBoards;
-export { categories, boardProsCons, boardDecisionTags, boardHighlightGroups, boardMetrics };
-
-/* Helper Functions */
-export function getAllBoards() {
-  return jobBoards;
-}
-
-export function getBoardBySlug(slug) {
-  return jobBoards.find((b) => b.slug === slug) || null;
-}
-
-export function getBoardsByCategory(categorySlug) {
-  return jobBoards.filter((b) => b.categorySlug === categorySlug);
-}
-
-export function getAllCategories() {
-  return categories;
-}
-
-export function getCategoryBySlug(slug) {
-  return categories.find((c) => c.slug === slug) || null;
-}
-
-export function searchBoards(query) {
-  if (!query) return [];
-  const q = query.toLowerCase();
-  return jobBoards.filter((b) => {
-    const nameMatch = b.name.toLowerCase().includes(q);
-    const slugMatch = b.slug.toLowerCase().includes(q);
-    const catMatch = b.category.toLowerCase().includes(q);
-    const shortDescMatch = b.shortDescription?.toLowerCase().includes(q);
-    const fullDescMatch = b.fullDescription?.toLowerCase().includes(q);
-    const featuresMatch = b.features?.some(f => f.toLowerCase().includes(q));
-    const tags = getBoardDecisionTags(b.slug) || [];
-    const tagsMatch = tags.some(t => t.toLowerCase().includes(q));
-
-    return nameMatch || slugMatch || catMatch || shortDescMatch || fullDescMatch || featuresMatch || tagsMatch;
-  });
-}
-
-export function getBoardMetrics(slug) {
-  return boardMetrics[slug] || { candidateReach: "Growing", reachLabel: "Candidates" };
-}
-
-export function getBoardProsCons(slug) {
-  return boardProsCons[slug] || null;
-}
-
-export function getBoardDecisionTags(slug) {
-  return boardDecisionTags[slug] || [];
-}
-
-export function getBoardHighlightGroups(slug) {
-  return boardHighlightGroups[slug] || null;
-}
-`;
-    fs.writeFileSync(path.join(process.cwd(), "data", "index.js"), indexContent, "utf-8");
+    writeResult = await commitRepoFiles(files, `Approve board: ${boardName} (${slug})`);
   } catch (e) {
     console.error("Error writing board files:", e);
-    return { success: false, error: "Failed to publish listing and update imports." };
+    return { success: false, error: "Failed to publish the board files: " + (e.message || "unknown error") };
   }
-    
+
   // 8. LAST operation: Move submission status in Supabase (pending -> approved)
   // Only executed after the board file and data/index.js writes have both succeeded.
   try {
@@ -814,7 +781,12 @@ export function getBoardHighlightGroups(slug) {
   });
 
   revalidatePath("/admin");
-  return { success: true };
+  return {
+    success: true,
+    message: writeResult?.mode === "github"
+      ? "Approved. Saved to GitHub; Vercel is rebuilding and the board will be live in about 2 minutes."
+      : "Approved. Board files written locally: commit and push to publish.",
+  };
 }
 
 export async function updateSubmissionStatusAction(submissionId, status) {
@@ -889,7 +861,7 @@ export async function setReviewStatusAction(reviewId, status) {
 
     const { data: before, error: readErr } = await supabaseAdmin
       .from("reviews")
-      .select("id, user_id, board_name, status")
+      .select("*")
       .eq("id", reviewId)
       .single();
     if (readErr || !before) return { success: false, error: "Review not found." };
@@ -903,19 +875,34 @@ export async function setReviewStatusAction(reviewId, status) {
       return { success: false, error: "Failed to update review." };
     }
 
-    // Email the reviewer only the first time a review goes live.
-    if (status === "approved" && before.status !== "approved" && before.user_id) {
-      const { data: userData } = await supabaseAdmin.auth.admin.getUserById(before.user_id);
-      const user = userData?.user;
-      const meta = user?.user_metadata || {};
-      const board = getAllBoards().find((b) => b.name === before.board_name);
-      await sendEmail("review-published", user?.email, {
+    const board = getAllBoards().find((b) => b.name === before.board_name);
+
+    // Email the reviewer only the first time a review goes live. Members via
+    // their account email; guests via the email they entered.
+    if (status === "approved" && before.status !== "approved") {
+      let email = before.reviewer_email || null;
+      let meta = {};
+      if (before.user_id) {
+        const { data: userData } = await supabaseAdmin.auth.admin.getUserById(before.user_id);
+        email = userData?.user?.email || email;
+        meta = userData?.user?.user_metadata || {};
+      }
+      await sendEmail("review-published", email, {
         first_name: firstNameFrom(meta.full_name || meta.name),
         board_name: before.board_name,
         review_url: board ? `${boardUrl(board.slug)}#reviews` : "https://jobboardsreview.com/directory",
       });
     }
 
+    // Show the change on the site now, not after the 5-minute refresh.
+    updateTag(REVIEWS_TAG);
+    if (board) {
+      revalidatePath(`/board/${board.slug}`);
+      revalidatePath(`/category/${board.categorySlug}`);
+    }
+    revalidatePath("/directory");
+    revalidatePath("/categories");
+    revalidatePath("/");
     revalidatePath("/admin");
     return { success: true };
   } catch (e) {
