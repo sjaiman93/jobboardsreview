@@ -159,25 +159,6 @@ export const boardDecisionTags = {
     "recruitment subscription",
     "niche job board"
   ],
-  "careerbuilder": [
-    "General Job Board",
-    "US Job Board",
-    "Corporate Jobs",
-    "High-Volume Hiring",
-    "Resume Database",
-    "AI Matching",
-    "Staffing Agencies",
-    "In-House Recruiters",
-    "Mid-Skill Roles",
-    "Administrative Jobs",
-    "Customer Service Jobs",
-    "Sales Jobs",
-    "Healthcare Support Jobs",
-    "Logistics And Warehouse Jobs",
-    "IT And Office Jobs",
-    "Job Search Platform",
-    "Recruiting Platform"
-  ],
   "cfa-institute-jobs": [
     "CFA Institute",
     "CFA job board",

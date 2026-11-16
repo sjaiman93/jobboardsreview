@@ -59,7 +59,9 @@ const nextConfig = {
       { source: '/board/hired', destination: '/category/technology', permanent: true },
       { source: '/board/nursingjobs', destination: '/category/healthcare', permanent: true },
       { source: '/board/chronicle-vitae', destination: '/category/education', permanent: true },
-      { source: '/board/lawyer-com-jobs', destination: '/category/legal', permanent: true }
+      { source: '/board/lawyer-com-jobs', destination: '/category/legal', permanent: true },
+      // CareerBuilder now runs on Monster's platform; send visitors to Monster.
+      { source: '/board/careerbuilder', destination: '/board/monster', permanent: true }
     ];
   },
 };

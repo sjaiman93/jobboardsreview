@@ -13,7 +13,6 @@ import authentic_jobs from "./jobboards/authentic-jobs";
 import behance_jobs from "./jobboards/behance-jobs";
 import biospace from "./jobboards/biospace";
 import bluepipes from "./jobboards/bluepipes";
-import careerbuilder from "./jobboards/careerbuilder";
 import cfa_institute_jobs from "./jobboards/cfa-institute-jobs";
 import clearancejobs from "./jobboards/clearancejobs";
 import clinic_jobs from "./jobboards/clinic-jobs";
@@ -97,7 +96,6 @@ const rawBoards = [
   behance_jobs,
   biospace,
   bluepipes,
-  careerbuilder,
   cfa_institute_jobs,
   clearancejobs,
   clinic_jobs,

@@ -122,14 +122,16 @@ Done, **not yet committed**:
 - [x] Admin approval no longer invents founded year, HQ, ownership,
       "Full-time" or "Verified Pool"
 
+Decided — do not re-flag:
+
+- "Verified" wording stays: the "Verified Pool" highlight on existing boards
+  and the verification copy on About, Compare, Join and the homepage. Sagar
+  verified each board manually (Nov 2026) and chose to keep it.
+- careerbuilder removed (Nov 2026): the site now runs on Monster's platform.
+  `/board/careerbuilder` 301s to `/board/monster`.
+
 Still open before cutover:
 
-- [ ] "Candidate Quality: Verified Pool" still in 72 boards'
-      `boardHighlightGroups` entries — unverified claim, shown on board pages
-- [ ] Marketing copy claiming verification that doesn't exist yet: About
-      ("verified against LinkedIn profiles and proof of ad spend"), Compare
-      hero ("verified by thousands of recruiters"), `siteContent.js`
-      ("100% Verified Community Insights"), Join page. Sagar/Palak to reword
 - [ ] Old newsletter subscribers in the Lovable Supabase
       (`newsletter_subscribers`) — export to Mailchimp before shutting it down
 - [ ] Confirm foundation-list and incredible-health from a US connection

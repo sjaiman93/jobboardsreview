@@ -67,10 +67,6 @@ export const boardMetrics = {
     "candidateReach": "Growing",
     "reachLabel": "Candidates"
   },
-  "careerbuilder": {
-    "candidateReach": "Growing",
-    "reachLabel": "Candidates"
-  },
   "cfa-institute-jobs": {
     "candidateReach": "Growing",
     "reachLabel": "Candidates"

@@ -177,20 +177,6 @@ export const boardProsCons = {
       "Website design feels dated compared to modern platforms like Health eCareers or Vivian Health"
     ]
   },
-  "careerbuilder": {
-    "pros": [
-      "Big, established candidate pool – tens of millions of US resumes and profiles, good for volume hiring.",
-      "Strong resume search – database search + AI matching can surface decent candidates if you know how to build good queries.",
-      "Integrated platform – job postings, candidate management, messaging, and ATS integrations in one place.",
-      "Useful for recurring roles – works well when you’re always hiring for the same positions (customer support, CNAs, warehouse, sales, etc.)"
-    ],
-    "cons": [
-      "Not cheap for light users – pay‑as‑you‑go and small plans can feel expensive if you only post a job occasionally.",
-      "Resume‑view limits – many plans cap the number of resumes you can view per month, which frustrates heavy sourcers.",
-      "Quality variance – you can get a lot of unqualified applies for specialized or senior roles; better for bulk than “purple squirrels.”",
-      "No free employer plan – unlike some competitors, there isn’t a true free tier for employers."
-    ]
-  },
   "cfa-institute-jobs": {
     "pros": [
       "Highly credentialed candidate pool — 190K+ CFA charterholders with verified expertise",

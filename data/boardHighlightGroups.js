@@ -185,20 +185,6 @@ export const boardHighlightGroups = {
       "Verified Pool"
     ]
   },
-  "careerbuilder": {
-    "Hiring Type": [
-      "Full-time"
-    ],
-    "Industry Focus": [
-      "Generalist"
-    ],
-    "Pricing Model": [
-      "Quote-Based"
-    ],
-    "Candidate Quality": [
-      "Verified Pool"
-    ]
-  },
   "cfa-institute-jobs": {
     "Hiring Type": [
       "Full-time"
