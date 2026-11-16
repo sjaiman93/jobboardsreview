@@ -3,6 +3,7 @@ import Image from "next/image";
 import { getBlogs } from "@/data/blogs";
 
 export const metadata = {
+  alternates: { canonical: "/blog" },
   title: "Blog | JobBoardsReview",
   description: "Recruitment insights, hiring strategies, and data-driven analysis of job boards.",
 };

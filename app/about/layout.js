@@ -1,4 +1,5 @@
 ﻿export const metadata = {
+  alternates: { canonical: "/about" },
   title: "About Us | Transparent Job Board Intelligence",
   description: "Learn why JobBoardsReview was founded: to bring unbiased, data-driven transparency to the recruitment advertising and job board industry.",
 };

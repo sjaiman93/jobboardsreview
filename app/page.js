@@ -5,6 +5,7 @@ import EmailCapture from "@/components/EmailCapture";
 import RotatingInsightCard from "@/components/RotatingInsightCard";
 
 export const metadata = {
+  alternates: { canonical: "/" },
   title: "JobBoardsReview | Compare & Review Job Boards",
   description:
     "Stop burning recruitment budget on blind intuition. Access the definitive database of job board performance, cost, and candidate quality.",

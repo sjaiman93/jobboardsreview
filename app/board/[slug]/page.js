@@ -16,6 +16,7 @@ import StarRating from "@/components/StarRating";
 import WriteReviewButton from "@/components/WriteReviewButton";
 import { shareMetadata } from "@/lib/shareImage";
 import { boardHasLogo, boardInitials } from "@/lib/boardLogo";
+import JsonLd, { breadcrumbs } from "@/components/JsonLd";
 
 export async function generateStaticParams() {
   return getAllBoards().map((b) => ({ slug: b.slug }));
@@ -30,7 +31,7 @@ export async function generateMetadata({ params }) {
   return {
     title,
     description,
-    ...shareMetadata({ title, description, url: `/board/${board.slug}` }),
+    ...shareMetadata({ title, description, url: `/board/${board.slug}`, canonical: true }),
   };
 }
 
@@ -124,7 +125,10 @@ export default async function BoardDetailPage({ params }) {
     .slice(0, 3);
 
   const hasReviews = board.reviews && board.reviews.length > 0;
-  const hasPricingData = board.pricingDetails && board.pricingDetails.employerCost;
+  const hasPricingData =
+    board.pricingDetails &&
+    board.pricingDetails.employerCost &&
+    board.pricingDetails.employerCost !== "Not yet verified";
   const isDice = board.slug === "dice";
   let detailedEmployerPricing = "";
   if (isDice && board._originalPricing && board._originalPricing.includes("||")) {
@@ -154,6 +158,13 @@ export default async function BoardDetailPage({ params }) {
 
   return (
     <>
+      <JsonLd
+        data={breadcrumbs([
+          { name: "Home", path: "/" },
+          { name: "Directory", path: "/directory" },
+          { name: board.name, path: `/board/${board.slug}` },
+        ])}
+      />
       {/* ─── Hero ─── */}
       <div className="max-w-7xl mx-auto px-6 py-12 lg:py-20">
         {/* Breadcrumb */}
@@ -368,13 +379,6 @@ export default async function BoardDetailPage({ params }) {
                           <div className="text-[10px] font-black text-slate-400 uppercase tracking-[0.12em] mb-2">Candidate Pricing</div>
                           <p className="text-slate-600 leading-relaxed font-normal">{board.seekerPricing}</p>
                         </div>
-                        <div>
-                          <div className="text-[10px] font-black text-slate-400 uppercase tracking-[0.12em] mb-2">Transparency</div>
-                          <div className="flex items-center gap-2">
-                            <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
-                            <span className="text-sm font-bold text-slate-700">Medium — varies by contract</span>
-                          </div>
-                        </div>
                       </>
                     ) : (
                       <>
@@ -389,26 +393,13 @@ export default async function BoardDetailPage({ params }) {
                             <p className="text-slate-600 leading-relaxed font-normal">{board.pricing}</p>
                           </div>
                         )}
-                        <div>
-                          <div className="text-[10px] font-black text-slate-400 uppercase tracking-[0.12em] mb-2">Transparency</div>
-                          <div className="flex items-center gap-2">
-                            <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
-                            <span className="text-sm font-bold text-slate-700">Medium — varies by contract</span>
-                          </div>
-                        </div>
-                        {!hasPricingData && (
-                          <div>
-                            <div className="text-[10px] font-black text-slate-400 uppercase tracking-[0.12em] mb-2">Typical Structure</div>
-                            <div className="text-sm font-bold text-slate-700">Varies by role and volume</div>
-                          </div>
-                        )}
                       </>
                     )}
                   </div>
                   <p className="text-sm text-slate-500 font-medium leading-relaxed mb-6">
                     {hasPricingData
-                      ? "Exact pricing varies based on hiring volume, role seniority, and contract terms."
-                      : "Public pricing is not disclosed. Costs typically depend on hiring volume, role type, and geographic reach."}
+                      ? `Pricing as last recorded by JobBoardsReview. Check ${board.name}'s own site for current rates.`
+                      : `We have not verified ${board.name}'s pricing yet.`}
                   </p>
                   {isDice ? (
                     <Collapsible label="View detailed pricing insights" collapseLabel="Hide details" maxHeight={0} fade={false}>
@@ -595,8 +586,8 @@ export default async function BoardDetailPage({ params }) {
                     {
                       q: `Is ${board.name} worth the cost for mid-volume hiring?`,
                       a: board.pricingDetails?.employerCost
-                        ? `It depends on your role types and volume. ${board.name} charges ${board.pricingDetails.employerCost} on the employer side. For niche or senior roles, the quality-to-cost ratio is generally favorable. For high-volume entry-level hiring, consider alternatives.`
-                        : `It depends on your role types and volume. ${board.name} operates under a ${board.pricing || "contact for pricing"} model. For specialized vertical positions, the targeted exposure is generally favorable. For high-volume entry-level hiring, consider generalist alternatives.`,
+                        ? `${board.name}'s recorded employer pricing is ${board.pricingDetails.employerCost}. Whether that pays off depends on your role types and hiring volume; there are not enough recruiter reviews yet to say how it performs.`
+                        : `We have not verified ${board.name}'s pricing yet. Whether it pays off depends on your role types and hiring volume.`,
                     },
                     {
                       q: `How does ${board.name} compare to other ${board.category.toLowerCase()} boards?`,
@@ -607,14 +598,14 @@ export default async function BoardDetailPage({ params }) {
                     {
                       q: `What kinds of roles get the best results on ${board.name}?`,
                       a: board.idealFor && board.idealFor.length > 0
-                        ? `Based on recruiter feedback, ${board.name} works best for: ${board.idealFor.slice(0, 2).join(", ")}. It may underperform for roles outside its core ${board.category.toLowerCase()} focus.`
-                        : `Based on recruiter feedback, ${board.name} works best for specialized roles within the ${board.category.toLowerCase()} vertical. It may underperform for general business positions outside its core area.`,
+                        ? `${board.name} is aimed at: ${board.idealFor.slice(0, 2).join(", ")}. Recruiter reviews will show which roles get the best results.`
+                        : `${board.name} focuses on the ${board.category.toLowerCase()} sector. Recruiter reviews will show which roles get the best results.`,
                     },
                     {
                       q: `Can I try ${board.name} before committing?`,
                       a: board.pricingModel === "free"
                         ? `Yes — ${board.name} is free to use. You can explore the platform without any upfront commitment.`
-                        : `${board.name} offers a ${board.pricing || "paid"} model. Check their website for any trial or demo options before committing.`,
+                        : `Check ${board.name}'s website for any trial or demo options before committing.`,
                     },
                   ].map((faq, i) => (
                     <details

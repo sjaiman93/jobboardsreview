@@ -2,6 +2,26 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { shareMetadata } from "@/lib/shareImage";
+import JsonLd, { SITE_URL } from "@/components/JsonLd";
+
+// sameAs is left out until social profile links appear in the footer.
+const ORGANIZATION_LD = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": `${SITE_URL}/#organization`,
+  name: "JobBoardsReview",
+  url: SITE_URL,
+  logo: `${SITE_URL}/logo.png`,
+};
+
+const WEBSITE_LD = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": `${SITE_URL}/#website`,
+  name: "JobBoardsReview",
+  url: SITE_URL,
+  publisher: { "@id": `${SITE_URL}/#organization` },
+};
 
 const SITE_TITLE = "JobBoardsReview | Compare & Review Job Boards";
 const SITE_DESCRIPTION =
@@ -25,6 +45,8 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className="overflow-x-hidden">
       <body className="overflow-x-hidden">
+        <JsonLd data={ORGANIZATION_LD} />
+        <JsonLd data={WEBSITE_LD} />
         <div className="min-h-screen bg-[#FCFBF8]">
           <Navbar />
           <main>{children}</main>

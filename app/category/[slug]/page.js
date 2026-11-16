@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getCategoryBySlug, getBoardsByCategory, getAllCategories } from "@/data/jobBoards";
 import JobBoardCard from "@/components/JobBoardCard";
 import { shareMetadata } from "@/lib/shareImage";
+import JsonLd, { breadcrumbs } from "@/components/JsonLd";
 
 export async function generateStaticParams() {
   return getAllCategories().map((c) => ({ slug: c.slug }));
@@ -17,7 +18,7 @@ export async function generateMetadata({ params }) {
   return {
     title,
     description,
-    ...shareMetadata({ title, description, url: `/category/${category.slug}` }),
+    ...shareMetadata({ title, description, url: `/category/${category.slug}`, canonical: true }),
   };
 }
 
@@ -30,6 +31,13 @@ export default async function CategoryPage({ params }) {
 
   return (
     <>
+      <JsonLd
+        data={breadcrumbs([
+          { name: "Home", path: "/" },
+          { name: "Categories", path: "/categories" },
+          { name: category.name, path: `/category/${category.slug}` },
+        ])}
+      />
       {/* Header */}
       <div className="max-w-7xl mx-auto px-6 py-12 lg:py-20">
         {/* Breadcrumb */}

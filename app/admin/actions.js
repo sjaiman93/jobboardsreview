@@ -155,11 +155,10 @@ export async function saveBoard(formData) {
   const highlightPath = path.join(process.cwd(), "data", "boardHighlightGroups.js");
   const highlightData = readMetadataFile(highlightPath, "boardHighlightGroups");
   if (!highlightData[slug]) {
+    // Only facts we hold. Hiring type and candidate quality need evidence.
     highlightData[slug] = {
-      "Hiring Type": ["Full-time"],
       "Industry Focus": [category],
       "Pricing Model": [pricingSummary],
-      "Candidate Quality": ["Verified Pool"]
     };
   }
   writeMetadataFile(highlightPath, "boardHighlightGroups", highlightData);
@@ -607,9 +606,11 @@ export async function approveSubmissionAction(submissionId) {
     pricingModel: pricingModel ? pricingModel.toLowerCase() : "paid",
     rating: null,
     reviewCount: null,
-    yearFounded: new Date().getFullYear(),
-    headquarters: "Remote",
-    ownership: "Private",
+    // Unknown until checked. Never default these: a guessed founding year,
+    // HQ or ownership is an invented fact on a public page.
+    yearFounded: null,
+    headquarters: null,
+    ownership: null,
     website: websiteUrl,
     features: [],
     idealFor: targetAudience,
@@ -653,11 +654,10 @@ export async function approveSubmissionAction(submissionId) {
     
     const highlightPath = path.join(process.cwd(), "data", "boardHighlightGroups.js");
     const highlightData = readMetadataFile(highlightPath, "boardHighlightGroups");
+    // Only facts we hold. Hiring type and candidate quality need evidence.
     highlightData[slug] = {
-      "Hiring Type": ["Full-time"],
       "Industry Focus": [category],
       "Pricing Model": [pricingModel || "Custom Pricing"],
-      "Candidate Quality": ["Verified Pool"]
     };
     writeMetadataFile(highlightPath, "boardHighlightGroups", highlightData);
     

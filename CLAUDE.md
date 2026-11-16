@@ -99,24 +99,40 @@ Done, **not yet committed** (working tree):
       verified identical; covers in `public/blog/`, served via `next/image`
 - [x] T5 Open Graph / Twitter metadata via `lib/shareImage.js`; default image
       `public/og-image.png` (1200×630, from Canva); posts use their cover
+- [x] T3c follow-up: Sagar checked the 20 bot-walled boards. lawyer-com-jobs
+      removed (lawyer directory, no jobs); nalp repointed to jobs.nalp.org.
+      foundation-list and incredible-health geo-block India — unconfirmed
+- [x] T4 Redirect map: all 126 URLs in the old Lovable sitemap resolve to 200;
+      6 boards approved on the old site restored
+- [x] Board initials replace dead Clearbit logos (`lib/boardLogo.js`)
 
-Still blocking launch:
+Done, **not yet committed**:
 
-- [ ] T2 JSON-LD structured data (none exists anywhere)
-- [ ] T9 Self-referencing canonicals and a title template (neither exists)
-- [ ] T4 Verify the redirect map in `next.config.mjs` against real Lovable URLs
-      (14 redirects now, 8 added by T3d)
-- [ ] T7 Blog posts missing from `app/sitemap.js`
-- [ ] T8 `lastModified: now` on every sitemap entry — use real dates
-- [ ] T11 Complete `.env.example` — code reads 8 env vars, file documents 1
+- [x] T2 JSON-LD: Organization + WebSite (root), Article (posts),
+      BreadcrumbList (boards, categories, posts). No FAQ or rating schema —
+      the board FAQ answers are templated, not real Q&A
+- [x] T7 / T8 Sitemap lists blog posts; real dates via `CONTENT_UPDATED` in
+      `app/sitemap.js` (bump it when data/ or legal copy changes)
+- [x] T9 Self-referencing canonical on every page; `/profile` titled and
+      noindexed. No title template: pages already carry full titles
+- [x] T11 `.env.example` documents all 8 variables
+- [x] T12 Unreviewed boards show "No reviews yet"; removed "85+ Verified",
+      "Transparency: Medium", guessed cost-per-hire ranges and "based on
+      recruiter feedback" FAQ text; category counts computed from data
+- [x] Admin approval no longer invents founded year, HQ, ownership,
+      "Full-time" or "Verified Pool"
 
-Should do before cutover:
+Still open before cutover:
 
-- [ ] T12 Zero-review rating display; `/directory` title claims "85+ Verified"
-      (77 boards now, none verified)
-- [ ] Manual browser check of the 20 boards that only ever returned a bot wall
-      (403) in T3c — a challenge page proves a server, not a live board.
-      Crunchboard returned the same 403 and turned out to be dead.
+- [ ] "Candidate Quality: Verified Pool" still in 72 boards'
+      `boardHighlightGroups` entries — unverified claim, shown on board pages
+- [ ] Marketing copy claiming verification that doesn't exist yet: About
+      ("verified against LinkedIn profiles and proof of ad spend"), Compare
+      hero ("verified by thousands of recruiters"), `siteContent.js`
+      ("100% Verified Community Insights"), Join page. Sagar/Palak to reword
+- [ ] Old newsletter subscribers in the Lovable Supabase
+      (`newsletter_subscribers`) — export to Mailchimp before shutting it down
+- [ ] Confirm foundation-list and incredible-health from a US connection
 
 Launch gate:
 

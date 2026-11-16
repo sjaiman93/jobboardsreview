@@ -3,6 +3,7 @@ import { getAllCategories, getBoardsByCategory, getAllBoards } from "@/data/jobB
 import JobBoardCard from "@/components/JobBoardCard";
 
 export const metadata = {
+  alternates: { canonical: "/categories" },
   title: "Browse Categories | JobBoardsReview",
   description:
     "Explore the comprehensive JobBoardsReview database, categorized by industry and specialism to find high-intent talent pools.",
@@ -77,6 +78,8 @@ export default function CategoriesPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {categories.map((cat, i) => {
               const colors = getColors(cat.slug);
+              // Counted from the real board list; categories.js boardCount is not used.
+              const count = getBoardsByCategory(cat.slug).length;
               return (
                 <Link
                   key={cat.slug}
@@ -88,7 +91,7 @@ export default function CategoriesPage() {
                   </div>
                   <h3 className="text-2xl font-black text-slate-900 mb-1.5">{cat.name}</h3>
                   <p className="text-gray-500 font-medium uppercase tracking-widest text-[13px]">
-                    <span className="font-bold text-gray-600">{cat.boardCount}</span> Board{cat.boardCount !== 1 ? "s" : ""}
+                    <span className="font-bold text-gray-600">{count}</span> Board{count !== 1 ? "s" : ""}
                   </p>
                 </Link>
               );

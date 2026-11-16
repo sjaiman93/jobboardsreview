@@ -14,17 +14,17 @@ const boardColors = [
 ];
 
 function qualityData(rating) {
-  if (rating == null) return { pct: "0%", label: "N/A", color: "bg-slate-200" };
+  if (rating == null) return { pct: "0%", label: "No data yet", color: "bg-slate-200" };
   if (rating >= 4.7) return { pct: "90%", label: "Elite", color: "bg-teal-500" };
   if (rating >= 4.4) return { pct: "75%", label: "Strong", color: "bg-teal-500" };
   if (rating >= 4.0) return { pct: "60%", label: "Good", color: "bg-amber-500" };
   return { pct: "45%", label: "Variable", color: "bg-amber-500" };
 }
 
-function costEstimate(model) {
-  if (model === "free") return "$0 (Free)";
-  if (model === "freemium") return "$50 – $300";
-  return "$200 – $600";
+// Cost per hire needs real hiring data from recruiters. Until we collect it,
+// say so rather than show a guessed range.
+function costEstimate() {
+  return "Not tracked yet";
 }
 
 export default function ComparePage() {

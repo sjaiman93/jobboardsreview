@@ -1,4 +1,5 @@
 ﻿export const metadata = {
+  alternates: { canonical: "/join" },
   title: "Join the Recruiter Community | JobBoardsReview",
   description: "Join talent acquisition professionals sharing verified job board reviews, pricing benchmarks, and hiring ROI insights.",
 };

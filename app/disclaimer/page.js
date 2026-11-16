@@ -1,6 +1,7 @@
 import { getSiteContent } from "@/data/siteContent";
 
 export const metadata = {
+  alternates: { canonical: "/disclaimer" },
   title: "Disclaimer | JobBoardsReview",
 };
 

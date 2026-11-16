@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { getBlogs, getBlogBySlug } from "@/data/blogs";
 import { shareMetadata } from "@/lib/shareImage";
+import JsonLd, { SITE_URL, breadcrumbs } from "@/components/JsonLd";
 import ShareButtons from "@/components/ShareButtons";
 
 export async function generateStaticParams() {
@@ -27,6 +28,7 @@ export async function generateMetadata({ params }) {
       title,
       description,
       url: `/blog/${blog.slug}`,
+      canonical: true,
       type: "article",
       images: blog.image ? [{ url: blog.image, alt: blog.title }] : undefined,
       extra: { publishedTime: blog.createdAt },
@@ -48,8 +50,30 @@ export default async function BlogPostPage({ params }) {
   const shareText = encodeURIComponent(blog.title);
   const shareUrlEnc = encodeURIComponent(shareUrl);
 
+  const articleLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: blog.title,
+    description: blog.metaDescription || blog.description,
+    datePublished: blog.createdAt,
+    dateModified: blog.updatedAt || blog.createdAt,
+    mainEntityOfPage: `${SITE_URL}/blog/${blog.slug}`,
+    ...(blog.image ? { image: [`${SITE_URL}${blog.image}`] } : {}),
+    // Organization until Palak's author page exists (launch task T16).
+    author: { "@type": "Organization", name: "JobBoardsReview", url: SITE_URL },
+    publisher: { "@id": `${SITE_URL}/#organization` },
+  };
+
   return (
     <article className="max-w-4xl mx-auto px-6 py-24 lg:py-32">
+      <JsonLd data={articleLd} />
+      <JsonLd
+        data={breadcrumbs([
+          { name: "Home", path: "/" },
+          { name: "Blog", path: "/blog" },
+          { name: blog.title, path: `/blog/${blog.slug}` },
+        ])}
+      />
       <Link href="/blog" className="inline-flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-[#FF5630] mb-12 transition-colors">
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />

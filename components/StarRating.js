@@ -14,8 +14,17 @@ export default function StarRating({
 
   const starPath = "M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z";
 
-  // Check if we should render interactive mode
-  const isInteractive = !readOnly && rating === null;
+  // Interactive (clickable) only when a form passes onChange to receive the value.
+  const isInteractive = !readOnly && typeof onChange === "function";
+  const hasRating = typeof rating === "number" && (reviewCount == null || reviewCount > 0);
+
+  // No reviews behind it: show no stars and no number. A rating nobody gave
+  // is the same credibility problem as a fake testimonial.
+  if (!isInteractive && !hasRating) {
+    return (
+      <span className={`text-sm font-bold text-slate-400 ${className}`}>No reviews yet</span>
+    );
+  }
 
   const handleSelect = (val) => {
     setSelectedRating(val);
