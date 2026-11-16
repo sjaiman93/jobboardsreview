@@ -1,0 +1,42 @@
+[
+  {
+    "file": "supabase/magic-link.html",
+    "subject": "Your JobBoardsReview sign-in link",
+    "preheader": "One click and you're back to comparing job boards."
+  },
+  {
+    "file": "supabase/confirm-signup.html",
+    "subject": "Confirm your email to finish joining JobBoardsReview",
+    "preheader": "One click to confirm, then start comparing boards by price and results."
+  },
+  {
+    "file": "supabase/change-email.html",
+    "subject": "Confirm your new email address",
+    "preheader": "Confirm the change to your JobBoardsReview sign-in email."
+  },
+  {
+    "file": "transactional/review-received.html",
+    "subject": "Thanks, your review of {{board_name}} is in",
+    "preheader": "Our team reads every review before it goes live."
+  },
+  {
+    "file": "transactional/review-published.html",
+    "subject": "Your review of {{board_name}} is live",
+    "preheader": "Other recruiters can now see what you learned."
+  },
+  {
+    "file": "transactional/listing-received.html",
+    "subject": "We've received your listing for {{board_name}}",
+    "preheader": "Here's what happens next."
+  },
+  {
+    "file": "transactional/listing-approved.html",
+    "subject": "{{board_name}} is approved for JobBoardsReview",
+    "preheader": "Your page goes up with our next site update. Two things will help it most."
+  },
+  {
+    "file": "transactional/admin-alert.html",
+    "subject": "[JBR] New {{item_type}} waiting: {{board_name}}",
+    "preheader": "Something needs your approval."
+  }
+]

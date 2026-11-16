@@ -1,6 +1,7 @@
 "use server";
 
 import { headers } from "next/headers";
+import { sendEmail, notifyAdmin, firstNameFrom } from "@/lib/email";
 
 const rateLimitCache = new Map();
 
@@ -49,10 +50,12 @@ export async function submitReviewAction(payload) {
   
   // Verify User Auth Token
   let userId = null;
+  let reviewer = null;
   if (payload.token && supabaseAdmin) {
     const { data: { user }, error: authErr } = await supabaseAdmin.auth.getUser(payload.token);
     if (user) {
       userId = user.id;
+      reviewer = user;
     }
   }
 
@@ -96,6 +99,21 @@ export async function submitReviewAction(payload) {
     console.error("Error saving review:", e);
     return { success: false, error: "Server error saving review." };
   }
+
+  // Emails never fail the submission (sendEmail does not throw).
+  const meta = reviewer?.user_metadata || {};
+  const reviewTitle =
+    dbPayload.title ||
+    (dbPayload.review_text.length > 80 ? dbPayload.review_text.slice(0, 77) + "..." : dbPayload.review_text);
+  await Promise.all([
+    sendEmail("review-received", reviewer?.email, {
+      first_name: firstNameFrom(meta.full_name || meta.name),
+      board_name: dbPayload.board_name,
+      rating: dbPayload.rating,
+      review_title: reviewTitle,
+    }),
+    notifyAdmin({ itemType: "review", boardName: dbPayload.board_name, submitterEmail: reviewer?.email }),
+  ]);
 
   return { success: true };
 }

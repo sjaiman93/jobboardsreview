@@ -7,6 +7,7 @@ import { cookies, headers } from "next/headers";
 import { validateBoardData } from "@/data/validation";
 import { getAllBoards, getAllCategories } from "@/data/jobBoards";
 import { ADMIN_COOKIE_NAME, hashPassword, getAdminPassword } from "@/lib/adminAuth";
+import { sendEmail, notifyAdmin, firstNameFrom, boardUrl } from "@/lib/email";
 
 export async function adminLoginAction(password) {
   const adminPass = getAdminPassword();
@@ -527,6 +528,15 @@ export async function submitBoardProposal(submission) {
     return { success: false, error: "Database connection failed." };
   }
 
+  // Emails never fail the submission (sendEmail does not throw).
+  await Promise.all([
+    sendEmail("listing-received", dbPayload.contact_email, {
+      first_name: firstNameFrom(dbPayload.contact_name),
+      board_name: dbPayload.board_name,
+    }),
+    notifyAdmin({ itemType: "listing", boardName: dbPayload.board_name, submitterEmail: dbPayload.contact_email }),
+  ]);
+
   return { success: true };
 }
 
@@ -779,7 +789,15 @@ export function getBoardDecisionTags(slug) {
     console.error("Supabase update error on approve:", err);
     return { success: false, error: "Board published, but failed to update submission status in database." };
   }
-  
+
+  // After every write has succeeded. Wording says "approved", not "live":
+  // the page only goes live after the next commit + deploy.
+  await sendEmail("listing-approved", sub.contact_email || sub.contactEmail, {
+    first_name: firstNameFrom(sub.contact_name || sub.contactName),
+    board_name: boardName,
+    board_url: boardUrl(slug),
+  });
+
   revalidatePath("/admin");
   return { success: true };
 }

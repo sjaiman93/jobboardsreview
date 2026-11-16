@@ -1,0 +1,344 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>JBR email preview</title>
+<style>
+  body{margin:0;background:#F1F5F9;font:15px/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#0F172A}
+  header{padding:24px 16px;max-width:1240px;margin:0 auto}
+  h1{margin:0 0 4px;font-size:22px} header p{margin:0;color:#64748B}
+  main{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:20px;padding:0 16px 40px;max-width:1240px;margin:0 auto}
+  section{background:#fff;border:1px solid #E2E8F0;border-radius:14px;overflow:hidden}
+  .meta{padding:14px 16px;border-bottom:1px solid #E2E8F0}
+  .tag{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#FF5630}
+  .subj{font-weight:700;margin:4px 0 2px} .pre{color:#64748B;font-size:13px} code{font-size:12px;color:#64748B}
+  iframe{width:100%;height:640px;border:0;display:block;background:#FCFBF8}
+</style></head><body>
+<header><h1>JobBoardsReview emails</h1><p>8 templates with sample data. Source: <code>emails/build.js</code></p></header>
+<main>
+<section>
+  <div class="meta"><span class="tag">Supabase sign-in</span>
+  <div class="subj">Your JobBoardsReview sign-in link</div><div class="pre">One click and you're back to comparing job boards.</div><code>supabase/magic-link.html</code></div>
+  <iframe srcdoc="<!doctype html>
+<html lang=&quot;en&quot;>
+<head>
+<meta charset=&quot;utf-8&quot;>
+<meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;>
+<meta name=&quot;color-scheme&quot; content=&quot;light&quot;>
+<title>Your JobBoardsReview sign-in link</title>
+</head>
+<body style=&quot;margin:0;padding:0;background:#FCFBF8;&quot;>
+<div style=&quot;display:none;max-height:0;overflow:hidden;opacity:0;&quot;>One click and you're back to comparing job boards.</div>
+<table role=&quot;presentation&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; width=&quot;100%&quot; style=&quot;background:#FCFBF8;&quot;>
+  <tr><td align=&quot;center&quot; style=&quot;padding:32px 16px;&quot;>
+    <table role=&quot;presentation&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; width=&quot;100%&quot; style=&quot;max-width:560px;&quot;>
+      <tr><td style=&quot;padding:0 4px 20px;&quot;>
+        <a href=&quot;https://jobboardsreview.com&quot; style=&quot;text-decoration:none;font:800 20px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#0F172A;&quot;>Job<span style=&quot;color:#FF5630;&quot;>Boards</span>Review</a>
+      </td></tr>
+      <tr><td style=&quot;background:#FFFFFF;border:1px solid #E2E8F0;border-radius:16px;padding:32px 28px;&quot;>
+        <h1 style=&quot;margin:0 0 16px;font:800 26px/1.25 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#0F172A;&quot;>Sign in to JobBoardsReview</h1><p style=&quot;margin:0 0 16px;font:400 16px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#334155;&quot;>Click the button below to sign in. The link works once and expires soon, so use it now.</p>
+<table role=&quot;presentation&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; style=&quot;margin:8px 0 24px;&quot;>
+  <tr><td style=&quot;border-radius:12px;background:#FF5630;&quot;>
+    <a href=&quot;https://jobboardsreview.com/directory&quot; style=&quot;display:inline-block;padding:14px 28px;font:700 16px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#FFFFFF;text-decoration:none;border-radius:12px;&quot;>Sign me in</a>
+  </td></tr>
+</table><p style=&quot;margin:0 0 12px;font:400 13px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#64748B;&quot;>Button not working? Copy this link into your browser:<br><a href=&quot;https://jobboardsreview.com/directory&quot; style=&quot;color:#64748B;word-break:break-all;&quot;>https://jobboardsreview.com/directory</a></p>
+      </td></tr>
+      <tr><td style=&quot;padding:20px 4px 0;&quot;>
+        <p style=&quot;margin:0 0 12px;font:400 13px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#64748B;&quot;>Didn't ask to sign in? You can ignore this email. Nobody can get into your account without this link.</p>
+        <p style=&quot;margin:0 0 12px;font:400 13px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#64748B;&quot;>JobBoardsReview · Compare &amp;amp; review US job boards · <a href=&quot;https://jobboardsreview.com&quot; style=&quot;color:#FF5630;font-weight:600;text-decoration:underline;word-break:break-all;&quot;>jobboardsreview.com</a></p>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>
+" title="Your JobBoardsReview sign-in link" loading="lazy"></iframe>
+</section>
+<section>
+  <div class="meta"><span class="tag">Supabase sign-in</span>
+  <div class="subj">Confirm your email to finish joining JobBoardsReview</div><div class="pre">One click to confirm, then start comparing boards by price and results.</div><code>supabase/confirm-signup.html</code></div>
+  <iframe srcdoc="<!doctype html>
+<html lang=&quot;en&quot;>
+<head>
+<meta charset=&quot;utf-8&quot;>
+<meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;>
+<meta name=&quot;color-scheme&quot; content=&quot;light&quot;>
+<title>Confirm your email to finish joining JobBoardsReview</title>
+</head>
+<body style=&quot;margin:0;padding:0;background:#FCFBF8;&quot;>
+<div style=&quot;display:none;max-height:0;overflow:hidden;opacity:0;&quot;>One click to confirm, then start comparing boards by price and results.</div>
+<table role=&quot;presentation&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; width=&quot;100%&quot; style=&quot;background:#FCFBF8;&quot;>
+  <tr><td align=&quot;center&quot; style=&quot;padding:32px 16px;&quot;>
+    <table role=&quot;presentation&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; width=&quot;100%&quot; style=&quot;max-width:560px;&quot;>
+      <tr><td style=&quot;padding:0 4px 20px;&quot;>
+        <a href=&quot;https://jobboardsreview.com&quot; style=&quot;text-decoration:none;font:800 20px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#0F172A;&quot;>Job<span style=&quot;color:#FF5630;&quot;>Boards</span>Review</a>
+      </td></tr>
+      <tr><td style=&quot;background:#FFFFFF;border:1px solid #E2E8F0;border-radius:16px;padding:32px 28px;&quot;>
+        <h1 style=&quot;margin:0 0 16px;font:800 26px/1.25 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#0F172A;&quot;>Welcome to JobBoardsReview</h1><p style=&quot;margin:0 0 16px;font:400 16px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#334155;&quot;>You're one click away from your account. Confirm your email and you're in.</p>
+<table role=&quot;presentation&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; style=&quot;margin:8px 0 24px;&quot;>
+  <tr><td style=&quot;border-radius:12px;background:#FF5630;&quot;>
+    <a href=&quot;https://jobboardsreview.com/directory&quot; style=&quot;display:inline-block;padding:14px 28px;font:700 16px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#FFFFFF;text-decoration:none;border-radius:12px;&quot;>Confirm my email</a>
+  </td></tr>
+</table><p style=&quot;margin:0 0 16px;font:400 16px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#334155;&quot;><strong style=&quot;color:#0F172A;&quot;>Once you're in, three things worth doing:</strong></p>
+<table role=&quot;presentation&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; style=&quot;margin:0 0 20px;width:100%;&quot;>
+  <tr>
+    <td valign=&quot;top&quot; style=&quot;width:28px;padding:0 0 12px;font:800 15px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#FF5630;&quot;>1.</td>
+    <td valign=&quot;top&quot; style=&quot;padding:0 0 12px;font:400 15px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#334155;&quot;><strong>Compare boards side by side.</strong> Pricing, focus and fit for the roles you hire for, in one view.</td>
+  </tr><tr>
+    <td valign=&quot;top&quot; style=&quot;width:28px;padding:0 0 12px;font:800 15px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#FF5630;&quot;>2.</td>
+    <td valign=&quot;top&quot; style=&quot;padding:0 0 12px;font:400 15px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#334155;&quot;><strong>Check what a board charges</strong> before you get on a call with its sales team.</td>
+  </tr><tr>
+    <td valign=&quot;top&quot; style=&quot;width:28px;padding:0 0 12px;font:800 15px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#FF5630;&quot;>3.</td>
+    <td valign=&quot;top&quot; style=&quot;padding:0 0 12px;font:400 15px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#334155;&quot;><strong>Review a board you've used.</strong> Recruiters learn the most from other recruiters, and every honest review makes the next budget call easier.</td>
+  </tr>
+</table><p style=&quot;margin:0 0 12px;font:400 13px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#64748B;&quot;>Button not working? Copy this link into your browser:<br><a href=&quot;https://jobboardsreview.com/directory&quot; style=&quot;color:#64748B;word-break:break-all;&quot;>https://jobboardsreview.com/directory</a></p>
+      </td></tr>
+      <tr><td style=&quot;padding:20px 4px 0;&quot;>
+        <p style=&quot;margin:0 0 12px;font:400 13px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#64748B;&quot;>Didn't sign up? Ignore this email and no account will be created.</p>
+        <p style=&quot;margin:0 0 12px;font:400 13px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#64748B;&quot;>JobBoardsReview · Compare &amp;amp; review US job boards · <a href=&quot;https://jobboardsreview.com&quot; style=&quot;color:#FF5630;font-weight:600;text-decoration:underline;word-break:break-all;&quot;>jobboardsreview.com</a></p>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>
+" title="Confirm your email to finish joining JobBoardsReview" loading="lazy"></iframe>
+</section>
+<section>
+  <div class="meta"><span class="tag">Supabase sign-in</span>
+  <div class="subj">Confirm your new email address</div><div class="pre">Confirm the change to your JobBoardsReview sign-in email.</div><code>supabase/change-email.html</code></div>
+  <iframe srcdoc="<!doctype html>
+<html lang=&quot;en&quot;>
+<head>
+<meta charset=&quot;utf-8&quot;>
+<meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;>
+<meta name=&quot;color-scheme&quot; content=&quot;light&quot;>
+<title>Confirm your new email address</title>
+</head>
+<body style=&quot;margin:0;padding:0;background:#FCFBF8;&quot;>
+<div style=&quot;display:none;max-height:0;overflow:hidden;opacity:0;&quot;>Confirm the change to your JobBoardsReview sign-in email.</div>
+<table role=&quot;presentation&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; width=&quot;100%&quot; style=&quot;background:#FCFBF8;&quot;>
+  <tr><td align=&quot;center&quot; style=&quot;padding:32px 16px;&quot;>
+    <table role=&quot;presentation&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; width=&quot;100%&quot; style=&quot;max-width:560px;&quot;>
+      <tr><td style=&quot;padding:0 4px 20px;&quot;>
+        <a href=&quot;https://jobboardsreview.com&quot; style=&quot;text-decoration:none;font:800 20px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#0F172A;&quot;>Job<span style=&quot;color:#FF5630;&quot;>Boards</span>Review</a>
+      </td></tr>
+      <tr><td style=&quot;background:#FFFFFF;border:1px solid #E2E8F0;border-radius:16px;padding:32px 28px;&quot;>
+        <h1 style=&quot;margin:0 0 16px;font:800 26px/1.25 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#0F172A;&quot;>Confirm your new email</h1><p style=&quot;margin:0 0 16px;font:400 16px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#334155;&quot;>You asked to change the email on your JobBoardsReview account from <strong>old@staffingco.com</strong> to <strong>maria@staffingco.com</strong>.</p>
+<table role=&quot;presentation&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; style=&quot;margin:8px 0 24px;&quot;>
+  <tr><td style=&quot;border-radius:12px;background:#FF5630;&quot;>
+    <a href=&quot;https://jobboardsreview.com/directory&quot; style=&quot;display:inline-block;padding:14px 28px;font:700 16px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#FFFFFF;text-decoration:none;border-radius:12px;&quot;>Confirm new email</a>
+  </td></tr>
+</table><p style=&quot;margin:0 0 12px;font:400 13px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#64748B;&quot;>Button not working? Copy this link into your browser:<br><a href=&quot;https://jobboardsreview.com/directory&quot; style=&quot;color:#64748B;word-break:break-all;&quot;>https://jobboardsreview.com/directory</a></p>
+      </td></tr>
+      <tr><td style=&quot;padding:20px 4px 0;&quot;>
+        <p style=&quot;margin:0 0 12px;font:400 13px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#64748B;&quot;>Didn't request this? Ignore this email and your address stays the same.</p>
+        <p style=&quot;margin:0 0 12px;font:400 13px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#64748B;&quot;>JobBoardsReview · Compare &amp;amp; review US job boards · <a href=&quot;https://jobboardsreview.com&quot; style=&quot;color:#FF5630;font-weight:600;text-decoration:underline;word-break:break-all;&quot;>jobboardsreview.com</a></p>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>
+" title="Confirm your new email address" loading="lazy"></iframe>
+</section>
+<section>
+  <div class="meta"><span class="tag">Sent by site</span>
+  <div class="subj">Thanks, your review of Vivian Health is in</div><div class="pre">Our team reads every review before it goes live.</div><code>transactional/review-received.html</code></div>
+  <iframe srcdoc="<!doctype html>
+<html lang=&quot;en&quot;>
+<head>
+<meta charset=&quot;utf-8&quot;>
+<meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;>
+<meta name=&quot;color-scheme&quot; content=&quot;light&quot;>
+<title>Thanks, your review of Vivian Health is in</title>
+</head>
+<body style=&quot;margin:0;padding:0;background:#FCFBF8;&quot;>
+<div style=&quot;display:none;max-height:0;overflow:hidden;opacity:0;&quot;>Our team reads every review before it goes live.</div>
+<table role=&quot;presentation&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; width=&quot;100%&quot; style=&quot;background:#FCFBF8;&quot;>
+  <tr><td align=&quot;center&quot; style=&quot;padding:32px 16px;&quot;>
+    <table role=&quot;presentation&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; width=&quot;100%&quot; style=&quot;max-width:560px;&quot;>
+      <tr><td style=&quot;padding:0 4px 20px;&quot;>
+        <a href=&quot;https://jobboardsreview.com&quot; style=&quot;text-decoration:none;font:800 20px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#0F172A;&quot;>Job<span style=&quot;color:#FF5630;&quot;>Boards</span>Review</a>
+      </td></tr>
+      <tr><td style=&quot;background:#FFFFFF;border:1px solid #E2E8F0;border-radius:16px;padding:32px 28px;&quot;>
+        <h1 style=&quot;margin:0 0 16px;font:800 26px/1.25 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#0F172A;&quot;>Thanks for reviewing Vivian Health</h1><p style=&quot;margin:0 0 16px;font:400 16px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#334155;&quot;>Hi Maria,</p><p style=&quot;margin:0 0 16px;font:400 16px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#334155;&quot;>Your review is with our team. We read every review before it goes live, so recruiters can trust what they find on JobBoardsReview.</p>
+<table role=&quot;presentation&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; style=&quot;width:100%;margin:0 0 24px;&quot;>
+  <tr><td style=&quot;background:#FCFBF8;border:1px solid #E2E8F0;border-radius:12px;padding:16px 20px;font:400 15px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#334155;&quot;><strong style=&quot;color:#0F172A;&quot;>What you sent</strong><br>4 / 5 · &amp;ldquo;Strong for travel RN roles, slower for allied&amp;rdquo;</td></tr>
+</table><p style=&quot;margin:0 0 16px;font:400 16px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#334155;&quot;>We'll email you as soon as it's published. If you spot something you want to change, reply to this email.</p>
+      </td></tr>
+      <tr><td style=&quot;padding:20px 4px 0;&quot;>
+        
+        <p style=&quot;margin:0 0 12px;font:400 13px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#64748B;&quot;>JobBoardsReview · Compare &amp;amp; review US job boards · <a href=&quot;https://jobboardsreview.com&quot; style=&quot;color:#FF5630;font-weight:600;text-decoration:underline;word-break:break-all;&quot;>jobboardsreview.com</a></p>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>
+" title="Thanks, your review of {{board_name}} is in" loading="lazy"></iframe>
+</section>
+<section>
+  <div class="meta"><span class="tag">Sent by site</span>
+  <div class="subj">Your review of Vivian Health is live</div><div class="pre">Other recruiters can now see what you learned.</div><code>transactional/review-published.html</code></div>
+  <iframe srcdoc="<!doctype html>
+<html lang=&quot;en&quot;>
+<head>
+<meta charset=&quot;utf-8&quot;>
+<meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;>
+<meta name=&quot;color-scheme&quot; content=&quot;light&quot;>
+<title>Your review of Vivian Health is live</title>
+</head>
+<body style=&quot;margin:0;padding:0;background:#FCFBF8;&quot;>
+<div style=&quot;display:none;max-height:0;overflow:hidden;opacity:0;&quot;>Other recruiters can now see what you learned.</div>
+<table role=&quot;presentation&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; width=&quot;100%&quot; style=&quot;background:#FCFBF8;&quot;>
+  <tr><td align=&quot;center&quot; style=&quot;padding:32px 16px;&quot;>
+    <table role=&quot;presentation&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; width=&quot;100%&quot; style=&quot;max-width:560px;&quot;>
+      <tr><td style=&quot;padding:0 4px 20px;&quot;>
+        <a href=&quot;https://jobboardsreview.com&quot; style=&quot;text-decoration:none;font:800 20px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#0F172A;&quot;>Job<span style=&quot;color:#FF5630;&quot;>Boards</span>Review</a>
+      </td></tr>
+      <tr><td style=&quot;background:#FFFFFF;border:1px solid #E2E8F0;border-radius:16px;padding:32px 28px;&quot;>
+        <h1 style=&quot;margin:0 0 16px;font:800 26px/1.25 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#0F172A;&quot;>Your review is live</h1><p style=&quot;margin:0 0 16px;font:400 16px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#334155;&quot;>Hi Maria,</p><p style=&quot;margin:0 0 16px;font:400 16px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#334155;&quot;>Your review of <strong>Vivian Health</strong> is now on its page, helping other recruiters decide where their budget goes.</p>
+<table role=&quot;presentation&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; style=&quot;margin:8px 0 24px;&quot;>
+  <tr><td style=&quot;border-radius:12px;background:#FF5630;&quot;>
+    <a href=&quot;https://jobboardsreview.com/board/vivian#reviews&quot; style=&quot;display:inline-block;padding:14px 28px;font:700 16px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#FFFFFF;text-decoration:none;border-radius:12px;&quot;>See your review</a>
+  </td></tr>
+</table><p style=&quot;margin:0 0 16px;font:400 16px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#334155;&quot;>Used other boards this year? Each review you add makes the comparison fairer for everyone hiring.</p><p style=&quot;margin:0 0 16px;font:400 16px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#334155;&quot;><a href=&quot;https://jobboardsreview.com/directory&quot; style=&quot;color:#FF5630;font-weight:600;text-decoration:underline;word-break:break-all;&quot;>Review another board</a></p>
+      </td></tr>
+      <tr><td style=&quot;padding:20px 4px 0;&quot;>
+        
+        <p style=&quot;margin:0 0 12px;font:400 13px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#64748B;&quot;>JobBoardsReview · Compare &amp;amp; review US job boards · <a href=&quot;https://jobboardsreview.com&quot; style=&quot;color:#FF5630;font-weight:600;text-decoration:underline;word-break:break-all;&quot;>jobboardsreview.com</a></p>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>
+" title="Your review of {{board_name}} is live" loading="lazy"></iframe>
+</section>
+<section>
+  <div class="meta"><span class="tag">Sent by site</span>
+  <div class="subj">We've received your listing for Vivian Health</div><div class="pre">Here's what happens next.</div><code>transactional/listing-received.html</code></div>
+  <iframe srcdoc="<!doctype html>
+<html lang=&quot;en&quot;>
+<head>
+<meta charset=&quot;utf-8&quot;>
+<meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;>
+<meta name=&quot;color-scheme&quot; content=&quot;light&quot;>
+<title>We've received your listing for Vivian Health</title>
+</head>
+<body style=&quot;margin:0;padding:0;background:#FCFBF8;&quot;>
+<div style=&quot;display:none;max-height:0;overflow:hidden;opacity:0;&quot;>Here's what happens next.</div>
+<table role=&quot;presentation&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; width=&quot;100%&quot; style=&quot;background:#FCFBF8;&quot;>
+  <tr><td align=&quot;center&quot; style=&quot;padding:32px 16px;&quot;>
+    <table role=&quot;presentation&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; width=&quot;100%&quot; style=&quot;max-width:560px;&quot;>
+      <tr><td style=&quot;padding:0 4px 20px;&quot;>
+        <a href=&quot;https://jobboardsreview.com&quot; style=&quot;text-decoration:none;font:800 20px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#0F172A;&quot;>Job<span style=&quot;color:#FF5630;&quot;>Boards</span>Review</a>
+      </td></tr>
+      <tr><td style=&quot;background:#FFFFFF;border:1px solid #E2E8F0;border-radius:16px;padding:32px 28px;&quot;>
+        <h1 style=&quot;margin:0 0 16px;font:800 26px/1.25 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#0F172A;&quot;>Thanks for listing Vivian Health</h1><p style=&quot;margin:0 0 16px;font:400 16px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#334155;&quot;>Hi Maria,</p><p style=&quot;margin:0 0 16px;font:400 16px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#334155;&quot;>We've received your submission. Someone on our team checks every listing by hand before it goes live. Here's what happens next:</p>
+<table role=&quot;presentation&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; style=&quot;margin:0 0 20px;width:100%;&quot;>
+  <tr>
+    <td valign=&quot;top&quot; style=&quot;width:28px;padding:0 0 12px;font:800 15px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#FF5630;&quot;>1.</td>
+    <td valign=&quot;top&quot; style=&quot;padding:0 0 12px;font:400 15px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#334155;&quot;>We check that the board is live and hiring in the US.</td>
+  </tr><tr>
+    <td valign=&quot;top&quot; style=&quot;width:28px;padding:0 0 12px;font:800 15px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#FF5630;&quot;>2.</td>
+    <td valign=&quot;top&quot; style=&quot;padding:0 0 12px;font:400 15px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#334155;&quot;>We confirm the pricing and details you sent us.</td>
+  </tr><tr>
+    <td valign=&quot;top&quot; style=&quot;width:28px;padding:0 0 12px;font:800 15px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#FF5630;&quot;>3.</td>
+    <td valign=&quot;top&quot; style=&quot;padding:0 0 12px;font:400 15px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#334155;&quot;>We email you when your page is published, or if we need anything from you.</td>
+  </tr>
+</table><p style=&quot;margin:0 0 16px;font:400 16px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#334155;&quot;>Want to add or correct something in the meantime? Just reply to this email.</p>
+      </td></tr>
+      <tr><td style=&quot;padding:20px 4px 0;&quot;>
+        
+        <p style=&quot;margin:0 0 12px;font:400 13px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#64748B;&quot;>JobBoardsReview · Compare &amp;amp; review US job boards · <a href=&quot;https://jobboardsreview.com&quot; style=&quot;color:#FF5630;font-weight:600;text-decoration:underline;word-break:break-all;&quot;>jobboardsreview.com</a></p>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>
+" title="We've received your listing for {{board_name}}" loading="lazy"></iframe>
+</section>
+<section>
+  <div class="meta"><span class="tag">Sent by site</span>
+  <div class="subj">Vivian Health is approved for JobBoardsReview</div><div class="pre">Your page goes up with our next site update. Two things will help it most.</div><code>transactional/listing-approved.html</code></div>
+  <iframe srcdoc="<!doctype html>
+<html lang=&quot;en&quot;>
+<head>
+<meta charset=&quot;utf-8&quot;>
+<meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;>
+<meta name=&quot;color-scheme&quot; content=&quot;light&quot;>
+<title>Vivian Health is approved for JobBoardsReview</title>
+</head>
+<body style=&quot;margin:0;padding:0;background:#FCFBF8;&quot;>
+<div style=&quot;display:none;max-height:0;overflow:hidden;opacity:0;&quot;>Your page goes up with our next site update. Two things will help it most.</div>
+<table role=&quot;presentation&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; width=&quot;100%&quot; style=&quot;background:#FCFBF8;&quot;>
+  <tr><td align=&quot;center&quot; style=&quot;padding:32px 16px;&quot;>
+    <table role=&quot;presentation&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; width=&quot;100%&quot; style=&quot;max-width:560px;&quot;>
+      <tr><td style=&quot;padding:0 4px 20px;&quot;>
+        <a href=&quot;https://jobboardsreview.com&quot; style=&quot;text-decoration:none;font:800 20px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#0F172A;&quot;>Job<span style=&quot;color:#FF5630;&quot;>Boards</span>Review</a>
+      </td></tr>
+      <tr><td style=&quot;background:#FFFFFF;border:1px solid #E2E8F0;border-radius:16px;padding:32px 28px;&quot;>
+        <h1 style=&quot;margin:0 0 16px;font:800 26px/1.25 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#0F172A;&quot;>Vivian Health is approved</h1><p style=&quot;margin:0 0 16px;font:400 16px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#334155;&quot;>Hi Maria,</p><p style=&quot;margin:0 0 16px;font:400 16px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#334155;&quot;>Good news: we've approved your listing. Your page goes up with our next site update, at this address:</p><p style=&quot;margin:0 0 16px;font:400 16px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#334155;&quot;><a href=&quot;https://jobboardsreview.com/board/vivian&quot; style=&quot;color:#FF5630;font-weight:600;text-decoration:underline;word-break:break-all;&quot;>https://jobboardsreview.com/board/vivian</a></p><p style=&quot;margin:0 0 16px;font:400 16px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#334155;&quot;><strong style=&quot;color:#0F172A;&quot;>Recruiters compare boards on price and on results, so two things help your page most:</strong></p>
+<table role=&quot;presentation&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; style=&quot;margin:0 0 20px;width:100%;&quot;>
+  <tr>
+    <td valign=&quot;top&quot; style=&quot;width:28px;padding:0 0 12px;font:800 15px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#FF5630;&quot;>1.</td>
+    <td valign=&quot;top&quot; style=&quot;padding:0 0 12px;font:400 15px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#334155;&quot;><strong>Keep your pricing current.</strong> When your rates change, reply to this email and we'll update the page.</td>
+  </tr><tr>
+    <td valign=&quot;top&quot; style=&quot;width:28px;padding:0 0 12px;font:800 15px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#FF5630;&quot;>2.</td>
+    <td valign=&quot;top&quot; style=&quot;padding:0 0 12px;font:400 15px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#334155;&quot;><strong>Ask recruiters who've hired through you for a review.</strong> Send them this link: <a href=&quot;https://jobboardsreview.com/board/vivian#reviews&quot; style=&quot;color:#FF5630;font-weight:600;text-decoration:underline;word-break:break-all;&quot;>https://jobboardsreview.com/board/vivian#reviews</a></td>
+  </tr>
+</table>
+      </td></tr>
+      <tr><td style=&quot;padding:20px 4px 0;&quot;>
+        
+        <p style=&quot;margin:0 0 12px;font:400 13px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#64748B;&quot;>JobBoardsReview · Compare &amp;amp; review US job boards · <a href=&quot;https://jobboardsreview.com&quot; style=&quot;color:#FF5630;font-weight:600;text-decoration:underline;word-break:break-all;&quot;>jobboardsreview.com</a></p>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>
+" title="{{board_name}} is approved for JobBoardsReview" loading="lazy"></iframe>
+</section>
+<section>
+  <div class="meta"><span class="tag">Sent by site</span>
+  <div class="subj">[JBR] New review waiting: Vivian Health</div><div class="pre">Something needs your approval.</div><code>transactional/admin-alert.html</code></div>
+  <iframe srcdoc="<!doctype html>
+<html lang=&quot;en&quot;>
+<head>
+<meta charset=&quot;utf-8&quot;>
+<meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;>
+<meta name=&quot;color-scheme&quot; content=&quot;light&quot;>
+<title>[JBR] New review waiting: Vivian Health</title>
+</head>
+<body style=&quot;margin:0;padding:0;background:#FCFBF8;&quot;>
+<div style=&quot;display:none;max-height:0;overflow:hidden;opacity:0;&quot;>Something needs your approval.</div>
+<table role=&quot;presentation&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; width=&quot;100%&quot; style=&quot;background:#FCFBF8;&quot;>
+  <tr><td align=&quot;center&quot; style=&quot;padding:32px 16px;&quot;>
+    <table role=&quot;presentation&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; width=&quot;100%&quot; style=&quot;max-width:560px;&quot;>
+      <tr><td style=&quot;padding:0 4px 20px;&quot;>
+        <a href=&quot;https://jobboardsreview.com&quot; style=&quot;text-decoration:none;font:800 20px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#0F172A;&quot;>Job<span style=&quot;color:#FF5630;&quot;>Boards</span>Review</a>
+      </td></tr>
+      <tr><td style=&quot;background:#FFFFFF;border:1px solid #E2E8F0;border-radius:16px;padding:32px 28px;&quot;>
+        <h1 style=&quot;margin:0 0 16px;font:800 26px/1.25 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#0F172A;&quot;>New review waiting</h1>
+<table role=&quot;presentation&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; style=&quot;width:100%;margin:0 0 24px;&quot;>
+  <tr><td style=&quot;background:#FCFBF8;border:1px solid #E2E8F0;border-radius:12px;padding:16px 20px;font:400 15px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#334155;&quot;><strong style=&quot;color:#0F172A;&quot;>Board:</strong> Vivian Health<br><strong style=&quot;color:#0F172A;&quot;>From:</strong> maria@staffingco.com<br><strong style=&quot;color:#0F172A;&quot;>Submitted:</strong> 16 Nov 2026, 10:42</td></tr>
+</table>
+<table role=&quot;presentation&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; style=&quot;margin:8px 0 24px;&quot;>
+  <tr><td style=&quot;border-radius:12px;background:#FF5630;&quot;>
+    <a href=&quot;https://supabase.com/dashboard&quot; style=&quot;display:inline-block;padding:14px 28px;font:700 16px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#FFFFFF;text-decoration:none;border-radius:12px;&quot;>Open in Supabase</a>
+  </td></tr>
+</table><p style=&quot;margin:0 0 12px;font:400 13px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#64748B;&quot;>To approve a listing: run <code>npm run dev</code>, open /admin, approve, then commit and push.</p>
+      </td></tr>
+      <tr><td style=&quot;padding:20px 4px 0;&quot;>
+        
+        <p style=&quot;margin:0 0 12px;font:400 13px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#64748B;&quot;>JobBoardsReview · Compare &amp;amp; review US job boards · <a href=&quot;https://jobboardsreview.com&quot; style=&quot;color:#FF5630;font-weight:600;text-decoration:underline;word-break:break-all;&quot;>jobboardsreview.com</a></p>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>
+" title="[JBR] New {{item_type}} waiting: {{board_name}}" loading="lazy"></iframe>
+</section>
+</main></body></html>
