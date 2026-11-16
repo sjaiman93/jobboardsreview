@@ -70,6 +70,8 @@ export default async function AdminPage({ searchParams }) {
         pricingInfo: sub.pricing_info,
         freeTrial: sub.free_trial,
         claimListing: sub.claim_listing,
+        // "domain_match" | "needs_verification" | null (set for claims since Nov 2026)
+        ownerVerification: sub.owner_verification || null,
         linkedinPage: sub.linkedin_page,
         status: sub.status
       }));

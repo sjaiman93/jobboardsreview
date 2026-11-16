@@ -11,6 +11,8 @@ import { ADMIN_COOKIE_NAME, ADMIN_SESSION_DAYS, createAdminSession, isAllowedAdm
 import { sendEmail, notifyAdmin, firstNameFrom, boardUrl } from "@/lib/email";
 import { isAdmin, NOT_AUTHORIZED, isLocalDev, LOCAL_ONLY } from "@/lib/requireAdmin";
 import { readRepoFile, listRepoDir, commitRepoFiles, canWriteRepo } from "@/lib/repoFiles";
+import { isOwnerDomain } from "@/lib/emailDomain";
+import { verifyTurnstileToken } from "@/app/actions/turnstile";
 
 // Exchange a signed-in site user's Supabase access token for an admin
 // session, if their email is on the ADMIN_EMAILS allow-list.
@@ -560,12 +562,38 @@ export async function submitBoardProposal(submission) {
     return { success: false, error: "Too many requests. Please try again in an hour." };
   }
 
-  const { website_hp, formLoadTime, ...cleanSubmission } = submission;
+  const { website_hp, formLoadTime, token, turnstileToken, ...cleanSubmission } = submission;
+
+  // Spam check on the server (a browser-only check can be skipped).
+  if (!(await verifyTurnstileToken(turnstileToken))) {
+    return { success: false, error: "Security check failed. Please refresh and try again." };
+  }
+
+  const { supabaseAdmin } = await import("@/lib/supabase");
+  if (!supabaseAdmin) return { success: false, error: "Database connection failed." };
+
+  // Claiming a listing requires a signed-in account. The contact email is
+  // the account's (verified) email, not whatever was typed, and a domain
+  // match with the board's website marks the claim as a likely owner.
+  let claimant = null;
+  if (cleanSubmission.claimListing) {
+    if (token) {
+      const { data } = await supabaseAdmin.auth.getUser(token);
+      claimant = data?.user || null;
+    }
+    if (!claimant?.email) {
+      return { success: false, error: "Please sign in to claim and manage a listing." };
+    }
+  }
+  const contactEmail = claimant ? claimant.email.toLowerCase() : cleanSubmission.contactEmail;
+  const ownerVerification = claimant
+    ? isOwnerDomain(contactEmail, cleanSubmission.websiteUrl) ? "domain_match" : "needs_verification"
+    : null;
 
   const dbPayload = {
     submitter_type: cleanSubmission.submitterType,
     contact_name: cleanSubmission.contactName,
-    contact_email: cleanSubmission.contactEmail,
+    contact_email: contactEmail,
     board_name: cleanSubmission.boardName,
     tool_type: cleanSubmission.toolType,
     website_url: cleanSubmission.websiteUrl,
@@ -578,12 +606,18 @@ export async function submitBoardProposal(submission) {
     free_trial: cleanSubmission.freeTrial,
     claim_listing: cleanSubmission.claimListing,
     linkedin_page: cleanSubmission.linkedinPage,
-    status: 'pending'
+    status: 'pending',
+    user_id: claimant?.id || null,
+    owner_verification: ownerVerification,
   };
 
   try {
-    const { supabaseAdmin } = await import('@/lib/supabase');
-    const { error } = await supabaseAdmin.from('board_submissions').insert([dbPayload]);
+    let { error } = await supabaseAdmin.from('board_submissions').insert([dbPayload]);
+    if (error && (error.code === "PGRST204" || /column/i.test(error.message || ""))) {
+      // Ownership migration not run yet: save without the new columns.
+      const { user_id, owner_verification, ...legacy } = dbPayload;
+      ({ error } = await supabaseAdmin.from('board_submissions').insert([legacy]));
+    }
     if (error) {
       console.error("Supabase insert error:", error);
       return { success: false, error: "Database error." };
@@ -594,15 +628,20 @@ export async function submitBoardProposal(submission) {
   }
 
   // Emails never fail the submission (sendEmail does not throw).
+  const itemType = !claimant
+    ? "listing"
+    : ownerVerification === "domain_match"
+      ? "listing claim (email matches the board's domain)"
+      : "listing claim (needs verification)";
   await Promise.all([
     sendEmail("listing-received", dbPayload.contact_email, {
       first_name: firstNameFrom(dbPayload.contact_name),
       board_name: dbPayload.board_name,
     }),
-    notifyAdmin({ itemType: "listing", boardName: dbPayload.board_name, submitterEmail: dbPayload.contact_email }),
+    notifyAdmin({ itemType, boardName: dbPayload.board_name, submitterEmail: dbPayload.contact_email }),
   ]);
 
-  return { success: true };
+  return { success: true, ownerVerification };
 }
 
 export async function approveSubmissionAction(submissionId) {

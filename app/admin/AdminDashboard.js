@@ -10,6 +10,18 @@ import "react-quill/dist/quill.snow.css";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
+// Ownership claim status (set by submitBoardProposal for signed-in claims).
+function ClaimBadge({ verification, large = false }) {
+  const size = large ? "px-3 py-1 text-xs" : "px-2 py-0.5 text-[10px]";
+  if (verification === "domain_match") {
+    return <span className={`inline-flex items-center rounded-full font-bold bg-teal-50 text-teal-700 border border-teal-100 ${size}`}>Verified owner (domain)</span>;
+  }
+  if (verification === "needs_verification") {
+    return <span className={`inline-flex items-center rounded-full font-bold bg-amber-50 text-amber-800 border border-amber-200 ${size}`}>Needs verification</span>;
+  }
+  return <span className={`inline-flex items-center rounded-full font-bold bg-slate-100 text-slate-600 border border-slate-200 ${size}`}>Claim (unverified)</span>;
+}
+
 export default function AdminDashboard({ boards, editingBoard, editProsCons, editTags, editSlug, siteContent, blogs = [], submissions = [], reviews = [], canEditFiles = true }) {
   const [activeTab, setActiveTab] = useState("jobBoards");
   const [isSaving, setIsSaving] = useState(false);
@@ -486,7 +498,7 @@ export default function AdminDashboard({ boards, editingBoard, editProsCons, edi
                           </td>
                           <td className="py-5 px-4">
                             {sub.claimListing ? (
-                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-teal-50 text-teal-700 border border-teal-100">Yes</span>
+                              <ClaimBadge verification={sub.ownerVerification} />
                             ) : (
                               <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-50 text-slate-400 border border-slate-100">No</span>
                             )}
@@ -839,9 +851,16 @@ export default function AdminDashboard({ boards, editingBoard, editProsCons, edi
                   <div>
                     <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Wants to Claim Profile</span>
                     {selectedSubmission.claimListing ? (
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-teal-50 text-teal-700 border border-teal-100">
-                        Yes, represents company
-                      </span>
+                      <div className="space-y-1.5">
+                        <ClaimBadge verification={selectedSubmission.ownerVerification} large />
+                        <p className="text-xs text-slate-500 font-medium">
+                          {selectedSubmission.ownerVerification === "domain_match"
+                            ? "Signed in with an email on the board's own domain."
+                            : selectedSubmission.ownerVerification === "needs_verification"
+                              ? "Signed in, but the email doesn't match the board's website. Check their LinkedIn before approving."
+                              : "Submitted before sign-in was required for claims: not verified."}
+                        </p>
+                      </div>
                     ) : (
                       <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-slate-50 text-slate-400 border border-slate-100">
                         No, community submission

@@ -1,12 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { getAllCategories } from "@/data/jobBoards";
 import { submitBoardProposal } from "@/app/admin/actions";
 import CustomSelect from "@/components/CustomSelect";
 import { Turnstile } from '@marsidev/react-turnstile';
-import { validateClientTurnstile } from "@/app/actions/turnstile";
+import { supabase } from "@/lib/supabase";
+import { isOwnerDomain, websiteHost, FREE_EMAIL_DOMAINS, emailDomain } from "@/lib/emailDomain";
+
+// Saved before sending someone to sign in, restored when they come back,
+// so a half-filled form isn't lost.
+const DRAFT_KEY = "jbr_claim_listing_draft";
 
 export default function ClaimListingPage() {
   const categories = getAllCategories();
@@ -64,6 +69,67 @@ export default function ClaimListingPage() {
   // Validation State
   const [errors, setErrors] = useState({});
 
+  // Signed-in account (required to claim a listing).
+  const [session, setSession] = useState(null);
+
+  // Security-check tokens are single-use: reset the widget after a failed send.
+  const turnstileRef = useRef(null);
+  function resetTurnstile() {
+    setTurnstileToken("");
+    turnstileRef.current?.reset();
+  }
+
+  const draftFields = {
+    submitterType: [submitterType, setSubmitterType], contactName: [contactName, setContactName],
+    contactEmail: [contactEmail, setContactEmail], boardName: [boardName, setBoardName],
+    toolType: [toolType, setToolType], websiteUrl: [websiteUrl, setWebsiteUrl],
+    categorySlug: [categorySlug, setCategorySlug], bestFor: [bestFor, setBestFor],
+    shortDescription: [shortDescription, setShortDescription], targetAudience: [targetAudience, setTargetAudience],
+    pricingModel: [pricingModel, setPricingModel], pricingInfo: [pricingInfo, setPricingInfo],
+    freeTrial: [freeTrial, setFreeTrial], claimListing: [claimListing, setClaimListing],
+    linkedinPage: [linkedinPage, setLinkedinPage],
+  };
+
+  function prefillFrom(user) {
+    if (!user) return;
+    const meta = user.user_metadata || {};
+    setContactName((v) => v || meta.full_name || meta.name || "");
+    setContactEmail((v) => v || user.email || "");
+  }
+
+  useEffect(() => {
+    // Restore a draft saved before signing in.
+    try {
+      const saved = JSON.parse(sessionStorage.getItem(DRAFT_KEY) || "null");
+      if (saved) {
+        for (const [k, v] of Object.entries(saved)) draftFields[k]?.[1](v);
+        sessionStorage.removeItem(DRAFT_KEY);
+      }
+    } catch {}
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      prefillFrom(session?.user);
+    });
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => {
+      setSession(s);
+      prefillFrom(s?.user);
+    });
+    return () => sub.subscription.unsubscribe();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  function saveDraftAndSignIn() {
+    try {
+      sessionStorage.setItem(DRAFT_KEY, JSON.stringify(Object.fromEntries(Object.entries(draftFields).map(([k, [v]]) => [k, v]))));
+    } catch {}
+    window.location.href = "/join?next=/claim-listing";
+  }
+
+  // When claiming, the account email is the one we verify.
+  const claimEmail = claimListing && session ? session.user.email : null;
+  const claimDomainMatch = claimEmail && websiteUrl.trim() ? isOwnerDomain(claimEmail, websiteUrl) : null;
+
   const audiences = [
     "Staffing Agencies",
     "Internal TA Teams",
@@ -86,6 +152,8 @@ export default function ClaimListingPage() {
     const newErrors = {};
 
     // Required Field Validation
+    if (claimListing && !session) newErrors.claim = "Please sign in to claim and manage this listing.";
+    if (!turnstileToken) newErrors.submit = "Please complete the security check.";
     if (!submitterType) newErrors.submitterType = "Please select who you are submitting as.";
     if (!contactName.trim()) newErrors.contactName = "Contact Name is required.";
     
@@ -167,20 +235,8 @@ export default function ClaimListingPage() {
       return;
     }
 
+    // The security check is verified on the server with the submission.
     setIsSubmitting(true);
-
-    try {
-      const turnstileValid = await validateClientTurnstile(turnstileToken);
-      if (!turnstileValid.success) {
-        setErrors({ submit: "Bot detected. Please try again." });
-        setIsSubmitting(false);
-        return;
-      }
-    } catch (err) {
-      setErrors({ submit: "Validation error." });
-      setIsSubmitting(false);
-      return;
-    }
 
     // Normalize URLs before sending
     const normalizeUrl = (url) => {
@@ -197,7 +253,7 @@ export default function ClaimListingPage() {
     const submissionPayload = {
       submitterType,
       contactName: contactName.trim(),
-      contactEmail: contactEmail.trim().toLowerCase(),
+      contactEmail: (claimEmail || contactEmail).trim().toLowerCase(),
       boardName: boardName.trim(),
       toolType,
       websiteUrl: normalizeUrl(websiteUrl),
@@ -213,6 +269,8 @@ export default function ClaimListingPage() {
       linkedinPage: normalizeUrl(linkedinPage),
       website_hp: honeypot,
       formLoadTime,
+      turnstileToken,
+      token: claimListing ? session?.access_token || null : null,
     };
 
     try {
@@ -222,9 +280,11 @@ export default function ClaimListingPage() {
         window.scrollTo({ top: 0, behavior: "smooth" });
       } else {
         setErrors({ submit: result.error || "An error occurred while saving." });
+        resetTurnstile();
       }
     } catch (err) {
       setErrors({ submit: "A network error occurred. Please try again." });
+      resetTurnstile();
     } finally {
       setIsSubmitting(false);
     }
@@ -368,11 +428,15 @@ export default function ClaimListingPage() {
                     <input
                       type="email"
                       id="contactEmail"
-                      value={contactEmail}
+                      value={claimEmail || contactEmail}
                       onChange={(e) => setContactEmail(e.target.value)}
+                      readOnly={!!claimEmail}
                       placeholder="jane@company.com"
-                      className="w-full px-6 py-4 bg-slate-50 border-2 border-transparent rounded-[20px] outline-none transition-all focus:border-[#FF5630] focus:bg-white text-base font-medium focus:placeholder-transparent placeholder:text-slate-400"
+                      className="w-full px-6 py-4 bg-slate-50 border-2 border-transparent rounded-[20px] outline-none transition-all focus:border-[#FF5630] focus:bg-white text-base font-medium focus:placeholder-transparent placeholder:text-slate-400 read-only:text-slate-500 read-only:cursor-not-allowed"
                     />
+                    {claimEmail && (
+                      <p className="text-xs font-medium text-slate-400 ml-1">Your sign-in email. Claims use it to verify you.</p>
+                    )}
                     {errors.contactEmail && <p className="text-red-500 text-xs font-bold ml-1">{errors.contactEmail}</p>}
                   </div>
 
@@ -586,13 +650,47 @@ export default function ClaimListingPage() {
                       I represent this company and would like to manage this profile.
                     </span>
                   </label>
+
+                  {claimListing && !session && (
+                    <div className="mt-4 p-5 rounded-[20px] bg-amber-50 border border-amber-200 text-sm text-amber-900">
+                      <p className="font-bold mb-3">Sign in to claim this listing.</p>
+                      <p className="font-medium mb-4">
+                        We verify owners through their sign-in email. Your answers so far are kept while you sign in.
+                      </p>
+                      <button
+                        type="button"
+                        onClick={saveDraftAndSignIn}
+                        className="px-5 py-2.5 rounded-xl bg-[#FF5630] text-white font-black text-sm hover:opacity-90"
+                      >
+                        Sign in to continue
+                      </button>
+                    </div>
+                  )}
+
+                  {claimEmail && claimDomainMatch === true && (
+                    <p className="mt-4 p-4 rounded-[20px] bg-teal-50 border border-teal-100 text-sm font-bold text-teal-800">
+                      Your email matches {websiteHost(websiteUrl)}, so we can verify you as the owner quickly.
+                    </p>
+                  )}
+                  {claimEmail && claimDomainMatch === false && (
+                    <p className="mt-4 p-4 rounded-[20px] bg-slate-50 border border-slate-200 text-sm font-medium text-slate-600">
+                      {FREE_EMAIL_DOMAINS.has(emailDomain(claimEmail))
+                        ? "You're signed in with a personal email,"
+                        : `Your email domain doesn't match ${websiteHost(websiteUrl) || "the website"},`}{" "}
+                      so we'll verify you manually, for example through your LinkedIn company page. Signing in with your
+                      company email speeds this up.
+                    </p>
+                  )}
+                  {errors.claim && <p className="mt-2 text-red-500 text-xs font-bold ml-1">{errors.claim}</p>}
                 </div>
 
                 {/* Submit Button */}
                   <div className="flex justify-start">
-                    <Turnstile 
-                      siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY} 
+                    <Turnstile
+                      ref={turnstileRef}
+                      siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
                       onSuccess={(token) => setTurnstileToken(token)}
+                      onExpire={() => setTurnstileToken("")}
                     />
                   </div>
 

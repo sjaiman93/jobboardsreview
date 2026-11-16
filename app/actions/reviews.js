@@ -6,6 +6,7 @@ import { getAllBoards } from "@/data/jobBoards";
 import { REVIEWS_TAG } from "@/lib/reviews";
 import { sendEmail, notifyAdmin, firstNameFrom, boardUrl } from "@/lib/email";
 import { verifyTurnstileToken } from "@/app/actions/turnstile";
+import { isWorkEmail, isOwnerDomain } from "@/lib/emailDomain";
 
 // Publishing rules
 // - Signed-in members: published immediately, including people whose email
@@ -17,37 +18,7 @@ import { verifyTurnstileToken } from "@/app/actions/turnstile";
 // - One review per person per board (also enforced by unique indexes in
 //   supabase/migrations/20261116_reviews_instant.sql).
 
-const FREE_EMAIL_DOMAINS = new Set([
-  "gmail.com", "googlemail.com", "yahoo.com", "yahoo.co.in", "yahoo.co.uk", "ymail.com",
-  "hotmail.com", "outlook.com", "live.com", "msn.com", "aol.com", "icloud.com", "me.com",
-  "mac.com", "proton.me", "protonmail.com", "gmx.com", "gmx.net", "mail.com", "zoho.com",
-  "yandex.com", "rediffmail.com", "fastmail.com", "hey.com", "tutanota.com", "pm.me",
-]);
-
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-function emailDomain(email) {
-  return String(email || "").split("@")[1]?.toLowerCase().trim() || "";
-}
-
-function isWorkEmail(email) {
-  const d = emailDomain(email);
-  return !!d && !FREE_EMAIL_DOMAINS.has(d);
-}
-
-// True when the reviewer's email domain is the board's own domain, e.g.
-// someone@dice.com reviewing Dice (dice.com / www.dice.com / jobs.dice.com).
-function isOwnerDomain(email, website) {
-  const d = emailDomain(email);
-  if (!d || FREE_EMAIL_DOMAINS.has(d)) return false;
-  let host = "";
-  try {
-    host = new URL(website).hostname.toLowerCase().replace(/^www\./, "");
-  } catch {
-    return false;
-  }
-  return d === host || host.endsWith("." + d) || d.endsWith("." + host);
-}
 
 const rateLimitCache = new Map();
 
