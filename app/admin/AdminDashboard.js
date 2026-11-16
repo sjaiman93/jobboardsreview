@@ -4,12 +4,13 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import CsvTools from "./CsvTools";
+import ReviewQueue from "./ReviewQueue";
 import { saveBoard, saveSiteContentAction, saveBlogAction, approveSubmissionAction, updateSubmissionStatusAction, hardDeleteSubmissionAction, adminLogoutAction } from "./actions";
 import "react-quill/dist/quill.snow.css";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
-export default function AdminDashboard({ boards, editingBoard, editProsCons, editTags, editSlug, siteContent, blogs = [], submissions = [] }) {
+export default function AdminDashboard({ boards, editingBoard, editProsCons, editTags, editSlug, siteContent, blogs = [], submissions = [], reviews = [] }) {
   const [activeTab, setActiveTab] = useState("jobBoards");
   const [isSaving, setIsSaving] = useState(false);
 
@@ -260,6 +261,7 @@ export default function AdminDashboard({ boards, editingBoard, editProsCons, edi
         {[
           { id: "jobBoards", label: "Job Boards" },
           { id: "submissions", label: "Submissions" },
+          { id: "reviews", label: `Reviews${reviews.filter((r) => (r.status || "pending") === "pending").length ? ` (${reviews.filter((r) => (r.status || "pending") === "pending").length})` : ""}` },
           { id: "blog", label: "Blog" },
           { id: "homepage", label: "Homepage" },
           { id: "legalPages", label: "Legal Pages" },
@@ -371,6 +373,8 @@ export default function AdminDashboard({ boards, editingBoard, editProsCons, edi
           </div>
         </div>
       )}
+
+      {activeTab === "reviews" && <ReviewQueue reviews={reviews} />}
 
       {activeTab === "submissions" && (
         <div className="bg-white p-8 sm:p-12 rounded-[48px] card-shadow border border-slate-100 space-y-8">

@@ -54,12 +54,10 @@ submission still succeeds. A failed send never fails a submission.
 | `transactional/listing-received.html` | We've received your listing for {{board_name}} | `submitBoardProposal` (`app/admin/actions.js`) | submitter | yes |
 | `transactional/listing-approved.html` | {{board_name}} is approved for JobBoardsReview | `approveSubmissionAction`, after all writes | submitter | yes |
 | `transactional/admin-alert.html` | [JBR] New {{item_type}} waiting: {{board_name}} | both submit actions | `ADMIN_ALERT_EMAIL` | yes |
-| `transactional/review-published.html` | Your review of {{board_name}} is live | review approval | reviewer | **no**, see below |
+| `transactional/review-published.html` | Your review of {{board_name}} is live | `setReviewStatusAction` (admin → Reviews tab), first approval only | reviewer | yes |
 
-**review-published is not wired** because nothing in the site approves or shows
-Supabase reviews yet: they are saved as `pending`, and board pages only show
-`reviews` from the data files. Once reviews can be approved and shown, send it
-from that approval step with `sendEmail("review-published", ...)`.
+**review-published** is sent the first time a review is approved. The board page
+shows it within about 10 minutes (5-min page refresh + 5-min data cache).
 
 **listing-approved says "approved", not "live".** Approval happens in local
 admin, and the page only goes live after commit + push + Vercel deploy.

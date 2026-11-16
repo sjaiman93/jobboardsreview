@@ -8,6 +8,7 @@ import { validateBoardData } from "@/data/validation";
 import { getAllBoards, getAllCategories } from "@/data/jobBoards";
 import { ADMIN_COOKIE_NAME, hashPassword, getAdminPassword } from "@/lib/adminAuth";
 import { sendEmail, notifyAdmin, firstNameFrom, boardUrl } from "@/lib/email";
+import { isAdmin, NOT_AUTHORIZED } from "@/lib/requireAdmin";
 
 export async function adminLoginAction(password) {
   const adminPass = getAdminPassword();
@@ -59,6 +60,8 @@ function writeMetadataFile(filePath, exportName, data) {
 }
 
 export async function saveBoard(formData) {
+  if (!(await isAdmin())) return NOT_AUTHORIZED;
+
   const name = formData.get("name");
   const slug = formData.get("slug");
   const shortDescription = formData.get("shortDescription");
@@ -276,6 +279,8 @@ export function getBoardHighlightGroups(slug) {
 }
 
 export async function importCsvAction(csvText) {
+  if (!(await isAdmin())) return NOT_AUTHORIZED;
+
   const rows = [];
   let row = [];
   let inQuotes = false;
@@ -363,6 +368,8 @@ export async function importCsvAction(csvText) {
 }
 
 export async function saveSiteContentAction(formData, section) {
+  if (!(await isAdmin())) return NOT_AUTHORIZED;
+
   // Read current content dynamically to avoid caching issues with imports
   const filePath = path.join(process.cwd(), "data", "siteContent.js");
   let content = fs.readFileSync(filePath, "utf-8");
@@ -403,6 +410,8 @@ export async function saveSiteContentAction(formData, section) {
 }
 
 export async function saveBlogAction(formData) {
+  if (!(await isAdmin())) return NOT_AUTHORIZED;
+
   const filePath = path.join(process.cwd(), "data", "blogs.js");
   let content = fs.readFileSync(filePath, "utf-8");
   
@@ -541,6 +550,8 @@ export async function submitBoardProposal(submission) {
 }
 
 export async function approveSubmissionAction(submissionId) {
+  if (!(await isAdmin())) return NOT_AUTHORIZED;
+
   let sub;
   let supabaseAdmin;
   try {
@@ -807,6 +818,8 @@ export function getBoardHighlightGroups(slug) {
 }
 
 export async function updateSubmissionStatusAction(submissionId, status) {
+  if (!(await isAdmin())) return NOT_AUTHORIZED;
+
   try {
     const { supabaseAdmin } = await import('@/lib/supabase');
     if (!supabaseAdmin) {
@@ -832,6 +845,8 @@ export async function updateSubmissionStatusAction(submissionId, status) {
 }
 
 export async function hardDeleteSubmissionAction(submissionId) {
+  if (!(await isAdmin())) return NOT_AUTHORIZED;
+
   try {
     const { supabaseAdmin } = await import('@/lib/supabase');
     if (!supabaseAdmin) {
@@ -858,3 +873,53 @@ export async function hardDeleteSubmissionAction(submissionId) {
 
 
 
+
+// ---- Review moderation (admin, local) ----
+// Reviews live in Supabase, so approving takes effect without a deploy: board
+// pages re-read approved reviews every few minutes (see app/board/[slug]).
+export async function setReviewStatusAction(reviewId, status) {
+  if (!(await isAdmin())) return NOT_AUTHORIZED;
+  if (!["approved", "rejected", "pending"].includes(status)) {
+    return { success: false, error: "Invalid status." };
+  }
+
+  try {
+    const { supabaseAdmin } = await import("@/lib/supabase");
+    if (!supabaseAdmin) return { success: false, error: "Database client not configured." };
+
+    const { data: before, error: readErr } = await supabaseAdmin
+      .from("reviews")
+      .select("id, user_id, board_name, status")
+      .eq("id", reviewId)
+      .single();
+    if (readErr || !before) return { success: false, error: "Review not found." };
+
+    const { error: updateErr } = await supabaseAdmin
+      .from("reviews")
+      .update({ status })
+      .eq("id", reviewId);
+    if (updateErr) {
+      console.error("Review status update error:", updateErr);
+      return { success: false, error: "Failed to update review." };
+    }
+
+    // Email the reviewer only the first time a review goes live.
+    if (status === "approved" && before.status !== "approved" && before.user_id) {
+      const { data: userData } = await supabaseAdmin.auth.admin.getUserById(before.user_id);
+      const user = userData?.user;
+      const meta = user?.user_metadata || {};
+      const board = getAllBoards().find((b) => b.name === before.board_name);
+      await sendEmail("review-published", user?.email, {
+        first_name: firstNameFrom(meta.full_name || meta.name),
+        board_name: before.board_name,
+        review_url: board ? `${boardUrl(board.slug)}#reviews` : "https://jobboardsreview.com/directory",
+      });
+    }
+
+    revalidatePath("/admin");
+    return { success: true };
+  } catch (e) {
+    console.error("Error updating review status:", e);
+    return { success: false, error: "Failed to update review." };
+  }
+}

@@ -25,7 +25,9 @@ export default async function AdminPage({ searchParams }) {
     return { ...b, _pros: pc.pros || [], _cons: pc.cons || [], _tags: tgs };
   });
 
-  const editSlug = searchParams?.edit;
+  // searchParams is a Promise in Next 15+; reading it directly gave undefined,
+  // so ?edit=<slug> never loaded the board.
+  const editSlug = (await searchParams)?.edit;
   let editingBoard = null;
   let editProsCons = null;
   let editTags = null;
@@ -73,8 +75,35 @@ export default async function AdminPage({ searchParams }) {
     console.error("Error reading submissions from Supabase:", e);
   }
 
+  // Reviews for the Reviews tab, newest first, with the reviewer's email
+  // (admin-only view; never sent to public pages).
+  let reviews = [];
+  try {
+    const { supabaseAdmin } = await import("@/lib/supabase");
+    if (supabaseAdmin) {
+      const { data, error } = await supabaseAdmin
+        .from("reviews")
+        .select("id, user_id, board_name, rating, title, review_text, status, created_at")
+        .order("created_at", { ascending: false })
+        .limit(300);
+      if (error) {
+        console.error("Supabase fetch error (reviews):", error);
+      } else {
+        const emails = {};
+        for (const id of [...new Set(data.map((r) => r.user_id).filter(Boolean))]) {
+          const { data: u } = await supabaseAdmin.auth.admin.getUserById(id);
+          emails[id] = u?.user?.email || null;
+        }
+        reviews = data.map((r) => ({ ...r, reviewer_email: emails[r.user_id] || null }));
+      }
+    }
+  } catch (e) {
+    console.error("Error reading reviews from Supabase:", e);
+  }
+
   return (
-    <AdminDashboard 
+    <AdminDashboard
+      reviews={reviews}
       boards={boards}
       siteContent={siteContent}
       blogs={blogs}

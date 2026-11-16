@@ -17,6 +17,11 @@ import WriteReviewButton from "@/components/WriteReviewButton";
 import { shareMetadata } from "@/lib/shareImage";
 import { boardHasLogo, boardInitials } from "@/lib/boardLogo";
 import JsonLd, { breadcrumbs } from "@/components/JsonLd";
+import { getApprovedReviews, reviewStats } from "@/lib/reviews";
+
+// Re-render at most every 5 minutes so reviews approved in admin show up
+// without a deploy.
+export const revalidate = 300;
 
 export async function generateStaticParams() {
   return getAllBoards().map((b) => ({ slug: b.slug }));
@@ -124,7 +129,20 @@ export default async function BoardDetailPage({ params }) {
     .filter((b) => b.categorySlug === board.categorySlug && b.slug !== board.slug)
     .slice(0, 3);
 
-  const hasReviews = board.reviews && board.reviews.length > 0;
+  // Approved reviews from Supabase, plus any stored in the board's data file.
+  const dbReviews = await getApprovedReviews(board.name);
+  const reviews = [
+    ...dbReviews.map((r) => ({
+      rating: r.rating,
+      title: r.title,
+      text: r.review_text,
+      author: "Recruiter review",
+      role: new Date(r.created_at).toLocaleDateString("en-US", { month: "short", year: "numeric" }),
+    })),
+    ...(board.reviews || []),
+  ];
+  const hasReviews = reviews.length > 0;
+  const stats = reviewStats(reviews);
   const hasPricingData =
     board.pricingDetails &&
     board.pricingDetails.employerCost &&
@@ -198,7 +216,7 @@ export default async function BoardDetailPage({ params }) {
                 )}
               </div>
               <div className="flex flex-wrap items-center gap-3 mb-6">
-                <StarRating rating={board.rating} reviewCount={board.reviewCount} />
+                <StarRating rating={stats.rating} reviewCount={stats.reviewCount} />
               </div>
               <p className="text-slate-500 font-medium leading-relaxed mb-8 max-w-xl">
                 {board.shortDescription}
@@ -542,7 +560,7 @@ export default async function BoardDetailPage({ params }) {
                 </h2>
                 {hasReviews ? (
                   <div className="space-y-6">
-                    {board.reviews.map((review, i) => (
+                    {reviews.map((review, i) => (
                       <div key={i} className="bg-white p-8 rounded-[32px] border border-slate-100 card-shadow">
                         <div className="flex items-center gap-1 mb-4">
                           {Array.from({ length: review.rating }).map((_, j) => (
@@ -551,8 +569,10 @@ export default async function BoardDetailPage({ params }) {
                             </svg>
                           ))}
                         </div>
-                        <h4 className="text-slate-900 font-black text-lg mb-3">&ldquo;{review.title}&rdquo;</h4>
-                        <p className="text-sm text-slate-500 font-medium leading-relaxed mb-5">{review.text}</p>
+                        {review.title && (
+                          <h4 className="text-slate-900 font-black text-lg mb-3">&ldquo;{review.title}&rdquo;</h4>
+                        )}
+                        <p className="text-sm text-slate-500 font-medium leading-relaxed mb-5 whitespace-pre-line">{review.text}</p>
                         <p className="text-xs text-slate-400 font-bold">{review.author} · {review.role}</p>
                       </div>
                     ))}

@@ -71,6 +71,12 @@ leftover reference in one of them.
   (Stack Overflow Jobs closed 2022, Chronicle Vitae retired). A failed DNS lookup
   means the URL is wrong — it does **not** prove the board is dead. Verify before
   deleting anything.
+- **Every admin-only server action must start with `if (!(await isAdmin())) return NOT_AUTHORIZED;`**
+  (`lib/requireAdmin.js`). Server actions are public endpoints; hiding /admin
+  does not protect them.
+- **Reviews are keyed by board name** (`reviews.board_name`), not slug. Renaming a
+  board detaches its reviews unless the Supabase rows are updated too. Approved
+  reviews reach board pages within ~10 min (ISR 300s + fetch cache 300s).
 - `puppeteer` and `cheerio` are devDependencies only. They are used by the agent
   scripts, never by the site. Keep them out of `dependencies` or Vercel downloads
   Chromium on every build.
