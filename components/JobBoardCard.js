@@ -3,10 +3,11 @@
 import { useState } from "react";
 import Link from "next/link";
 import StarRating from "./StarRating";
+import { boardHasLogo, boardInitials } from "@/lib/boardLogo";
 
 export default function JobBoardCard({ board }) {
   const [imgError, setImgError] = useState(false);
-  const hasLogo = board.logo && board.logo !== "/logos/default.svg" && !imgError;
+  const hasLogo = boardHasLogo(board) && !imgError;
 
   return (
     <div className="bg-white p-5 sm:p-8 rounded-[48px] border border-slate-100 card-shadow hover:-translate-y-2 transition-all duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] group flex flex-col h-full overflow-hidden">
@@ -23,8 +24,8 @@ export default function JobBoardCard({ board }) {
             className="w-full h-full object-contain p-3.5"
           />
         ) : (
-          <span className="text-3xl font-black text-slate-600">
-            {board.name.charAt(0)}
+          <span className="text-3xl font-black text-slate-600" aria-label={board.name}>
+            {boardInitials(board.name)}
           </span>
         )}
       </Link>

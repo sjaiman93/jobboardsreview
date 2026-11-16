@@ -15,6 +15,7 @@ import Collapsible from "@/components/Collapsible";
 import StarRating from "@/components/StarRating";
 import WriteReviewButton from "@/components/WriteReviewButton";
 import { shareMetadata } from "@/lib/shareImage";
+import { boardHasLogo, boardInitials } from "@/lib/boardLogo";
 
 export async function generateStaticParams() {
   return getAllBoards().map((b) => ({ slug: b.slug }));
@@ -172,10 +173,10 @@ export default async function BoardDetailPage({ params }) {
         <div className="bg-white p-10 sm:p-12 rounded-[48px] border border-slate-100 card-shadow">
           <div className="flex flex-col sm:flex-row items-start gap-8">
             <div className="w-24 h-24 rounded-[30px] bg-slate-100 flex items-center justify-center shrink-0 overflow-hidden">
-              {board.logo && board.logo !== "/logos/default.svg" ? (
+              {boardHasLogo(board) ? (
                 <img src={board.logo} alt={board.name} className="w-full h-full object-contain p-4" />
               ) : (
-                <span className="text-4xl font-black text-slate-600">{board.name.charAt(0)}</span>
+                <span className="text-4xl font-black text-slate-600" aria-label={board.name}>{boardInitials(board.name)}</span>
               )}
             </div>
             <div className="flex-grow min-w-0">
