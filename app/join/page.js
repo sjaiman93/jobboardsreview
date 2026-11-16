@@ -43,7 +43,7 @@ export default function JoinPage() {
           data: {
             company_name: companyName,
           },
-          emailRedirectTo: `${window.location.origin}/directory`,
+          emailRedirectTo: `${window.location.origin}/`,
         }
       });
 
@@ -69,7 +69,7 @@ export default function JoinPage() {
       const { error: authError } = await supabase.auth.signInWithOAuth({
         provider: provider,
         options: {
-          redirectTo: `${window.location.origin}/directory`,
+          redirectTo: `${window.location.origin}/`,
         }
       });
       if (authError) setError(authError.message);

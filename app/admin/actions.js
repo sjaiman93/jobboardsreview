@@ -766,6 +766,10 @@ export function getBoardProsCons(slug) {
 export function getBoardDecisionTags(slug) {
   return boardDecisionTags[slug] || [];
 }
+
+export function getBoardHighlightGroups(slug) {
+  return boardHighlightGroups[slug] || null;
+}
 `;
     fs.writeFileSync(path.join(process.cwd(), "data", "index.js"), indexContent, "utf-8");
   } catch (e) {
