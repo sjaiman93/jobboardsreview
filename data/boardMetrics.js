@@ -171,10 +171,6 @@ export const boardMetrics = {
     "candidateReach": "Growing",
     "reachLabel": "Candidates"
   },
-  "lawyer-com-jobs": {
-    "candidateReach": "Growing",
-    "reachLabel": "Candidates"
-  },
   "linkedin-jobs": {
     "candidateReach": "Growing",
     "reachLabel": "Candidates"
@@ -304,6 +300,30 @@ export const boardMetrics = {
     "reachLabel": "Candidates"
   },
   "ziprecruiter": {
+    "candidateReach": "Growing",
+    "reachLabel": "Candidates"
+  },
+  "ai-gig-scout": {
+    "candidateReach": "Growing",
+    "reachLabel": "Candidates"
+  },
+  "clinic-jobs": {
+    "candidateReach": "Growing",
+    "reachLabel": "Candidates"
+  },
+  "dds-recruit": {
+    "candidateReach": "Growing",
+    "reachLabel": "Candidates"
+  },
+  "jobsboard": {
+    "candidateReach": "Growing",
+    "reachLabel": "Candidates"
+  },
+  "pro-revolution-solution": {
+    "candidateReach": "Growing",
+    "reachLabel": "Candidates"
+  },
+  "sidehustles-com": {
     "candidateReach": "Growing",
     "reachLabel": "Candidates"
   }

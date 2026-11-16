@@ -630,20 +630,6 @@ export const boardHighlightGroups = {
       "Verified Pool"
     ]
   },
-  "lawyer-com-jobs": {
-    "Hiring Type": [
-      "Full-time"
-    ],
-    "Industry Focus": [
-      "Legal"
-    ],
-    "Pricing Model": [
-      "Free Option"
-    ],
-    "Candidate Quality": [
-      "Verified Pool"
-    ]
-  },
   "linkedin-jobs": {
     "Hiring Type": [
       "Full-time"
@@ -1124,6 +1110,36 @@ export const boardHighlightGroups = {
     ],
     "Candidate Quality": [
       "Verified Pool"
+    ]
+  },
+  "ai-gig-scout": {
+    "Industry Focus": [
+      "Remote & Flexible"
+    ]
+  },
+  "clinic-jobs": {
+    "Industry Focus": [
+      "Healthcare"
+    ]
+  },
+  "dds-recruit": {
+    "Industry Focus": [
+      "Healthcare"
+    ]
+  },
+  "jobsboard": {
+    "Industry Focus": [
+      "Remote & Flexible"
+    ]
+  },
+  "pro-revolution-solution": {
+    "Industry Focus": [
+      "Healthcare"
+    ]
+  },
+  "sidehustles-com": {
+    "Industry Focus": [
+      "Remote & Flexible"
     ]
   }
 };

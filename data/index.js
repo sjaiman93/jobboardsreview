@@ -6,6 +6,7 @@ import { boardHighlightGroups } from "./boardHighlightGroups";
 import { boardMetrics } from "./boardMetrics";
 
 import accounting_jobs_today from "./jobboards/accounting-jobs-today";
+import ai_gig_scout from "./jobboards/ai-gig-scout";
 import alliedhealthjobcafe from "./jobboards/alliedhealthjobcafe";
 import alliedtravelcareers from "./jobboards/alliedtravelcareers";
 import authentic_jobs from "./jobboards/authentic-jobs";
@@ -15,9 +16,11 @@ import bluepipes from "./jobboards/bluepipes";
 import careerbuilder from "./jobboards/careerbuilder";
 import cfa_institute_jobs from "./jobboards/cfa-institute-jobs";
 import clearancejobs from "./jobboards/clearancejobs";
+import clinic_jobs from "./jobboards/clinic-jobs";
 import coroflot from "./jobboards/coroflot";
 import culinary_agents from "./jobboards/culinary-agents";
 import cybersecjobs from "./jobboards/cybersecjobs";
+import dds_recruit from "./jobboards/dds-recruit";
 import dentistjobcafe from "./jobboards/dentistjobcafe";
 import devex from "./jobboards/devex";
 import devjobsscanner from "./jobboards/devjobsscanner";
@@ -42,11 +45,11 @@ import ihire from "./jobboards/ihire";
 import incredible_health from "./jobboards/incredible-health";
 import indeed from "./jobboards/indeed";
 import intelligence_careers from "./jobboards/intelligence-careers";
+import jobsboard from "./jobboards/jobsboard";
 import journalismjobs from "./jobboards/journalismjobs";
 import juicebox from "./jobboards/juicebox";
 import ladders from "./jobboards/ladders";
 import lawcrossing from "./jobboards/lawcrossing";
-import lawyer_com_jobs from "./jobboards/lawyer-com-jobs";
 import linkedin_jobs from "./jobboards/linkedin-jobs";
 import mediabistro from "./jobboards/mediabistro";
 import monster from "./jobboards/monster";
@@ -54,12 +57,14 @@ import nalp_job_board from "./jobboards/nalp-job-board";
 import nature_jobs from "./jobboards/nature-jobs";
 import practicelink from "./jobboards/practicelink";
 import practicematch from "./jobboards/practicematch";
+import pro_revolution_solution from "./jobboards/pro-revolution-solution";
 import product_hunt_jobs from "./jobboards/product-hunt-jobs";
 import remote_co from "./jobboards/remote-co";
 import remote_ok from "./jobboards/remote-ok";
 import remotive from "./jobboards/remotive";
 import schoolspring from "./jobboards/schoolspring";
 import science_careers from "./jobboards/science-careers";
+import sidehustles_com from "./jobboards/sidehustles-com";
 import simplyhired from "./jobboards/simplyhired";
 import smashing_magazine_jobs from "./jobboards/smashing-magazine-jobs";
 import snagajob from "./jobboards/snagajob";
@@ -85,6 +90,7 @@ import ziprecruiter from "./jobboards/ziprecruiter";
 
 const rawBoards = [
   accounting_jobs_today,
+  ai_gig_scout,
   alliedhealthjobcafe,
   alliedtravelcareers,
   authentic_jobs,
@@ -94,9 +100,11 @@ const rawBoards = [
   careerbuilder,
   cfa_institute_jobs,
   clearancejobs,
+  clinic_jobs,
   coroflot,
   culinary_agents,
   cybersecjobs,
+  dds_recruit,
   dentistjobcafe,
   devex,
   devjobsscanner,
@@ -121,11 +129,11 @@ const rawBoards = [
   incredible_health,
   indeed,
   intelligence_careers,
+  jobsboard,
   journalismjobs,
   juicebox,
   ladders,
   lawcrossing,
-  lawyer_com_jobs,
   linkedin_jobs,
   mediabistro,
   monster,
@@ -133,12 +141,14 @@ const rawBoards = [
   nature_jobs,
   practicelink,
   practicematch,
+  pro_revolution_solution,
   product_hunt_jobs,
   remote_co,
   remote_ok,
   remotive,
   schoolspring,
   science_careers,
+  sidehustles_com,
   simplyhired,
   smashing_magazine_jobs,
   snagajob,

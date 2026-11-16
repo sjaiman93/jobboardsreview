@@ -15,7 +15,7 @@ const nalp_job_board = {
     "employerCost": "Member access",
     "includes": []
   },
-  "website": "https://www.nalp.org",
+  "website": "https://jobs.nalp.org",
   "features": [],
   "reviews": [],
   "highlights": [],

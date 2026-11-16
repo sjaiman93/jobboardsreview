@@ -593,10 +593,6 @@ export const boardProsCons = {
       "Overlap with other sources – Some jobs still come from big public boards, so you’ll see duplicates if you’re using multiple platforms."
     ]
   },
-  "lawyer-com-jobs": {
-    "pros": [],
-    "cons": []
-  },
   "linkedin-jobs": {
     "pros": [
       "Access to passive candidates – You’re not limited to active job seekers; you can source from a huge pool of professionals who may be open to the right move.",
@@ -824,5 +820,29 @@ export const boardProsCons = {
       "Not ideal for niche or executive roles – AI matching works best for common, mid‑skill roles; specialized positions may need manual sourcing.",
       "Some users report unclear pricing – Exact costs can vary by industry and geography, and some employers mention unexpected charges."
     ]
+  },
+  "ai-gig-scout": {
+    "pros": [],
+    "cons": []
+  },
+  "clinic-jobs": {
+    "pros": [],
+    "cons": []
+  },
+  "dds-recruit": {
+    "pros": [],
+    "cons": []
+  },
+  "jobsboard": {
+    "pros": [],
+    "cons": []
+  },
+  "pro-revolution-solution": {
+    "pros": [],
+    "cons": []
+  },
+  "sidehustles-com": {
+    "pros": [],
+    "cons": []
   }
 };

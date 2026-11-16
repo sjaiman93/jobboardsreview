@@ -380,7 +380,6 @@ export const boardDecisionTags = {
     "US Legal Jobs",
     "Global Legal Jobs"
   ],
-  "lawyer-com-jobs": [],
   "linkedin-jobs": [
     "Professional Networking Platform",
     "Job Board And Network",
@@ -538,5 +537,11 @@ export const boardDecisionTags = {
     "IT And Admin Jobs",
     "Job Syndication",
     "Monthly Subscription Job Board"
-  ]
+  ],
+  "ai-gig-scout": [],
+  "clinic-jobs": [],
+  "dds-recruit": [],
+  "jobsboard": [],
+  "pro-revolution-solution": [],
+  "sidehustles-com": []
 };
