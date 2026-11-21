@@ -80,13 +80,23 @@ leftover reference in one of them.
   does not protect them.
 - **Reviews are keyed by board name** (`reviews.board_name`), not slug. Renaming a
   board detaches its reviews unless the Supabase rows are updated too.
-- **Review publishing:** signed-in members' reviews publish instantly, including
-  from the board's own email domain (Sagar's decision; those get a labelled admin
-  alert). Guest reviews (email + Turnstile)
-  wait for approval. One per person per board. Review reads are tagged
-  `REVIEWS_TAG` (`lib/reviews.js`); every action that changes a review must call
+- **Review publishing (Sagar's decision, Nov 2026; overrides framework rule 3.3
+  for reviews):** every review — member or guest — publishes the moment the
+  reviewer presses Publish. A valid email (format + domain accepts mail) is
+  required; sign-up is not. Guests pass Turnstile. Every publish sends an admin
+  alert; admin unpublishes afterwards if needed. "Verified" = email confirmed
+  (signed in, or clicked the link in the "your review is live" email, which goes
+  to `/review/confirm`) or marked verified by admin after a LinkedIn check.
+  One per person per board. The form is the tap-first flow at `/review/[slug]`
+  (`components/review-flow/ReviewFlow.js`); question lists live in
+  `lib/reviewFlow/` and the draft text is built from templates in
+  `lib/reviewDraft.js` (no AI provider). Drafts are saved from the first tap and
+  changed only with their `draft_token`. Step events go to `review_events`
+  (drop-off report in /admin). Review reads are tagged `REVIEWS_TAG`
+  (`lib/reviews.js`); every action that changes a review must call
   `updateTag(REVIEWS_TAG)` + `revalidatePath(...)` or the change shows only after
-  the 5-minute refresh. Schema: `supabase/migrations/20261116_reviews_instant.sql`.
+  the 5-minute refresh. Schema: `supabase/migrations/20261116_reviews_instant.sql`
+  then `20261119_review_flow.sql`.
 - `puppeteer` and `cheerio` are devDependencies only. They are used by the agent
   scripts, never by the site. Keep them out of `dependencies` or Vercel downloads
   Chromium on every build.
@@ -155,10 +165,16 @@ Still open before cutover:
 Launch gate:
 
 ```bash
-curl -s https://jobboardsreview.com | grep -c "Before You Spend"
+curl -s https://jobboardsreview.com | grep -c 'data-jbr-site'
 ```
 
-Returns 0 until the new site is actually live.
+Returns 0 until the new site is actually live, 1 after. It looks for the
+`data-jbr-site` attribute on `<body>` in `app/layout.js` (the old check searched
+for "Before You Spend", which the new homepage splits across two tags).
+
+Sitemap: board pages are listed only when complete (`lib/listingGate.js`):
+a 300+ word `fullDescription` and a `lastVerified: "YYYY-MM-DD"` field in the
+board's file. Add `lastVerified` when you check a board by hand.
 
 ## Strategy, in one paragraph
 

@@ -153,6 +153,9 @@ export default function ClaimListingPage() {
 
     // Required Field Validation
     if (claimListing && !session) newErrors.claim = "Please sign in to claim and manage this listing.";
+    else if (claimEmail && FREE_EMAIL_DOMAINS.has(emailDomain(claimEmail))) {
+      newErrors.claim = "Please sign in with your company email to claim this listing.";
+    }
     if (!turnstileToken) newErrors.submit = "Please complete the security check.";
     if (!submitterType) newErrors.submitterType = "Please select who you are submitting as.";
     if (!contactName.trim()) newErrors.contactName = "Contact Name is required.";
@@ -667,19 +670,26 @@ export default function ClaimListingPage() {
                     </div>
                   )}
 
-                  {claimEmail && claimDomainMatch === true && (
-                    <p className="mt-4 p-4 rounded-[20px] bg-teal-50 border border-teal-100 text-sm font-bold text-teal-800">
-                      Your email matches {websiteHost(websiteUrl)}, so we can verify you as the owner quickly.
+                  {claimEmail && FREE_EMAIL_DOMAINS.has(emailDomain(claimEmail)) ? (
+                    <p className="mt-4 p-4 rounded-[20px] bg-amber-50 border border-amber-200 text-sm font-medium text-amber-900">
+                      You&apos;re signed in with a personal email ({claimEmail}). To claim a listing, sign out and sign in
+                      with your company email.
                     </p>
-                  )}
-                  {claimEmail && claimDomainMatch === false && (
-                    <p className="mt-4 p-4 rounded-[20px] bg-slate-50 border border-slate-200 text-sm font-medium text-slate-600">
-                      {FREE_EMAIL_DOMAINS.has(emailDomain(claimEmail))
-                        ? "You're signed in with a personal email,"
-                        : `Your email domain doesn't match ${websiteHost(websiteUrl) || "the website"},`}{" "}
-                      so we'll verify you manually, for example through your LinkedIn company page. Signing in with your
-                      company email speeds this up.
-                    </p>
+                  ) : (
+                    <>
+                      {claimEmail && claimDomainMatch === true && (
+                        <p className="mt-4 p-4 rounded-[20px] bg-teal-50 border border-teal-100 text-sm font-bold text-teal-800">
+                          Your email matches {websiteHost(websiteUrl)}. We&apos;ll still review your claim before you can
+                          manage the listing.
+                        </p>
+                      )}
+                      {claimEmail && claimDomainMatch === false && (
+                        <p className="mt-4 p-4 rounded-[20px] bg-slate-50 border border-slate-200 text-sm font-medium text-slate-600">
+                          Your email domain doesn&apos;t match {websiteHost(websiteUrl) || "the website"}, so we&apos;ll
+                          verify you manually, for example through your LinkedIn company page.
+                        </p>
+                      )}
+                    </>
                   )}
                   {errors.claim && <p className="mt-2 text-red-500 text-xs font-bold ml-1">{errors.claim}</p>}
                 </div>

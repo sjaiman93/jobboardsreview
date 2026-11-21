@@ -44,7 +44,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className="overflow-x-hidden">
-      <body className="overflow-x-hidden">
+      {/* data-jbr-site: marker for the launch-gate check in CLAUDE.md. Only
+          this site has it, the old Lovable site doesn't. Don't remove. (A
+          <meta> via `metadata.other` is dropped when ISR re-renders a page.) */}
+      <body className="overflow-x-hidden" data-jbr-site="next">
         <JsonLd data={ORGANIZATION_LD} />
         <JsonLd data={WEBSITE_LD} />
         <div className="min-h-screen bg-[#FCFBF8]">

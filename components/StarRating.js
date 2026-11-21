@@ -22,7 +22,7 @@ export default function StarRating({
   // is the same credibility problem as a fake testimonial.
   if (!isInteractive && !hasRating) {
     return (
-      <span className={`text-sm font-bold text-slate-400 ${className}`}>No reviews yet</span>
+      <span className={`text-sm font-bold text-slate-400 ${className}`}>Be the first to review</span>
     );
   }
 

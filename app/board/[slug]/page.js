@@ -14,11 +14,11 @@ import BoardInteractionPrompt from "@/components/BoardInteractionPrompt";
 import Collapsible from "@/components/Collapsible";
 import StarRating from "@/components/StarRating";
 import WriteReviewButton from "@/components/WriteReviewButton";
+import ReviewCard from "@/components/ReviewCard";
 import { shareMetadata } from "@/lib/shareImage";
 import { boardHasLogo, boardInitials } from "@/lib/boardLogo";
 import JsonLd, { breadcrumbs } from "@/components/JsonLd";
 import { getApprovedReviews, reviewStats } from "@/lib/reviews";
-import ReportReviewButton from "@/components/ReportReviewButton";
 
 // Re-render at most every 5 minutes so reviews approved in admin show up
 // without a deploy.
@@ -130,20 +130,9 @@ export default async function BoardDetailPage({ params }) {
     .filter((b) => b.categorySlug === board.categorySlug && b.slug !== board.slug)
     .slice(0, 3);
 
-  // Approved reviews from Supabase, plus any stored in the board's data file.
+  // Published reviews from Supabase, plus any stored in the board's data file.
   const dbReviews = await getApprovedReviews(board.name);
-  const reviews = [
-    ...dbReviews.map((r) => ({
-      id: r.id,
-      rating: r.rating,
-      title: r.title,
-      text: r.review_text,
-      author: "Recruiter review",
-      role: new Date(r.created_at).toLocaleDateString("en-US", { month: "short", year: "numeric" }),
-      workEmail: r.is_work_email,
-    })),
-    ...(board.reviews || []),
-  ];
+  const reviews = [...dbReviews, ...(board.reviews || [])];
   const hasReviews = reviews.length > 0;
   const stats = reviewStats(reviews);
   const hasPricingData =
@@ -226,7 +215,7 @@ export default async function BoardDetailPage({ params }) {
               </p>
               <div className="flex flex-wrap gap-3">
                 <WriteReviewButton 
-                  boardName={board.name} 
+                  boardSlug={board.slug} 
                   className="bg-[#FF5630] text-white font-black px-7 py-3.5 rounded-2xl shadow-xl shadow-[#FF5630]/20 hover:scale-105 transition-all text-sm"
                 />
                 <a
@@ -564,33 +553,7 @@ export default async function BoardDetailPage({ params }) {
                 {hasReviews ? (
                   <div className="space-y-6">
                     {reviews.map((review, i) => (
-                      <div key={i} className="bg-white p-8 rounded-[32px] border border-slate-100 card-shadow">
-                        <div className="flex items-center gap-1 mb-4">
-                          {Array.from({ length: review.rating }).map((_, j) => (
-                            <svg key={j} className="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
-                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                            </svg>
-                          ))}
-                        </div>
-                        {review.title && (
-                          <h4 className="text-slate-900 font-black text-lg mb-3">&ldquo;{review.title}&rdquo;</h4>
-                        )}
-                        <p className="text-sm text-slate-500 font-medium leading-relaxed mb-5 whitespace-pre-line">{review.text}</p>
-                        <div className="flex flex-wrap items-center justify-between gap-3">
-                          <p className="text-xs text-slate-400 font-bold flex flex-wrap items-center gap-2">
-                            <span>{review.author} · {review.role}</span>
-                            {review.workEmail && (
-                              <span
-                                className="px-2 py-0.5 rounded-full bg-teal-50 text-teal-700 border border-teal-100 text-[10px] uppercase tracking-wider"
-                                title="Written by a signed-in user with a company email address"
-                              >
-                                Work email
-                              </span>
-                            )}
-                          </p>
-                          {review.id && <ReportReviewButton reviewId={review.id} />}
-                        </div>
-                      </div>
+                      <ReviewCard key={review.id || i} review={review} />
                     ))}
                   </div>
                 ) : (
@@ -600,12 +563,12 @@ export default async function BoardDetailPage({ params }) {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
                       </svg>
                     </div>
-                    <h4 className="text-xl font-black text-slate-900 mb-2">No reviews yet</h4>
+                    <h3 className="text-xl font-black text-slate-900 mb-2">Be the first to review {board.name}</h3>
                     <p className="text-sm text-slate-500 font-medium mb-6">
-                      Be the first recruiter to share feedback on {board.name}.
+                      Tell other recruiters how it works for you. About 2 minutes, no typing needed.
                     </p>
                     <WriteReviewButton 
-                      boardName={board.name} 
+                      boardSlug={board.slug} 
                       className="inline-block bg-[#FF5630] text-white font-black px-8 py-3 rounded-2xl shadow-lg shadow-[#FF5630]/20 hover:scale-105 transition-all text-sm"
                     />
                   </div>
@@ -764,7 +727,7 @@ export default async function BoardDetailPage({ params }) {
       )}
 
       {/* Fixed Interaction Prompt */}
-      <BoardInteractionPrompt boardName={board.name} />
+      <BoardInteractionPrompt boardSlug={board.slug} boardName={board.name} />
     </>
   );
 }

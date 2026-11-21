@@ -14,21 +14,21 @@ export default function Footer() {
         { href: "/categories", label: "Categories" },
         { href: "/compare", label: "Compare" },
         { href: "/optimizer?source=footer", label: "Hiring Budget Optimizer" },
-        { href: "/", label: "Trends" },
+        { href: "/trends", label: "Trends" },
       ],
     },
     {
       title: "For Boards",
       links: [
         { href: "/claim-listing", label: "List Your Board" },
-        { href: "/", label: "Advertise" },
+        { href: "/advertise", label: "Advertise" },
       ],
     },
     {
       title: "Company",
       links: [
         { href: "/about", label: "About Us" },
-        { href: "#", label: "Careers" },
+        { href: "/careers", label: "Careers" },
         { href: "/privacy", label: "Privacy" },
       ],
     },

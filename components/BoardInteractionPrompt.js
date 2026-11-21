@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import ReviewModal from "./ReviewModal";
+import { useRouter } from "next/navigation";
 
-export default function BoardInteractionPrompt({ boardName }) {
+export default function BoardInteractionPrompt({ boardSlug, boardName }) {
+  const router = useRouter();
   const [dismissed, setDismissed] = useState(false);
-  const [showModal, setShowModal] = useState(false);
   const [visible, setVisible] = useState(false);
   const [nearFooter, setNearFooter] = useState(false);
   // Track which option the user selected (internal only, no UI change)
@@ -34,8 +34,8 @@ export default function BoardInteractionPrompt({ boardName }) {
 
   const handleOpenReview = useCallback((type) => {
     setSelectionType(type);
-    setShowModal(true);
-  }, []);
+    router.push(`/review/${boardSlug}`);
+  }, [router, boardSlug]);
 
   const handleDismiss = useCallback(() => {
     setDismissed(true);
@@ -98,12 +98,6 @@ export default function BoardInteractionPrompt({ boardName }) {
           </button>
         </div>
       </div>
-
-      <ReviewModal 
-        isOpen={showModal} 
-        onClose={() => setShowModal(false)} 
-        boardName={boardName} 
-      />
     </>
   );
 }

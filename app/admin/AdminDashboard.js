@@ -5,6 +5,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import CsvTools from "./CsvTools";
 import ReviewQueue from "./ReviewQueue";
+import ReviewFunnel from "./ReviewFunnel";
 import { saveBoard, saveSiteContentAction, saveBlogAction, approveSubmissionAction, updateSubmissionStatusAction, hardDeleteSubmissionAction, adminLogoutAction } from "./actions";
 import "react-quill/dist/quill.snow.css";
 
@@ -22,7 +23,7 @@ function ClaimBadge({ verification, large = false }) {
   return <span className={`inline-flex items-center rounded-full font-bold bg-slate-100 text-slate-600 border border-slate-200 ${size}`}>Claim (unverified)</span>;
 }
 
-export default function AdminDashboard({ boards, editingBoard, editProsCons, editTags, editSlug, siteContent, blogs = [], submissions = [], reviews = [], canEditFiles = true }) {
+export default function AdminDashboard({ boards, editingBoard, editProsCons, editTags, editSlug, siteContent, blogs = [], submissions = [], reviews = [], reviewEvents = [], canEditFiles = true }) {
   const [activeTab, setActiveTab] = useState("jobBoards");
   const [isSaving, setIsSaving] = useState(false);
 
@@ -286,7 +287,7 @@ export default function AdminDashboard({ boards, editingBoard, editProsCons, edi
         {[
           { id: "jobBoards", label: "Job Boards" },
           { id: "submissions", label: "Submissions" },
-          { id: "reviews", label: `Reviews${reviews.filter((r) => (r.status || "pending") === "pending").length ? ` (${reviews.filter((r) => (r.status || "pending") === "pending").length})` : ""}` },
+          { id: "reviews", label: `Reviews${reviews.filter((r) => ["pending", "submitted"].includes(r.status)).length ? ` (${reviews.filter((r) => ["pending", "submitted"].includes(r.status)).length})` : ""}` },
           { id: "blog", label: "Blog" },
           { id: "homepage", label: "Homepage" },
           { id: "legalPages", label: "Legal Pages" },
@@ -407,7 +408,12 @@ export default function AdminDashboard({ boards, editingBoard, editProsCons, edi
         </div>
       )}
 
-      {activeTab === "reviews" && <ReviewQueue reviews={reviews} />}
+      {activeTab === "reviews" && (
+        <div className="space-y-10">
+          <ReviewQueue reviews={reviews} />
+          <ReviewFunnel events={reviewEvents} />
+        </div>
+      )}
 
       {activeTab === "submissions" && (
         <div className="bg-white p-8 sm:p-12 rounded-[48px] card-shadow border border-slate-100 space-y-8">

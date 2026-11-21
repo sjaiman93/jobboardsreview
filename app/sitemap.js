@@ -1,5 +1,6 @@
 ﻿import { getAllBoards, getAllCategories } from "@/data/jobBoards";
 import { getBlogs } from "@/data/blogs";
+import { isCompleteListing, lastVerifiedDate } from "@/lib/listingGate";
 
 // Date the board/category data and the static pages were last changed.
 // Bump this when you edit data/ or the about/legal copy, so search engines
@@ -25,6 +26,7 @@ export default function sitemap() {
     { url: `${baseUrl}/blog`, lastModified: latestPost, changeFrequency: "weekly", priority: 0.7 },
     { url: `${baseUrl}/about`, lastModified: CONTENT_UPDATED, changeFrequency: "monthly", priority: 0.6 },
     { url: `${baseUrl}/claim-listing`, lastModified: CONTENT_UPDATED, changeFrequency: "monthly", priority: 0.6 },
+    { url: `${baseUrl}/advertise`, lastModified: new Date("2026-11-21"), changeFrequency: "monthly", priority: 0.5 },
     { url: `${baseUrl}/privacy`, lastModified: CONTENT_UPDATED, changeFrequency: "yearly", priority: 0.3 },
     { url: `${baseUrl}/terms`, lastModified: CONTENT_UPDATED, changeFrequency: "yearly", priority: 0.3 },
     { url: `${baseUrl}/cookies`, lastModified: CONTENT_UPDATED, changeFrequency: "yearly", priority: 0.3 },
@@ -38,12 +40,17 @@ export default function sitemap() {
     priority: 0.8,
   }));
 
-  const boardRoutes = getAllBoards().map((board) => ({
-    url: `${baseUrl}/board/${board.slug}`,
-    lastModified: CONTENT_UPDATED,
-    changeFrequency: "weekly",
-    priority: 0.7,
-  }));
+  // Only complete listings (lib/listingGate.js): 300+ word write-up and a
+  // lastVerified date. The rest stay on the site but aren't offered to search
+  // engines until they're finished.
+  const boardRoutes = getAllBoards()
+    .filter(isCompleteListing)
+    .map((board) => ({
+      url: `${baseUrl}/board/${board.slug}`,
+      lastModified: lastVerifiedDate(board),
+      changeFrequency: "weekly",
+      priority: 0.7,
+    }));
 
   const blogRoutes = posts.map((post) => ({
     url: `${baseUrl}/blog/${post.slug}`,

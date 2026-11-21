@@ -89,6 +89,7 @@ export default async function AdminPage({ searchParams }) {
       const { data, error } = await supabaseAdmin
         .from("reviews")
         .select("*") // "*" so it works before and after the reviews migration
+        .neq("status", "draft") // unfinished reviews only count in the drop-off report
         .order("created_at", { ascending: false })
         .limit(300);
       if (error) {
@@ -106,9 +107,28 @@ export default async function AdminPage({ searchParams }) {
     console.error("Error reading reviews from Supabase:", e);
   }
 
+  // Review-flow step events for the drop-off report (last 90 days).
+  let reviewEvents = [];
+  try {
+    const { supabaseAdmin } = await import("@/lib/supabase");
+    if (supabaseAdmin) {
+      const since = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString();
+      const { data, error } = await supabaseAdmin
+        .from("review_events")
+        .select("session_id, step, event, src")
+        .gte("created_at", since)
+        .limit(20000);
+      if (error) console.error("Supabase fetch error (review events):", error.message);
+      else reviewEvents = data || [];
+    }
+  } catch (e) {
+    console.error("Error reading review events:", e);
+  }
+
   return (
     <AdminDashboard
       reviews={reviews}
+      reviewEvents={reviewEvents}
       canEditFiles={isLocalDev()}
       boards={boards}
       siteContent={siteContent}

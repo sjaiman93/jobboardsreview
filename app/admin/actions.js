@@ -11,7 +11,7 @@ import { ADMIN_COOKIE_NAME, ADMIN_SESSION_DAYS, createAdminSession, isAllowedAdm
 import { sendEmail, notifyAdmin, firstNameFrom, boardUrl } from "@/lib/email";
 import { isAdmin, NOT_AUTHORIZED, isLocalDev, LOCAL_ONLY } from "@/lib/requireAdmin";
 import { readRepoFile, listRepoDir, commitRepoFiles, canWriteRepo } from "@/lib/repoFiles";
-import { isOwnerDomain } from "@/lib/emailDomain";
+import { isOwnerDomain, isWorkEmail, websiteHost } from "@/lib/emailDomain";
 import { verifyTurnstileToken } from "@/app/actions/turnstile";
 
 // Exchange a signed-in site user's Supabase access token for an admin
@@ -534,6 +534,19 @@ function checkRateLimit(ip) {
   return true;
 }
 
+// The listed board a claim refers to, matched by name (ignoring case and
+// punctuation) or by website host. Null for a board we don't list yet.
+function findExistingListing(boardName, websiteUrl) {
+  const norm = (s) => String(s || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  const name = norm(boardName);
+  const host = websiteHost(websiteUrl || "");
+  return (
+    getAllBoards().find(
+      (b) => (name && norm(b.name) === name) || (host && websiteHost(b.website || "") === host)
+    ) || null
+  );
+}
+
 export async function submitBoardProposal(submission) {
   // Honeypot check
   if (submission.website_hp) {
@@ -572,9 +585,10 @@ export async function submitBoardProposal(submission) {
   const { supabaseAdmin } = await import("@/lib/supabase");
   if (!supabaseAdmin) return { success: false, error: "Database connection failed." };
 
-  // Claiming a listing requires a signed-in account. The contact email is
-  // the account's (verified) email, not whatever was typed, and a domain
-  // match with the board's website marks the claim as a likely owner.
+  // Claiming a listing requires a signed-in account with a company email.
+  // The contact email is the account's (verified) email, not whatever was
+  // typed. Every claim still waits for manual approval; a domain match only
+  // labels it as a likely owner.
   let claimant = null;
   if (cleanSubmission.claimListing) {
     if (token) {
@@ -584,10 +598,17 @@ export async function submitBoardProposal(submission) {
     if (!claimant?.email) {
       return { success: false, error: "Please sign in to claim and manage a listing." };
     }
+    if (!isWorkEmail(claimant.email)) {
+      return { success: false, error: "Please sign in with your company email to claim a listing." };
+    }
   }
   const contactEmail = claimant ? claimant.email.toLowerCase() : cleanSubmission.contactEmail;
+  // For a board already listed, check against the website we have on file,
+  // not the one typed into the form (anyone can type a domain they own).
+  const existingListing = claimant ? findExistingListing(cleanSubmission.boardName, cleanSubmission.websiteUrl) : null;
+  const verifyAgainst = existingListing ? existingListing.website : cleanSubmission.websiteUrl;
   const ownerVerification = claimant
-    ? isOwnerDomain(contactEmail, cleanSubmission.websiteUrl) ? "domain_match" : "needs_verification"
+    ? isOwnerDomain(contactEmail, verifyAgainst) ? "domain_match" : "needs_verification"
     : null;
 
   const dbPayload = {
@@ -628,11 +649,12 @@ export async function submitBoardProposal(submission) {
   }
 
   // Emails never fail the submission (sendEmail does not throw).
+  const listedAs = existingListing ? `, existing listing ${existingListing.name}` : ", not yet listed";
   const itemType = !claimant
     ? "listing"
     : ownerVerification === "domain_match"
-      ? "listing claim (email matches the board's domain)"
-      : "listing claim (needs verification)";
+      ? `listing claim (email matches ${websiteHost(verifyAgainst)}${listedAs})`
+      : `listing claim (needs verification${listedAs})`;
   await Promise.all([
     sendEmail("listing-received", dbPayload.contact_email, {
       first_name: firstNameFrom(dbPayload.contact_name),
@@ -890,7 +912,7 @@ export async function hardDeleteSubmissionAction(submissionId) {
 // pages re-read approved reviews every few minutes (see app/board/[slug]).
 export async function setReviewStatusAction(reviewId, status) {
   if (!(await isAdmin())) return NOT_AUTHORIZED;
-  if (!["approved", "rejected", "pending"].includes(status)) {
+  if (!["published", "rejected", "submitted"].includes(status)) {
     return { success: false, error: "Invalid status." };
   }
 
@@ -907,7 +929,7 @@ export async function setReviewStatusAction(reviewId, status) {
 
     const { error: updateErr } = await supabaseAdmin
       .from("reviews")
-      .update({ status })
+      .update(status === "published" && !before.published_at ? { status, published_at: new Date().toISOString() } : { status })
       .eq("id", reviewId);
     if (updateErr) {
       console.error("Review status update error:", updateErr);
@@ -918,7 +940,7 @@ export async function setReviewStatusAction(reviewId, status) {
 
     // Email the reviewer only the first time a review goes live. Members via
     // their account email; guests via the email they entered.
-    if (status === "approved" && before.status !== "approved") {
+    if (status === "published" && !["published", "approved"].includes(before.status) && !before.published_at) {
       let email = before.reviewer_email || null;
       let meta = {};
       if (before.user_id) {
@@ -946,6 +968,52 @@ export async function setReviewStatusAction(reviewId, status) {
     return { success: true };
   } catch (e) {
     console.error("Error updating review status:", e);
+    return { success: false, error: "Failed to update review." };
+  }
+}
+
+// Admin checked the reviewer by hand (e.g. their LinkedIn profile): the
+// review gets the Verified badge.
+export async function verifyReviewAction(reviewId) {
+  if (!(await isAdmin())) return NOT_AUTHORIZED;
+  try {
+    const { supabaseAdmin } = await import("@/lib/supabase");
+    if (!supabaseAdmin) return { success: false, error: "Database client not configured." };
+    const { data: before } = await supabaseAdmin.from("reviews").select("id, board_name, linkedin_url, verified_at").eq("id", reviewId).single();
+    if (!before) return { success: false, error: "Review not found." };
+    if (before.verified_at) return { success: true };
+    const now = new Date().toISOString();
+    const { error } = await supabaseAdmin
+      .from("reviews")
+      .update({ verified_at: now, verification_method: before.linkedin_url ? "linkedin" : "admin" })
+      .eq("id", reviewId);
+    if (error) return { success: false, error: "Failed to update review." };
+    const board = getAllBoards().find((b) => b.name === before.board_name);
+    updateTag(REVIEWS_TAG);
+    if (board) revalidatePath(`/board/${board.slug}`);
+    revalidatePath("/admin");
+    return { success: true, verifiedAt: now };
+  } catch (e) {
+    console.error("Error verifying review:", e);
+    return { success: false, error: "Failed to update review." };
+  }
+}
+
+// Records that the thank-you voucher was sent. Payouts themselves are manual.
+export async function setVoucherIssuedAction(reviewId, issued) {
+  if (!(await isAdmin())) return NOT_AUTHORIZED;
+  try {
+    const { supabaseAdmin } = await import("@/lib/supabase");
+    if (!supabaseAdmin) return { success: false, error: "Database client not configured." };
+    const { error } = await supabaseAdmin
+      .from("reviews")
+      .update({ voucher_status: issued ? "issued" : "none" })
+      .eq("id", reviewId);
+    if (error) return { success: false, error: "Failed to update review." };
+    revalidatePath("/admin");
+    return { success: true };
+  } catch (e) {
+    console.error("Error updating voucher status:", e);
     return { success: false, error: "Failed to update review." };
   }
 }

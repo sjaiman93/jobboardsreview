@@ -17,7 +17,17 @@ export const revalidate = 300;
 
 export default async function HomePage() {
   const boards = withReviewStats(getAllBoards(), await getReviewStatsMap());
-  const featured = boards.slice(0, 6);
+  // Healthcare first (the site's focus): most-reviewed, then the fullest
+  // write-up. Other categories only fill in if there are fewer than six.
+  const words = (b) => (b.fullDescription || "").split(/\s+/).filter(Boolean).length;
+  const featured = [...boards]
+    .sort(
+      (a, b) =>
+        Number(b.categorySlug === "healthcare") - Number(a.categorySlug === "healthcare") ||
+        (b.reviewCount || 0) - (a.reviewCount || 0) ||
+        words(b) - words(a)
+    )
+    .slice(0, 6);
 
   return (
     <>
