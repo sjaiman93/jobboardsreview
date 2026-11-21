@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { revalidatePath, updateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { getAllBoards } from "@/data/jobBoards";
 import { REVIEWS_TAG } from "@/lib/reviews";
 import { isWorkEmail } from "@/lib/emailDomain";
@@ -33,11 +33,20 @@ export async function GET(request) {
         verified_at: new Date().toISOString(),
         verification_method: "email_link",
         is_work_email: isWorkEmail(row.reviewer_email),
-        confirm_token: null,
+        // The token stays, so opening the email link again still lands on
+        // the review; verified_at stops it from verifying twice.
       })
       .eq("id", row.id);
-    updateTag(REVIEWS_TAG);
-    if (board) revalidatePath(`/board/${board.slug}`);
+    // updateTag() only works in Server Actions and throws in a route
+    // handler; revalidateTag with expire: 0 is the route-handler way to
+    // expire the cached reviews now. A cache hiccup must not block the
+    // redirect, so it can't fail the request.
+    try {
+      revalidateTag(REVIEWS_TAG, { expire: 0 });
+      if (board) revalidatePath(`/board/${board.slug}`);
+    } catch (e) {
+      console.error("Cache refresh after review confirm failed:", e);
+    }
   }
 
   const dest = board ? new URL(`/board/${board.slug}?verified=1#reviews`, url) : home;
