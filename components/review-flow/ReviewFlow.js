@@ -749,7 +749,8 @@ export default function ReviewFlow({ board, listingType, devListingType, reviewC
       </form>
     );
   } else if (step === "done") {
-    const shareUrl = result?.reviewUrl || "";
+    // Built from the address the reviewer is on, so it works on previews too.
+    const shareUrl = result?.reviewPath ? `${window.location.origin}${result.reviewPath}` : "";
     const eligible = factsComplete({
       listing_type: listingType,
       reviewer_role: answers.role,

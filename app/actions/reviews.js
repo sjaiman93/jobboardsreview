@@ -12,6 +12,7 @@ import { isWorkEmail, isOwnerDomain } from "@/lib/emailDomain";
 import { listingTypeOf } from "@/lib/reviewFlow";
 import { cleanAnswers, answersToColumns, answersFromRow } from "@/lib/reviewAnswers";
 import { buildDraft, seedFrom } from "@/lib/reviewDraft";
+import { linkBase } from "@/lib/linkBase";
 
 // Publishing rules (Sagar, Nov 2026; overrides framework rule 3.3 for reviews)
 // - Every review publishes the moment the reviewer presses Publish. No
@@ -26,7 +27,6 @@ import { buildDraft, seedFrom } from "@/lib/reviewDraft";
 // A review is saved as a draft from the first star tap. Drafts are only
 // changed with their secret draft_token, which the browser holds.
 
-const SITE_URL = "https://jobboardsreview.com";
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const LINKEDIN_RE = /^https?:\/\/([a-z]{2,3}\.)?linkedin\.com\/in\/[A-Za-z0-9\-_%]+\/?(\?.*)?$/i;
 const SOURCES = new Set(["personal", "voucher", "vendor"]);
@@ -271,7 +271,7 @@ export async function publishReviewAction(payload) {
       first_name: firstNameFrom(displayName || meta.full_name || meta.name),
       board_name: board.name,
       review_url: confirmToken
-        ? `${SITE_URL}/review/confirm?t=${confirmToken}`
+        ? `${linkBase()}/review/confirm?t=${confirmToken}`
         : `${boardUrl(board.slug)}#reviews`,
     }),
     notifyAdmin({
@@ -285,7 +285,8 @@ export async function publishReviewAction(payload) {
     success: true,
     reviewerNumber: await publishedCount(supabase, board.name),
     verified: !!user,
-    reviewUrl: `${boardUrl(board.slug)}#reviews`,
+    // Relative: the browser opens it on whatever site the reviewer is on.
+    reviewPath: `/board/${board.slug}#reviews`,
   };
 }
 

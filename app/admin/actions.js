@@ -12,6 +12,7 @@ import { sendEmail, notifyAdmin, firstNameFrom, boardUrl } from "@/lib/email";
 import { isAdmin, NOT_AUTHORIZED, isLocalDev, LOCAL_ONLY } from "@/lib/requireAdmin";
 import { readRepoFile, listRepoDir, commitRepoFiles, canWriteRepo } from "@/lib/repoFiles";
 import { isOwnerDomain, isWorkEmail, websiteHost } from "@/lib/emailDomain";
+import { linkBase } from "@/lib/linkBase";
 import { verifyTurnstileToken } from "@/app/actions/turnstile";
 
 // Exchange a signed-in site user's Supabase access token for an admin
@@ -951,7 +952,7 @@ export async function setReviewStatusAction(reviewId, status) {
       await sendEmail("review-published", email, {
         first_name: firstNameFrom(meta.full_name || meta.name),
         board_name: before.board_name,
-        review_url: board ? `${boardUrl(board.slug)}#reviews` : "https://jobboardsreview.com/directory",
+        review_url: board ? `${boardUrl(board.slug)}#reviews` : `${linkBase()}/directory`,
       });
     }
 
